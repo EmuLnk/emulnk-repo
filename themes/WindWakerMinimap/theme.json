@@ -1,0 +1,27 @@
+{
+  "id": "WindWakerMinimap",
+  "targetProfileId": "GZL",
+  "targetConsole": "GCN",
+  "meta": {
+    "name": "Great Sea Navigator",
+    "author": "EmuLink Team",
+    "version": "1.0.0",
+    "description": "Live minimap showing Link's real-time position on the Great Sea chart. Displays heading, hearts, rupees, and compass bearing.",
+    "minAppVersion": 1
+  },
+  "hideOverlay": false,
+  "settings": [
+    {
+      "id": "show_hud",
+      "label": "Show HUD Bar",
+      "type": "toggle",
+      "default": "true"
+    },
+    {
+      "id": "auto_center",
+      "label": "Auto-Center on Link",
+      "type": "toggle",
+      "default": "true"
+    }
+  ]
+}

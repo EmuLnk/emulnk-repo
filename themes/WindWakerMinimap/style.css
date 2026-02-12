@@ -1,0 +1,161 @@
+:root {
+  --hud-height: 36px;
+  --ocean-bg: #0a2a4a;
+  --hud-bg: rgba(0, 0, 0, 0.75);
+  --hud-text: #d4e8ff;
+  --heart-color: #e44;
+  --rupee-color: #5f5;
+  --compass-color: #aad4ff;
+  --active-color: #4f4;
+  --offline-color: #f44;
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--ocean-bg);
+  font-family: -apple-system, 'Segoe UI', sans-serif;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+#map {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: calc(100% - var(--hud-height));
+  display: block;
+}
+
+#hud-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: var(--hud-height);
+  background: var(--hud-bg);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 12px;
+  font-size: 14px;
+  color: var(--hud-text);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#hud-hearts {
+  color: var(--heart-color);
+  font-size: 15px;
+  letter-spacing: 1px;
+}
+
+#hud-rupees {
+  color: var(--rupee-color);
+  font-weight: 600;
+}
+
+#hud-compass {
+  color: var(--compass-color);
+  font-variant-numeric: tabular-nums;
+}
+
+.hud-item.active {
+  color: var(--active-color);
+  font-weight: 600;
+}
+
+.hud-item.offline {
+  color: var(--offline-color);
+}
+
+#indoor-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: calc(100% - var(--hud-height));
+  background: rgba(0, 0, 0, 0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+#indoor-text {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 18px;
+  text-align: center;
+  line-height: 1.6;
+}
+
+#indoor-text small {
+  font-size: 13px;
+  opacity: 0.6;
+}
+
+#wind-btn {
+  position: absolute;
+  bottom: calc(var(--hud-height) + 8px);
+  right: 8px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #00E5FF;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 20;
+}
+
+#wind-menu {
+  position: absolute;
+  bottom: calc(var(--hud-height) + 50px);
+  right: 8px;
+  background: rgba(0, 0, 0, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 8px;
+  z-index: 20;
+}
+
+#wind-menu-title {
+  color: #00E5FF;
+  font-size: 11px;
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+#wind-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 36px);
+  grid-template-rows: repeat(3, 36px);
+  gap: 2px;
+}
+
+.wind-dir {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #d4e8ff;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+}
+
+.wind-dir:active {
+  background: rgba(0, 229, 255, 0.3);
+}

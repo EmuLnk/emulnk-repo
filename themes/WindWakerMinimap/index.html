@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Great Sea Navigator</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="map"></canvas>
+<div id="hud-bar">
+  <span id="hud-hearts"></span>
+  <span id="hud-rupees" class="hud-item"></span>
+  <span id="hud-compass" class="hud-item"></span>
+  <span id="hud-status" class="hud-item"></span>
+</div>
+<div id="indoor-overlay">
+  <div id="indoor-text">Indoor Area<br><small>Sea Chart Paused</small></div>
+</div>
+<div id="wind-btn" onclick="toggleWindMenu()">&#x1F32C;</div>
+<div id="wind-menu" style="display:none;">
+  <div id="wind-menu-title">Set Wind</div>
+  <div id="wind-grid"></div>
+</div>
+
+<script>
+'use strict';
+
+// Constants
+var WORLD_MIN = -350000;
+var WORLD_MAX = 350000;
+var WORLD_RANGE = WORLD_MAX - WORLD_MIN;
+
+// 7x7 Great Sea island grid (row-major, top-left = A1)
+var ISLAND_GRID = [
+  ['Forsaken\nFortress','Four-Eye\nReef','Western Fairy\nIsland','Three-Eye\nReef','Needle Rock\nIsle','Diamond Steppe\nIsland','Horseshoe\nIsland'],
+  ['Star\nIsland','Northern Fairy\nIsland','Gale\nIsle','Crescent Moon\nIsland','Seven-Star\nIsles','Overlook\nIsland','Stone Watcher\nIsland'],
+  ['Islet of\nSteel','Mother &\nChild Isles','Spectacle\nIsland','Windfall\nIsland','Pawprint\nIsle','Dragon Roost\nIsland','Flight Control\nPlatform'],
+  ['Rock Spire\nIsle','Tingle\nIsland','Northern\nTriangle Isle','Eastern Fairy\nIsland','Fire\nMountain','Star Belt\nArchipelago','Private\nOasis'],
+  ['Bomb\nIsland','Bird\'s Peak\nRock','Southern Fairy\nIsland','Ice Ring\nIsle','Forest\nHaven','Cliff Plateau\nIsles','Shark\nIsland'],
+  ['Greatfish\nIsle','Cyclops\nReef','Six-Eye\nReef','Tower of the\nGods','Eastern\nTriangle Isle','Thorned Fairy\nIsland','Southern\nTriangle Isle'],
+  ['Angular\nIsles','Boating\nCourse','Five-Star\nIsles','Headstone\nIsland','Two-Eye\nReef','Angular\nIsles','Five-Eye\nReef']
+];
+
+// State
+var gameData = null;
+var settings = { show_hud: 'true', auto_center: 'true' };
+var isOnSea = true;
+var lastSeaPos = { nx: 0.5, nz: 0.5, rot: 0, windDeg: 0 };
+
+// Camera state for pan/zoom
+var camera = { x: 0.5, y: 0.5, zoom: 1 };
+var isPanning = false;
+var panStart = { x: 0, y: 0 };
+var camStart = { x: 0, y: 0 };
+var pinchStartDist = 0;
+var pinchStartZoom = 1;
+var userZoomed = false;
+var lastTapTime = 0;
+
+// Canvas refs
+var canvas, ctx;
+var offCanvas, offCtx;
+var offDirty = true;
+var customMapImg = null;
+var customMapLoaded = false;
+var customMapFailed = false;
+
+// Data Reception
+function decodeB64(encoded) {
+  try {
+    var binaryStr = atob(encoded);
+    var bytes = new Uint8Array(binaryStr.length);
+    for (var i = 0; i < binaryStr.length; i++) {
+      bytes[i] = binaryStr.charCodeAt(i);
+    }
+    return new TextDecoder('utf-8').decode(bytes);
+  } catch (e) {
+    return atob(encoded);
+  }
+}
+
+window.updateData = function(dataOrEncoded, isEncoded) {
+  try {
+    var parsed;
+    if (isEncoded) {
+      var decoded = decodeB64(dataOrEncoded);
+      parsed = JSON.parse(decoded);
+    } else if (typeof dataOrEncoded === 'string') {
+      parsed = JSON.parse(dataOrEncoded);
+    } else {
+      parsed = dataOrEncoded;
+    }
+
+    gameData = parsed;
+
+    if (parsed.settings) {
+      settings = parsed.settings;
+    }
+
+    processGameData(parsed);
+  } catch (e) {
+    console.error('updateData error:', e);
+  }
+};
+
+function processGameData(data) {
+  var v = data.values || {};
+
+  // Stage detection: decode stage_id_raw to check if "sea"
+  var stageRaw = v.stage_id_raw || 0;
+  var stageName = '';
+  if (stageRaw > 0) {
+    stageName = String.fromCharCode(
+      (stageRaw >>> 24) & 0xFF,
+      (stageRaw >>> 16) & 0xFF,
+      (stageRaw >>> 8) & 0xFF
+    );
+  }
+  isOnSea = (stageName === 'sea');
+
+  if (isOnSea || stageRaw === 0) {
+    var posX = v.pos_x || 0;
+    var posZ = v.pos_z || 0;
+    var rotY = v.rotation_y || 0;
+    var windRaw = v.wind_direction || 0;
+
+    lastSeaPos.nx = (posX - WORLD_MIN) / WORLD_RANGE;
+    lastSeaPos.nz = (posZ - WORLD_MIN) / WORLD_RANGE;
+    lastSeaPos.rot = rotY;
+    lastSeaPos.windDeg = windRaw;
+
+    lastSeaPos.stage = stageName;
+  }
+
+  if (settings.auto_center === 'true') {
+    camera.x = lastSeaPos.nx;
+    camera.y = lastSeaPos.nz;
+  }
+
+  updateHUD(data);
+
+  var overlay = document.getElementById('indoor-overlay');
+  overlay.style.display = isOnSea ? 'none' : 'flex';
+}
+
+function updateHUD(data) {
+  var v = data.values || {};
+  var showHud = settings.show_hud !== 'false';
+  var bar = document.getElementById('hud-bar');
+  bar.style.display = showHud ? 'flex' : 'none';
+  if (!showHud) return;
+
+  // Hearts — raw values are quarter-hearts, divide by 4 for display
+  var hp = (v.health || 0) / 4;
+  var maxHp = (v.max_health || 0) / 4;
+  var heartsEl = document.getElementById('hud-hearts');
+  var hpStr = hp % 1 === 0 ? hp.toFixed(0) : hp % 0.5 === 0 ? hp.toFixed(1) : hp.toFixed(2);
+  heartsEl.textContent = '\u2665 ' + hpStr + '/' + maxHp.toFixed(0);
+
+  var rupees = v.rupees || 0;
+  document.getElementById('hud-rupees').textContent = rupees + ' R';
+
+  // Compass bearing
+  var deg = lastSeaPos.rot;
+  var dirs = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+  var dirIdx = Math.round(deg / 45) % 8;
+  document.getElementById('hud-compass').textContent = dirs[dirIdx] + ' ' + Math.round(deg) + '\u00B0';
+
+  var statusEl = document.getElementById('hud-status');
+  if (data.isConnected) {
+    statusEl.textContent = 'ACTIVE';
+    statusEl.className = 'hud-item active';
+  } else {
+    statusEl.textContent = 'OFFLINE';
+    statusEl.className = 'hud-item offline';
+  }
+}
+
+// Offscreen Canvas: Static Background
+function drawOffscreen(w, h) {
+  if (!offCanvas) {
+    offCanvas = document.createElement('canvas');
+    offCtx = offCanvas.getContext('2d');
+  }
+  offCanvas.width = w;
+  offCanvas.height = h;
+  var c = offCtx;
+
+  if (customMapLoaded && customMapImg) {
+    c.drawImage(customMapImg, 0, 0, w, h);
+  } else {
+    drawProceduralOcean(c, w, h);
+  }
+
+  c.strokeStyle = 'rgba(255,255,255,0.15)';
+  c.lineWidth = 1;
+  for (var i = 1; i < 7; i++) {
+    var gx = (i / 7) * w;
+    var gy = (i / 7) * h;
+    c.beginPath(); c.moveTo(gx, 0); c.lineTo(gx, h); c.stroke();
+    c.beginPath(); c.moveTo(0, gy); c.lineTo(w, gy); c.stroke();
+  }
+
+  c.font = Math.max(9, Math.round(w / 70)) + 'px sans-serif';
+  c.fillStyle = 'rgba(255,255,255,0.7)';
+  c.textAlign = 'center';
+  c.textBaseline = 'middle';
+  for (var row = 0; row < 7; row++) {
+    for (var col = 0; col < 7; col++) {
+      var cx = ((col + 0.5) / 7) * w;
+      var cy = ((row + 0.5) / 7) * h;
+      var lines = ISLAND_GRID[row][col].split('\n');
+      var lineH = Math.max(10, Math.round(w / 60));
+      var startY = cy - ((lines.length - 1) * lineH) / 2;
+      for (var li = 0; li < lines.length; li++) {
+        c.fillText(lines[li], cx, startY + li * lineH);
+      }
+    }
+  }
+
+  offDirty = false;
+}
+
+function drawProceduralOcean(c, w, h) {
+  var grad = c.createLinearGradient(0, 0, 0, h);
+  grad.addColorStop(0, '#0a2a4a');
+  grad.addColorStop(0.5, '#0d3b66');
+  grad.addColorStop(1, '#0a2a4a');
+  c.fillStyle = grad;
+  c.fillRect(0, 0, w, h);
+
+  c.strokeStyle = 'rgba(100,180,255,0.08)';
+  c.lineWidth = 1.5;
+  for (var wy = 0; wy < h; wy += 24) {
+    c.beginPath();
+    for (var wx = 0; wx < w; wx += 4) {
+      var yOff = Math.sin((wx + wy * 0.7) * 0.02) * 6;
+      if (wx === 0) c.moveTo(wx, wy + yOff);
+      else c.lineTo(wx, wy + yOff);
+    }
+    c.stroke();
+  }
+}
+
+// Main Canvas: Animated Layer
+function render() {
+  if (!canvas) return;
+
+  var dpr = window.devicePixelRatio || 1;
+  var displayW = canvas.clientWidth;
+  var displayH = canvas.clientHeight;
+
+  if (canvas.width !== displayW * dpr || canvas.height !== displayH * dpr) {
+    canvas.width = displayW * dpr;
+    canvas.height = displayH * dpr;
+    offDirty = true;
+  }
+
+  var w = canvas.width;
+  var h = canvas.height;
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, w, h);
+
+  // Compute visible region based on camera
+  var zoom = camera.zoom;
+  var viewW = 1.0 / zoom;
+  var viewH = 1.0 / zoom;
+  var viewL = camera.x - viewW / 2;
+  var viewT = camera.y - viewH / 2;
+
+  if (viewL < 0) viewL = 0;
+  if (viewT < 0) viewT = 0;
+  if (viewL + viewW > 1) viewL = 1 - viewW;
+  if (viewT + viewH > 1) viewT = 1 - viewH;
+
+  // Redraw offscreen if needed (full map size)
+  var mapSize = Math.max(w, h) * zoom;
+  if (mapSize > 4096) mapSize = 4096;
+  if (offDirty || !offCanvas || offCanvas.width !== Math.round(mapSize)) {
+    drawOffscreen(Math.round(mapSize), Math.round(mapSize));
+  }
+
+  var sx = viewL * offCanvas.width;
+  var sy = viewT * offCanvas.height;
+  var sw = viewW * offCanvas.width;
+  var sh = viewH * offCanvas.height;
+
+  ctx.drawImage(offCanvas, sx, sy, sw, sh, 0, 0, w, h);
+
+  var boatScreenX = ((lastSeaPos.nx - viewL) / viewW) * w;
+  var boatScreenY = ((lastSeaPos.nz - viewT) / viewH) * h;
+
+  if (boatScreenX >= -20 && boatScreenX <= w + 20 && boatScreenY >= -20 && boatScreenY <= h + 20) {
+    drawBoat(ctx, boatScreenX, boatScreenY, lastSeaPos.rot, dpr);
+  }
+
+  // Direction indicator (top-right)
+  drawDirectionIndicator(ctx, w - 40 * dpr, 40 * dpr, 30 * dpr, lastSeaPos.rot, lastSeaPos.windDeg);
+
+  requestAnimationFrame(render);
+}
+
+function drawBoat(c, x, y, rotDeg, dpr) {
+  var size = 10 * dpr;
+  var rad = (rotDeg - 90) * Math.PI / 180; // Standard compass: N=0, E=90, S=180, W=270
+  c.save();
+  c.translate(x, y);
+  c.rotate(rad);
+
+  c.beginPath();
+  c.moveTo(size, 0);
+  c.lineTo(-size * 0.6, -size * 0.5);
+  c.lineTo(-size * 0.4, 0);
+  c.lineTo(-size * 0.6, size * 0.5);
+  c.closePath();
+
+  c.fillStyle = '#FFD700';
+  c.fill();
+  c.strokeStyle = '#A08000';
+  c.lineWidth = 1.5 * dpr;
+  c.stroke();
+
+  c.beginPath();
+  c.arc(0, 0, 2 * dpr, 0, Math.PI * 2);
+  c.fillStyle = '#FFF';
+  c.fill();
+
+  c.restore();
+
+  c.beginPath();
+  c.arc(x, y, size * 1.5, 0, Math.PI * 2);
+  c.strokeStyle = 'rgba(255,215,0,0.3)';
+  c.lineWidth = 2 * dpr;
+  c.stroke();
+}
+
+function drawDirectionIndicator(c, cx, cy, r, playerDeg, windDeg) {
+  c.save();
+
+  c.beginPath();
+  c.arc(cx, cy, r, 0, Math.PI * 2);
+  c.fillStyle = 'rgba(0,0,0,0.5)';
+  c.fill();
+  c.strokeStyle = 'rgba(255,255,255,0.3)';
+  c.lineWidth = 1;
+  c.stroke();
+
+  // Cardinal labels (fixed, don't rotate with player)
+  c.globalAlpha = 0.7;
+  var fontSize = Math.round(r * 0.3);
+  c.font = fontSize + 'px sans-serif';
+  c.fillStyle = '#FFF';
+  c.textAlign = 'center';
+  c.textBaseline = 'middle';
+  c.fillText('N', cx, cy - r * 0.72);
+  c.fillText('S', cx, cy + r * 0.76);
+  c.font = Math.round(r * 0.26) + 'px sans-serif';
+  c.fillText('W', cx - r * 0.72, cy);
+  c.fillText('E', cx + r * 0.72, cy);
+
+  // Wind direction arrow (cyan)
+  c.globalAlpha = 0.9;
+  var windRad = (windDeg - 90) * Math.PI / 180;
+  drawArrow(c, cx, cy, windRad, r * 0.6, r * 0.18, '#00E5FF');
+
+  c.globalAlpha = 1;
+  c.beginPath();
+  c.arc(cx, cy, r * 0.08, 0, Math.PI * 2);
+  c.fillStyle = '#FFF';
+  c.fill();
+
+  c.restore();
+}
+
+function drawArrow(c, cx, cy, rad, length, width, color) {
+  c.save();
+  c.translate(cx, cy);
+  c.rotate(rad);
+
+  c.beginPath();
+  c.moveTo(length, 0);
+  c.lineTo(-length * 0.3, -width);
+  c.lineTo(-length * 0.1, 0);
+  c.lineTo(-length * 0.3, width);
+  c.closePath();
+
+  c.fillStyle = color;
+  c.fill();
+  c.strokeStyle = 'rgba(0,0,0,0.4)';
+  c.lineWidth = 1;
+  c.stroke();
+
+  c.restore();
+}
+
+// Wind Direction Menu
+// Raw u16 values for wind (zero=East, CW): N=49152, NE=57344, E=0, SE=8192, S=16384, SW=24576, W=32768, NW=40960
+var WIND_DIRS = [
+  { label: 'NW', raw: 40960 }, { label: 'N',  raw: 49152 }, { label: 'NE', raw: 57344 },
+  { label: 'W',  raw: 32768 }, null,                          { label: 'E',  raw: 0     },
+  { label: 'SW', raw: 24576 }, { label: 'S',  raw: 16384 }, { label: 'SE', raw: 8192  }
+];
+
+function initWindMenu() {
+  var grid = document.getElementById('wind-grid');
+  for (var i = 0; i < WIND_DIRS.length; i++) {
+    var cell = document.createElement('div');
+    if (WIND_DIRS[i]) {
+      cell.className = 'wind-dir';
+      cell.textContent = WIND_DIRS[i].label;
+      cell.setAttribute('data-raw', WIND_DIRS[i].raw);
+      cell.addEventListener('click', function() {
+        var raw = parseInt(this.getAttribute('data-raw'));
+        if (typeof emulink !== 'undefined') {
+          emulink.writeVar('wind_direction', raw);
+        }
+        document.getElementById('wind-menu').style.display = 'none';
+      });
+    }
+    grid.appendChild(cell);
+  }
+}
+
+function toggleWindMenu() {
+  var menu = document.getElementById('wind-menu');
+  menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+}
+
+// Touch Interaction
+function initTouch() {
+  canvas.addEventListener('touchstart', function(e) {
+    if (e.touches.length === 1 && settings.auto_center !== 'true') {
+      isPanning = true;
+      panStart.x = e.touches[0].clientX;
+      panStart.y = e.touches[0].clientY;
+      camStart.x = camera.x;
+      camStart.y = camera.y;
+    } else if (e.touches.length === 2) {
+      isPanning = false;
+      var dx = e.touches[0].clientX - e.touches[1].clientX;
+      var dy = e.touches[0].clientY - e.touches[1].clientY;
+      pinchStartDist = Math.sqrt(dx * dx + dy * dy);
+      pinchStartZoom = camera.zoom;
+    }
+    e.preventDefault();
+  }, { passive: false });
+
+  canvas.addEventListener('touchmove', function(e) {
+    if (e.touches.length === 1 && isPanning) {
+      var dx = e.touches[0].clientX - panStart.x;
+      var dy = e.touches[0].clientY - panStart.y;
+      var scale = 1.0 / (camera.zoom * canvas.clientWidth);
+      camera.x = camStart.x - dx * scale;
+      camera.y = camStart.y - dy * scale;
+      camera.x = Math.max(0, Math.min(1, camera.x));
+      camera.y = Math.max(0, Math.min(1, camera.y));
+    } else if (e.touches.length === 2) {
+      var tdx = e.touches[0].clientX - e.touches[1].clientX;
+      var tdy = e.touches[0].clientY - e.touches[1].clientY;
+      var dist = Math.sqrt(tdx * tdx + tdy * tdy);
+      if (pinchStartDist > 0) {
+        var newZoom = pinchStartZoom * (dist / pinchStartDist);
+        camera.zoom = Math.max(1, Math.min(4, newZoom));
+        userZoomed = true;
+      }
+    }
+    e.preventDefault();
+  }, { passive: false });
+
+  canvas.addEventListener('touchend', function(e) {
+    if (e.touches.length === 0) {
+      isPanning = false;
+      var now = Date.now();
+      if (now - lastTapTime < 300) {
+        camera.zoom = 1;
+        userZoomed = false;
+      }
+      lastTapTime = now;
+    }
+  });
+}
+
+function tryLoadCustomMap() {
+  if (customMapFailed) return;
+  customMapImg = new Image();
+  customMapImg.onload = function() {
+    customMapLoaded = true;
+    offDirty = true;
+  };
+  customMapImg.onerror = function() {
+    customMapFailed = true;
+    customMapLoaded = false;
+    customMapImg = null;
+  };
+  customMapImg.src = 'assets/sea_chart.png';
+}
+
+function init() {
+  canvas = document.getElementById('map');
+  ctx = canvas.getContext('2d');
+
+  tryLoadCustomMap();
+  initTouch();
+  initWindMenu();
+  requestAnimationFrame(render);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+</script>
+</body>
+</html>

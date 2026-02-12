@@ -1,0 +1,16 @@
+[
+  {
+    "id": "dolphin_gcn",
+    "packageNames": ["org.emulnk.dolphinlnk"],
+    "console": "GCN",
+    "port": 55355,
+    "idAddress": "0x80000000"
+  },
+  {
+    "id": "dolphin_wii",
+    "packageNames": ["org.emulnk.dolphinlnk"],
+    "console": "WII",
+    "port": 55356,
+    "idAddress": "0x80000000"
+  }
+]

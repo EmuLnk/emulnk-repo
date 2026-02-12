@@ -1,0 +1,15 @@
+{
+  "version": "1.0",
+  "themes": [
+    {
+      "id": "WindWakerMinimap",
+      "name": "Great Sea Navigator",
+      "author": "EmuLink Team",
+      "version": "1.0.0",
+      "description": "Live minimap showing Link's real-time position on the Great Sea chart with heading, hearts, and compass.",
+      "targetProfileId": "GZL",
+      "minAppVersion": 1,
+      "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/WindWakerMinimap/preview.png"
+    }
+  ]
+}

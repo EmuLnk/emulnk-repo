@@ -1,0 +1,26 @@
+{
+  "id": "WindWakerTheme",
+  "targetProfileId": "GZL",
+  "meta": {
+    "name": "Wind Waker Companion",
+    "author": "EmuLink Team",
+    "version": "1.0.0",
+    "description": "The ultimate companion for The Wind Waker. Includes live HUD with Hearts, Magic, Ammo, and a built-in Wiki.",
+    "minAppVersion": 1
+  },
+  "hideOverlay": true,
+  "settings": [
+    {
+      "id": "show_stats",
+      "label": "Show Hardware Stats",
+      "type": "toggle",
+      "default": "true"
+    },
+    {
+      "id": "wiki_default",
+      "label": "Start on Wiki Tab",
+      "type": "toggle",
+      "default": "false"
+    }
+  ]
+}

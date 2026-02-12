@@ -1,0 +1,73 @@
+{
+  "id": "GZL",
+  "name": "The Legend of Zelda: The Wind Waker",
+  "platform": "GCN",
+  "dataPoints": [
+    {
+      "id": "health",
+      "type": "u16_be",
+      "size": 2,
+      "formula": "v / 4.0",
+      "addresses": {
+        "GZLE01": "0x803C4C08",
+        "GZLP01": "0x803C4D00",
+        "default": "0x803C4C08"
+      }
+    },
+    {
+      "id": "max_health",
+      "type": "u16_be",
+      "size": 2,
+      "formula": "v / 4.0",
+      "addresses": {
+        "GZLE01": "0x803C4C0A",
+        "default": "0x803C4C0A"
+      }
+    },
+    {
+      "id": "rupees",
+      "type": "u16_be",
+      "size": 2,
+      "addresses": {
+        "GZLE01": "0x803C4C0C",
+        "default": "0x803C4C0C"
+      }
+    },
+    {
+      "id": "magic_current",
+      "type": "u8",
+      "size": 1,
+      "addresses": {
+        "GZLE01": "0x803C4C1C",
+        "default": "0x803C4C1C"
+      }
+    },
+    {
+      "id": "magic_max",
+      "type": "u8",
+      "size": 1,
+      "addresses": {
+        "GZLE01": "0x803C4C1B",
+        "default": "0x803C4C1B"
+      }
+    },
+    {
+      "id": "arrows",
+      "type": "u8",
+      "size": 1,
+      "addresses": {
+        "GZLE01": "0x803C4C77",
+        "default": "0x803C4C77"
+      }
+    },
+    {
+      "id": "bombs",
+      "type": "u8",
+      "size": 1,
+      "addresses": {
+        "GZLE01": "0x803C4C78",
+        "default": "0x803C4C78"
+      }
+    }
+  ]
+}

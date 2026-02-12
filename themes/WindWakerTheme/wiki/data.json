@@ -1,0 +1,38 @@
+[
+  {
+    "id": "link",
+    "title": "Link (Hero of Winds)",
+    "category": "Characters",
+    "content": "A young boy from Outset Island who embarks on a journey to save his sister, Aryll. He wields the Wind Waker to control the winds."
+  },
+  {
+    "id": "aryll",
+    "title": "Aryll",
+    "category": "Characters",
+    "content": "Link's cheerful younger sister. She gives Link her telescope as a birthday present before being kidnapped by the Helmaroc King."
+  },
+  {
+    "id": "master_sword",
+    "title": "Master Sword",
+    "category": "Items",
+    "content": "The legendary blade of evil's bane. Found deep within Hyrule Castle beneath the sea. It requires the prayers of sages to restore its power."
+  },
+  {
+    "id": "tingle",
+    "title": "Tingle",
+    "category": "Characters",
+    "content": "A peculiar man who believes he is a fairy. He maps the Great Sea and translates ancient charts for a steep price."
+  },
+  {
+    "id": "outset",
+    "title": "Outset Island",
+    "category": "Locations",
+    "content": "The starting location of the game. Home to Link, Aryll, and their Grandmother. Features a large lookout tower and a forest where the Helmaroc King drops Tetra."
+  },
+  {
+    "id": "wind_waker",
+    "title": "The Wind Waker",
+    "category": "Items",
+    "content": "A magical baton passed down by the King of Red Lions. It allows the user to conduct the winds and control certain objects."
+  }
+]

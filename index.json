@@ -1,0 +1,25 @@
+{
+  "version": "1.0",
+  "themes": [
+    {
+      "id": "SampleTheme",
+      "name": "EmuLink Starter Pack",
+      "author": "EmuLink Team",
+      "version": "1.0.0",
+      "description": "The official reference theme. Demonstrates Safe Areas, Settings, Telemetry, and JS Bridge calls.",
+      "targetProfileId": "GZL",
+      "minAppVersion": 1,
+      "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/SampleTheme/preview.png"
+    },
+    {
+      "id": "WindWakerTheme",
+      "name": "Wind Waker Companion",
+      "author": "EmuLink Team",
+      "version": "1.0.0",
+      "description": "The ultimate companion for The Wind Waker. Includes live HUD with Hearts, Magic, Ammo, and a built-in Wiki.",
+      "targetProfileId": "GZL",
+      "minAppVersion": 1,
+      "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/WindWakerTheme/preview.png"
+    }
+  ]
+}

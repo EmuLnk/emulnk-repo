@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Wind Waker Companion</title>
+    <style>
+        :root {
+            --accent: #6a5acd;
+            --bg-deep: #121212;
+            --bg-card: #1e1e1e;
+            --text-main: #ffffff;
+            --text-dim: #888888;
+            --heart-red: #ff5252;
+            --magic-green: #4CAF50;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-deep);
+            overflow: hidden;
+        }
+
+        body {
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 1. APP BAR */
+        .app-bar {
+            flex-shrink: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: var(--bg-deep);
+        }
+
+        /* 2. TABS */
+        .tabs {
+            flex-shrink: 0;
+            display: flex;
+            background: #111;
+            padding: 4px;
+            margin: 0 20px 12px 20px;
+            border-radius: 12px;
+        }
+
+        /* 3. CONTENT AREA */
+        .main-content {
+            flex-grow: 1;
+            min-height: 0; /* CRITICAL for flex children to allow shrinking/scrolling */
+            overflow-y: auto;
+            padding: 0 20px;
+            display: none;
+        }
+        
+        .main-content.active { display: block; }
+
+        /* 4. FOOTER STATS */
+        footer {
+            flex-shrink: 0;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0,0,0,0.2);
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* COMPONENTS */
+        .icon-btn {
+            width: 40px; height: 40px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+        }
+        .icon-btn svg { width: 20px; height: 20px; fill: white; }
+
+        .app-title { font-size: 16px; font-weight: 900; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; }
+
+        .tab {
+            flex: 1; padding: 10px; text-align: center;
+            font-size: 12px; font-weight: 800; color: var(--text-dim);
+            border-radius: 10px; transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .tab.active { background: var(--bg-card); color: white; }
+
+        /* HUD GRID */
+        .hud-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            padding-bottom: 40px; /* Space to use bottom 10% */
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border-radius: 24px;
+            padding: 24px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            min-height: 140px;
+        }
+
+        .stat-label { font-size: 10px; font-weight: 900; color: var(--text-dim); letter-spacing: 1px; }
+        .stat-value { font-size: 32px; font-weight: 900; line-height: 1; }
+        
+        .progress-bg { width: 100%; height: 8px; background: #000; border-radius: 4px; overflow: hidden; }
+        .progress-fill { height: 100%; width: 0%; transition: width 0.4s ease; }
+
+        /* WIKI */
+        .wiki-item {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .wiki-title { font-size: 16px; font-weight: bold; color: var(--accent); margin-bottom: 4px; }
+        .wiki-cat { font-size: 10px; font-weight: 900; opacity: 0.5; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; }
+        .wiki-content { font-size: 13px; line-height: 1.4; color: #ccc; }
+
+        /* MODS */
+        .mod-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn-action {
+            background: var(--accent); color: white; border: none;
+            width: 44px; height: 44px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .btn-action svg { width: 20px; height: 20px; fill: white; }
+
+        .sys-stat { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 800; color: #444; }
+        .sys-stat svg { width: 16px; height: 16px; fill: currentColor; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="app-bar">
+    <div class="icon-btn" onclick="emulink.exit()">
+        <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+    </div>
+    <div class="app-title">Companion</div>
+    <div class="icon-btn" onclick="emulink.openSettings()">
+        <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+    </div>
+</div>
+
+<!-- Tabs -->
+<div class="tabs">
+    <div class="tab active" data-tab="hud">DASHBOARD</div>
+    <div class="tab" data-tab="mods">CHEATS</div>
+    <div class="tab" data-tab="wiki">WIKI</div>
+</div>
+
+<!-- Tab: HUD -->
+<div id="tab-hud" class="main-content active">
+    <div class="hud-grid">
+        <div class="stat-card">
+            <span class="stat-label">LIFE ENERGY</span>
+            <span class="stat-value" id="health-val" style="color: var(--heart-red)">--</span>
+            <div class="progress-bg"><div id="health-fill" class="progress-fill" style="background: var(--heart-red)"></div></div>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">MAGIC METER</span>
+            <span class="stat-value" id="magic-val" style="color: var(--magic-green)">--</span>
+            <div class="progress-bg"><div id="magic-fill" class="progress-fill" style="background: var(--magic-green)"></div></div>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">RUPEES</span>
+            <span class="stat-value" id="rupee-val">0</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">AMMO</span>
+            <div style="display: flex; gap: 12px; font-weight: 900;">
+                <div>🏹 <span id="arrow-val">0</span></div>
+                <div>💣 <span id="bomb-val">0</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tab: MODS -->
+<div id="tab-mods" class="main-content">
+    <div class="mod-card">
+        <div class="mod-info">
+            <div class="mod-title">Infinite Rupees</div>
+            <div class="mod-desc">Set current wallet to 999</div>
+        </div>
+        <button class="btn-action" onclick="emulink.writeVar('rupees', 999)">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+        </button>
+    </div>
+    <div class="mod-card">
+        <div class="mod-info">
+            <div class="mod-title">Full Recovery</div>
+            <div class="mod-desc">Refill all Hearts & Magic</div>
+        </div>
+        <button class="btn-action" onclick="refillAll()">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+        </button>
+    </div>
+</div>
+
+<!-- Tab: WIKI -->
+<div id="tab-wiki" class="main-content">
+    <div id="wiki-container">
+        <p style="color: var(--text-dim); text-align: center; padding: 40px;">Loading Wiki...</p>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer>
+    <div class="sys-stat">
+        <svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.34V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+        <span id="bat-val">--%</span>
+    </div>
+    <div class="sys-stat">
+        <svg viewBox="0 0 24 24"><path d="M15 13V5c0-1.66-1.34-3-3-3S9 3.34 9 5v8c-1.21.91-2 2.37-2 4 0 2.76 2.24 5 5 5s5-2.24 5-5c0-1.63-.79-3.09-2-4zm-4-2V5c0-.55.45-1 1-1s1 .45 1 1v6h-2z"/></svg>
+        <span id="temp-val">--°C</span>
+    </div>
+    <div class="sys-stat" id="conn-stat" style="margin-left: auto; color: var(--accent);">OFFLINE</div>
+</footer>
+
+<script>
+    let lastMagicMax = 32;
+    let wikiLoaded = false;
+
+    // --- HELPER: Robust Base64 Decoding ---
+    function decodeB64(str) {
+        try {
+            const binary = atob(str);
+            const bytes = new Uint8Array(binary.length);
+            for (let i = 0; i < binary.length; i++) {
+                bytes[i] = binary.charCodeAt(i);
+            }
+            return new TextDecoder().decode(bytes);
+        } catch (e) {
+            console.error("Decode error:", e);
+            return atob(str); // Fallback to standard atob
+        }
+    }
+
+    // Robust Tab Logic (Touch Friendly)
+    function initTabs() {
+        const tabs = document.querySelectorAll('.tab');
+        tabs.forEach(tab => {
+            const handleTab = (e) => {
+                const target = tab.getAttribute('data-tab');
+                console.log("Tab clicked: " + target);
+
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.main-content').forEach(c => {
+                    c.classList.remove('active');
+                    c.style.display = 'none'; // Force hide
+                });
+
+                tab.classList.add('active');
+                const targetEl = document.getElementById('tab-' + target);
+                if (targetEl) {
+                    targetEl.classList.add('active');
+                    targetEl.style.display = 'flex'; // Force show
+                    console.log("Switched to content: tab-" + target);
+                } else {
+                    console.error("Target content NOT FOUND: tab-" + target);
+                }
+
+                if (target === 'wiki' && !wikiLoaded) {
+                    loadWiki();
+                }
+
+                if (window.emulink) emulink.vibrate(10);
+            };
+
+            // Use both for maximum compatibility
+            tab.addEventListener('mousedown', handleTab);
+            tab.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                handleTab(e);
+            }, { passive: false });
+        });
+    }
+    initTabs();
+
+    async function loadWiki() {
+        try {
+            const response = await fetch('wiki/data.json');
+            const data = await response.json();
+            const container = document.getElementById('wiki-container');
+            container.innerHTML = '';
+            data.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'wiki-item';
+                div.innerHTML = `
+                    <div class="wiki-cat">${item.category}</div>
+                    <div class="wiki-title">${item.title}</div>
+                    <div class="wiki-content">${item.content}</div>
+                `;
+                container.appendChild(div);
+            });
+            wikiLoaded = true;
+        } catch (e) {
+            document.getElementById('wiki-container').innerHTML = '<p style="text-align:center; padding:20px;">Error loading wiki. Ensure wiki/data.json exists.</p>';
+        }
+    }
+
+    function refillAll() {
+        if (window.emulink) {
+            emulink.writeVar('health', 80);
+            emulink.writeVar('magic_current', lastMagicMax);
+            emulink.vibrate(100);
+        }
+    }
+
+    // --- THE TUNNEL ---
+    window.updateData = function(dataOrEncoded, isEncoded = false) {
+        if (window.emulink) emulink.log("updateData trigger - isEncoded: " + isEncoded);
+        try {
+            let data;
+            if (isEncoded) {
+                const decoded = decodeB64(dataOrEncoded);
+                data = JSON.parse(decoded);
+            } else {
+                data = typeof dataOrEncoded === 'string' ? JSON.parse(dataOrEncoded) : dataOrEncoded;
+            }
+
+            if (!data) {
+                if (window.emulink) emulink.log("updateData: Data object is null/empty");
+                return;
+            }
+
+            if (window.emulink) {
+                emulink.log("Processing Data. Connected: " + data.isConnected + " | Values: " + (data.values ? Object.keys(data.values).length : 0));
+            }
+
+            // 1. App Style Toggles
+            if (data.settings && data.settings.theme_color === "true") {
+                document.documentElement.style.setProperty('--accent', '#ff5252');
+            } else {
+                document.documentElement.style.setProperty('--accent', '#6a5acd');
+            }
+
+            // 2. Hardware
+            if (data.system) {
+                if (data.system.battery) {
+                    document.getElementById('bat-val').innerText = (data.system.battery.level || 0) + "%";
+                }
+                if (data.system.thermal) {
+                    document.getElementById('temp-val').innerText = Math.round(data.system.thermal.cpuTemp || 0) + "°C";
+                }
+            }
+
+            // 3. Game Data
+            const connStat = document.getElementById('conn-stat');
+            if (data.isConnected && data.values) {
+                const v = data.values;
+
+                // Note: health is already divided by 4 in Kotlin profile formula
+                const healthValue = v.health !== undefined ? v.health : 0;
+                document.getElementById('health-val').innerText = Number(healthValue).toFixed(1);
+
+                const maxH = v.max_health || 20; // 20 hearts default
+                const healthPercent = (healthValue / maxH) * 100;
+                document.getElementById('health-fill').style.width = Math.min(healthPercent, 100) + "%";
+
+                const magicCur = v.magic_current || 0;
+                lastMagicMax = v.magic_max || 32;
+                document.getElementById('magic-val').innerText = magicCur;
+                document.getElementById('magic-fill').style.width = Math.min((magicCur / lastMagicMax) * 100, 100) + "%";
+
+                document.getElementById('rupee-val').innerText = v.rupees || 0;
+                document.getElementById('arrow-val').innerText = v.arrows || 0;
+                document.getElementById('bomb-val').innerText = v.bombs || 0;
+
+                if (connStat) {
+                    connStat.innerText = "ACTIVE";
+                    connStat.style.color = "var(--magic-green)";
+                }
+            } else {
+                if (connStat) {
+                    connStat.innerText = "SEARCHING...";
+                    connStat.style.color = "#444";
+                }
+            }
+        } catch (e) {
+            if (window.emulink) emulink.log("JS Error: " + e.message + " | " + e.stack);
+            console.error("UpdateData Error:", e);
+        }
+    };
+</script>
+</body>
+</html>

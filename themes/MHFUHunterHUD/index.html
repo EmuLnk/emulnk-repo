@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Hunter's Eye</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="monster-panel inactive" id="m1-panel">
+        <div class="monster-header">
+            <div class="monster-name" id="m1-name">Monster 1</div>
+            <div class="monster-hp-text" id="m1-hp-text">—</div>
+        </div>
+        <div class="hp-bar-bg">
+            <div class="hp-bar-fill" id="m1-hp-bar" style="width:0%"></div>
+        </div>
+    </div>
+
+    <div id="radar-container">
+        <canvas id="radar"></canvas>
+    </div>
+
+    <div id="zenny-bar">z <span id="zenny-val">0</span></div>
+    <div id="status">Waiting for data...</div>
+
+<script>
+const MONSTER_NAMES = {
+    0:"—",1:"Rathian",2:"Fatalis",3:"Kelbi",4:"Mosswine",5:"Bullfango",
+    6:"Yian Kut-Ku",7:"Lao-Shan Lung",8:"Cephadrome",9:"Felyne",
+    11:"Rathalos",12:"Aptonoth",13:"Genprey",14:"Diablos",15:"Khezu",
+    16:"Velociprey",17:"Gravios",19:"Vespoid",20:"Gypceros",21:"Plesioth",
+    22:"Basarios",23:"Melynx",24:"Hornetaur",25:"Apceros",26:"Monoblos",
+    27:"Velocidrome",28:"Gendrome",30:"Ioprey",31:"Iodrome",33:"Kirin",
+    34:"Cephalos",35:"Giaprey",40:"Yian Garuga",48:"Daimyo Hermitaur",
+    51:"Blangonga",52:"Congalala",53:"Rajang",54:"Kushala Daora",
+    55:"Shen Gaoren",58:"Yama Tsukami",59:"Chameleos",61:"Blango",
+    62:"Conga",63:"Remobra",64:"Lunastra",65:"Teostra",66:"Hermitaur",
+    67:"Shogun Ceanataur",68:"Bulldrome",69:"Anteka",70:"Popo",
+    75:"Tigrex",76:"Akantor",77:"Giadrome",79:"King Shakalaka",
+    80:"Vespoid Queen",81:"Nargacuga",82:"Hypnocatrice",83:"Lavasioth",
+    88:"Ukanlos",89:"Rajang",
+    124:"Pink Rathian",125:"Blue Yian Kut-Ku",126:"Purple Gypceros",
+    127:"Yian Garuga",128:"Silver Rathalos",129:"Gold Rathian",
+    130:"Black Diablos",131:"White Monoblos",132:"Red Khezu",
+    133:"Green Plesioth",134:"Black Gravios",136:"Azure Rathalos",
+    161:"Tigrex",162:"Akantor",167:"Nargacuga",168:"Hypnocatrice",
+    169:"Lavasioth",170:"Copper Blangonga",171:"Emerald Congalala",
+    172:"Plum D.Hermitaur",173:"Terra S.Ceanataur",174:"Ukanlos",175:"Rajang"
+};
+
+// Known max HP per monster type (from mhfu-db stats.json, first appearance)
+const MONSTER_MAX_HP = {
+    1:2000,2:5000,6:1200,7:20000,8:1600,11:2200,14:3200,15:2000,
+    17:3600,20:1500,21:2800,22:2400,26:2800,27:1000,28:1000,31:1200,
+    33:3000,40:2800,48:2400,51:3200,52:2000,53:5000,54:5000,55:16000,
+    58:6000,59:5000,64:5000,65:5000,67:2800,68:1200,75:3200,76:6000,
+    79:800,80:1200,81:3200,82:2400,83:3200,88:6000,89:5000,
+    124:2400,125:1500,126:1800,127:2800,128:2800,129:2600,
+    130:3600,131:3200,132:2400,133:3200,134:4000,136:2600,
+    161:3200,162:6000,167:3200,168:2400,169:3200,170:3600,
+    171:2400,172:2800,173:3200,174:6000,175:5000
+};
+
+let maxSeen = { m1: 0 };
+let settings = { show_radar: true, show_zenny: true };
+
+function getHpColor(pct) {
+    if (pct > 0.5) return getComputedStyle(document.documentElement).getPropertyValue('--hp-full');
+    if (pct > 0.25) return getComputedStyle(document.documentElement).getPropertyValue('--hp-mid');
+    return getComputedStyle(document.documentElement).getPropertyValue('--hp-low');
+}
+
+function updateMonsterPanel(id, prefix, type, hp, vals) {
+    const panel = document.getElementById(id + '-panel');
+    const nameEl = document.getElementById(id + '-name');
+    const hpText = document.getElementById(id + '-hp-text');
+    const hpBar = document.getElementById(id + '-hp-bar');
+
+    const typeId = Math.round(type || 0);
+    const name = MONSTER_NAMES[typeId] || 'Unknown (' + typeId + ')';
+    const isSmall = [3,4,5,9,12,13,16,19,23,24,25,30,34,35,61,62,63,66,69,70,73].includes(typeId);
+    const isActive = typeId > 0 && hp > 0 && !isSmall;
+
+    if (isActive) {
+        panel.classList.remove('inactive');
+        nameEl.textContent = name;
+
+        // Track max HP seen
+        if (hp > maxSeen[id]) maxSeen[id] = hp;
+        const knownMax = MONSTER_MAX_HP[typeId] || maxSeen[id];
+        const maxHp = Math.max(knownMax, maxSeen[id]);
+        const pct = maxHp > 0 ? hp / maxHp : 0;
+
+        hpText.textContent = hp + ' / ' + maxHp;
+        hpBar.style.width = (pct * 100).toFixed(1) + '%';
+        hpBar.style.backgroundColor = getHpColor(pct);
+    } else {
+        panel.classList.add('inactive');
+        nameEl.textContent = name || 'No Monster';
+        hpText.textContent = '—';
+        hpBar.style.width = '0%';
+    }
+}
+
+function drawRadar(vals) {
+    const canvas = document.getElementById('radar');
+    const container = document.getElementById('radar-container');
+    if (!settings.show_radar) { container.style.display = 'none'; return; }
+    container.style.display = 'flex';
+
+    const size = Math.min(container.clientWidth, container.clientHeight) - 8;
+    if (size <= 0) return;
+    canvas.width = size; canvas.height = size;
+
+    const ctx = canvas.getContext('2d');
+    const cx = size / 2, cy = size / 2, r = size / 2 - 4;
+
+    ctx.clearRect(0, 0, size, size);
+
+    // Rings
+    const style = getComputedStyle(document.documentElement);
+    ctx.strokeStyle = style.getPropertyValue('--radar-ring');
+    for (let i = 1; i <= 3; i++) {
+        ctx.beginPath();
+        ctx.arc(cx, cy, r * i / 3, 0, Math.PI * 2);
+        ctx.stroke();
+    }
+    // Crosshairs
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - r); ctx.lineTo(cx, cy + r);
+    ctx.moveTo(cx - r, cy); ctx.lineTo(cx + r, cy);
+    ctx.stroke();
+
+    const px = vals.player_x || 0;
+    const pz = vals.player_z || 0;
+    const RANGE = 8000;
+
+    function plotDot(x, z, color, dotSize) {
+        const dx = (x - px) / RANGE;
+        const dz = (z - pz) / RANGE;
+        const dist = Math.sqrt(dx * dx + dz * dz);
+        if (dist > 1) return;
+        const sx = cx + dx * r;
+        const sy = cy + dz * r;
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(sx, sy, dotSize, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    // Player at center
+    ctx.fillStyle = style.getPropertyValue('--player-color');
+    ctx.beginPath();
+    ctx.arc(cx, cy, 5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Monster 1
+    if ((vals.monster1_hp || 0) > 0) {
+        plotDot(vals.monster1_x || 0, vals.monster1_z || 0,
+                style.getPropertyValue('--monster-color'), 6);
+    }
+
+}
+
+function updateData(base64Data, isInitial) {
+    try {
+        const json = JSON.parse(atob(base64Data));
+        const v = json.values || {};
+
+        if (json.settings) {
+            settings.show_radar = json.settings.show_radar !== 'false';
+            settings.show_zenny = json.settings.show_zenny !== 'false';
+        }
+
+        document.body.classList.toggle('offline', !json.isConnected);
+        document.getElementById('status').textContent =
+            json.isConnected ? 'Connected' : 'Offline';
+
+        updateMonsterPanel('m1', 'monster1', v.monster1_type, v.monster1_hp, v);
+
+        drawRadar(v);
+
+        const zennyBar = document.getElementById('zenny-bar');
+        if (settings.show_zenny) {
+            zennyBar.style.display = 'block';
+            document.getElementById('zenny-val').textContent =
+                (v.zenny || 0).toLocaleString();
+        } else {
+            zennyBar.style.display = 'none';
+        }
+    } catch (e) {
+        document.getElementById('status').textContent = 'Error: ' + e.message;
+    }
+}
+
+function onGameClosed() {
+    document.body.classList.add('offline');
+    document.getElementById('status').textContent = 'Game closed';
+    maxSeen = { m1: 0 };
+}
+</script>
+</body>
+</html>

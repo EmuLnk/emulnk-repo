@@ -1,0 +1,27 @@
+{
+  "id": "MHFUHunterHUD",
+  "targetProfileId": "MHFU",
+  "targetConsole": "PSP",
+  "meta": {
+    "name": "Hunter's Eye",
+    "author": "EmuLnk Team",
+    "version": "1.0.0",
+    "description": "Live monster HP bar, species identifier, and radar showing player and monster positions. Reveals hidden monster health.",
+    "minAppVersion": 1
+  },
+  "hideOverlay": false,
+  "settings": [
+    {
+      "id": "show_radar",
+      "label": "Show Radar",
+      "type": "toggle",
+      "default": "true"
+    },
+    {
+      "id": "show_zenny",
+      "label": "Show Zenny",
+      "type": "toggle",
+      "default": "true"
+    }
+  ]
+}

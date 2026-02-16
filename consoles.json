@@ -12,5 +12,13 @@
     "console": "WII",
     "port": 55356,
     "idAddress": "0x80000000"
+  },
+  {
+    "id": "ppsspp",
+    "packageNames": ["org.ppsspp.ppsspplnk"],
+    "console": "PSP",
+    "port": 55355,
+    "idAddress": "0x00013FF0",
+    "idSize": 9
   }
 ]

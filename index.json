@@ -10,6 +10,16 @@
       "targetProfileId": "GZL",
       "minAppVersion": 1,
       "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/WindWakerMinimap/preview.png"
+    },
+    {
+      "id": "MHFUHunterHUD",
+      "name": "Hunter's Eye",
+      "author": "EmuLnk Team",
+      "version": "1.0.0",
+      "description": "Live monster HP bar and radar for Monster Hunter Freedom Unite. Shows hidden monster health, species name, and real-time positions on a radar map.",
+      "targetProfileId": "MHFU",
+      "minAppVersion": 1,
+      "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/MHFUHunterHUD/preview.png"
     }
   ]
 }

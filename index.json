@@ -20,6 +20,16 @@
       "targetProfileId": "MHFU",
       "minAppVersion": 1,
       "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/MHFUHunterHUD/preview.png"
+    },
+    {
+      "id": "EmeraldPartyHUD",
+      "name": "Trainer's Eye",
+      "author": "EmuLnk Team",
+      "version": "1.0.0",
+      "description": "Real-time party viewer for Pokemon Emerald. Shows IVs, EVs, natures, stats, moves, friendship, and Hidden Power.",
+      "targetProfileId": "BPE",
+      "minAppVersion": 1,
+      "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/EmeraldPartyHUD/preview.png"
     }
   ]
 }

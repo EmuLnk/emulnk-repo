@@ -1,0 +1,28 @@
+{
+  "id": "BPE",
+  "name": "Pokemon Emerald",
+  "platform": "GBA",
+  "gameIds": [
+    "BPEE"
+  ],
+  "dataPoints": [
+    {
+      "id": "party_count",
+      "type": "u8",
+      "size": 1,
+      "addresses": {
+        "BPEE": "0x020244E9",
+        "default": "0x020244E9"
+      }
+    },
+    {
+      "id": "party_data",
+      "type": "bytes",
+      "size": 600,
+      "addresses": {
+        "BPEE": "0x020244EC",
+        "default": "0x020244EC"
+      }
+    }
+  ]
+}

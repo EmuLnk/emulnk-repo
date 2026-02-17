@@ -1,0 +1,33 @@
+{
+  "id": "EmeraldPartyHUD",
+  "targetProfileId": "BPE",
+  "targetConsole": "GBA",
+  "meta": {
+    "name": "Trainer's Eye",
+    "author": "EmuLnk Team",
+    "version": "1.0.0",
+    "description": "Real-time party viewer for Pokemon Emerald. Shows IVs, EVs, natures, stats, moves, friendship, and Hidden Power for your entire team.",
+    "minAppVersion": 1
+  },
+  "hideOverlay": false,
+  "settings": [
+    {
+      "id": "show_ivs",
+      "label": "Show IVs",
+      "type": "toggle",
+      "default": "true"
+    },
+    {
+      "id": "show_evs",
+      "label": "Show EVs",
+      "type": "toggle",
+      "default": "true"
+    },
+    {
+      "id": "show_moves",
+      "label": "Show Moves",
+      "type": "toggle",
+      "default": "true"
+    }
+  ]
+}

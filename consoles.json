@@ -20,5 +20,13 @@
     "port": 55355,
     "idAddress": "0x00013FF0",
     "idSize": 9
+  },
+  {
+    "id": "retroarch_gba",
+    "packageNames": ["com.retroarch.lnk.aarch64"],
+    "console": "GBA",
+    "port": 55355,
+    "idAddress": "0x080000AC",
+    "idSize": 4
   }
 ]

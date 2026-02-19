@@ -1,0 +1,80 @@
+{
+  "id": "FF7",
+  "name": "Final Fantasy VII",
+  "platform": "PS1",
+  "gameIds": ["SCUS94163", "SCUS-94163"],
+  "dataPoints": [
+    {
+      "id": "current_module",
+      "type": "u8",
+      "size": 1,
+      "addresses": { "SCUS94163": "0x0009D278", "default": "0x0009D278" }
+    },
+    {
+      "id": "gil",
+      "type": "u32_le",
+      "size": 4,
+      "addresses": { "SCUS94163": "0x0009D260", "default": "0x0009D260" }
+    },
+    {
+      "id": "character_save_data",
+      "type": "bytes",
+      "size": 1188,
+      "addresses": { "SCUS94163": "0x0009C738", "default": "0x0009C738" }
+    },
+    {
+      "id": "scene_enemy_data",
+      "type": "bytes",
+      "size": 552,
+      "addresses": { "SCUS94163": "0x000F5F44", "default": "0x000F5F44" }
+    },
+    {
+      "id": "enemy1_data",
+      "type": "bytes",
+      "size": 104,
+      "addresses": { "SCUS94163": "0x000F8580", "default": "0x000F8580" }
+    },
+    {
+      "id": "enemy2_data",
+      "type": "bytes",
+      "size": 104,
+      "addresses": { "SCUS94163": "0x000F85E8", "default": "0x000F85E8" }
+    },
+    {
+      "id": "enemy3_data",
+      "type": "bytes",
+      "size": 104,
+      "addresses": { "SCUS94163": "0x000F8650", "default": "0x000F8650" }
+    },
+    {
+      "id": "enemy4_data",
+      "type": "bytes",
+      "size": 104,
+      "addresses": { "SCUS94163": "0x000F86B8", "default": "0x000F86B8" }
+    },
+    {
+      "id": "enemy5_data",
+      "type": "bytes",
+      "size": 104,
+      "addresses": { "SCUS94163": "0x000F8720", "default": "0x000F8720" }
+    },
+    {
+      "id": "enemy6_data",
+      "type": "bytes",
+      "size": 104,
+      "addresses": { "SCUS94163": "0x000F8788", "default": "0x000F8788" }
+    },
+    {
+      "id": "party_formation",
+      "type": "bytes",
+      "size": 3,
+      "addresses": { "SCUS94163": "0x0009CBDC", "default": "0x0009CBDC" }
+    },
+    { "id": "slot1_hp", "type": "u16_le", "size": 2, "addresses": { "SCUS94163": "0x0009D85C", "default": "0x0009D85C" } },
+    { "id": "slot1_mp", "type": "u16_le", "size": 2, "addresses": { "SCUS94163": "0x0009D860", "default": "0x0009D860" } },
+    { "id": "slot2_hp", "type": "u16_le", "size": 2, "addresses": { "SCUS94163": "0x0009DC9C", "default": "0x0009DC9C" } },
+    { "id": "slot2_mp", "type": "u16_le", "size": 2, "addresses": { "SCUS94163": "0x0009DCA0", "default": "0x0009DCA0" } },
+    { "id": "slot3_hp", "type": "u16_le", "size": 2, "addresses": { "SCUS94163": "0x0009E0DC", "default": "0x0009E0DC" } },
+    { "id": "slot3_mp", "type": "u16_le", "size": 2, "addresses": { "SCUS94163": "0x0009E0E0", "default": "0x0009E0E0" } }
+  ]
+}

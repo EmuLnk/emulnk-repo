@@ -1,0 +1,13 @@
+{
+  "id": "FF7SenseHUD",
+  "targetProfileId": "FF7",
+  "targetConsole": "PS1",
+  "meta": {
+    "name": "Battle HUD",
+    "author": "EmuLnk Team",
+    "version": "1.0.0",
+    "description": "Always-on battle HUD for Final Fantasy VII. Shows enemy HP, weaknesses, absorbs.",
+    "minAppVersion": 1
+  },
+  "hideOverlay": false
+}

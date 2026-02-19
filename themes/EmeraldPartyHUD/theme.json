@@ -3,7 +3,7 @@
   "targetProfileId": "BPE",
   "targetConsole": "GBA",
   "meta": {
-    "name": "Trainer's Eye",
+    "name": "Pokemon Stats",
     "author": "EmuLnk Team",
     "version": "1.0.0",
     "description": "Real-time party viewer for Pokemon Emerald. Shows IVs, EVs, natures, stats, moves, friendship, and Hidden Power for your entire team.",

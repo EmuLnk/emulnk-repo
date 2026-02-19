@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Battle HUD</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="header">
+        <span class="title">Battle HUD</span>
+        <span class="mode-badge" id="mode-badge">FIELD</span>
+    </div>
+
+    <div id="content">
+        <div id="battle-view" style="display:none"></div>
+
+        <div id="party-view" style="display:none">
+            <div class="party-card hidden" id="party1-card">
+                <div class="party-header">
+                    <span class="party-name" id="party1-name">&mdash;</span>
+                    <span class="party-level" id="party1-level">Lv.&mdash;</span>
+                </div>
+                <div class="party-hp-row">
+                    <span class="bar-label hp">HP</span>
+                    <div class="bar-bg"><div class="bar-fill" id="party1-hp-bar"></div></div>
+                    <span class="bar-text" id="party1-hp-text">&mdash; / &mdash;</span>
+                </div>
+                <div class="party-mp-row">
+                    <span class="bar-label mp">MP</span>
+                    <div class="bar-bg"><div class="bar-fill mp" id="party1-mp-bar"></div></div>
+                    <span class="bar-text" id="party1-mp-text">&mdash; / &mdash;</span>
+                </div>
+            </div>
+
+            <div class="party-card hidden" id="party2-card">
+                <div class="party-header">
+                    <span class="party-name" id="party2-name">&mdash;</span>
+                    <span class="party-level" id="party2-level">Lv.&mdash;</span>
+                </div>
+                <div class="party-hp-row">
+                    <span class="bar-label hp">HP</span>
+                    <div class="bar-bg"><div class="bar-fill" id="party2-hp-bar"></div></div>
+                    <span class="bar-text" id="party2-hp-text">&mdash; / &mdash;</span>
+                </div>
+                <div class="party-mp-row">
+                    <span class="bar-label mp">MP</span>
+                    <div class="bar-bg"><div class="bar-fill mp" id="party2-mp-bar"></div></div>
+                    <span class="bar-text" id="party2-mp-text">&mdash; / &mdash;</span>
+                </div>
+            </div>
+
+            <div class="party-card hidden" id="party3-card">
+                <div class="party-header">
+                    <span class="party-name" id="party3-name">&mdash;</span>
+                    <span class="party-level" id="party3-level">Lv.&mdash;</span>
+                </div>
+                <div class="party-hp-row">
+                    <span class="bar-label hp">HP</span>
+                    <div class="bar-bg"><div class="bar-fill" id="party3-hp-bar"></div></div>
+                    <span class="bar-text" id="party3-hp-text">&mdash; / &mdash;</span>
+                </div>
+                <div class="party-mp-row">
+                    <span class="bar-label mp">MP</span>
+                    <div class="bar-bg"><div class="bar-fill mp" id="party3-mp-bar"></div></div>
+                    <span class="bar-text" id="party3-mp-text">&mdash; / &mdash;</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="gil-bar">Gil: <span class="gil-amount" id="gil-val">0</span></div>
+    <div id="status">Waiting for data...</div>
+
+    <script src="app.js"></script>
+</body>
+</html>

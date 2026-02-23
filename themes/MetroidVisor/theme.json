@@ -1,0 +1,33 @@
+{
+  "id": "MetroidVisor",
+  "targetProfileId": "SM",
+  "targetConsole": "SNES",
+  "meta": {
+    "name": "Chozo Visor",
+    "author": "EmuLnk Team",
+    "version": "1.0.0",
+    "description": "Real-time status HUD for Super Metroid. Energy, ammo, equipment, boss tracker, and item %.",
+    "minAppVersion": 1
+  },
+  "hideOverlay": false,
+  "settings": [
+    {
+      "id": "show_equipment",
+      "label": "Show Equipment",
+      "type": "toggle",
+      "default": "true"
+    },
+    {
+      "id": "show_bosses",
+      "label": "Show Boss Tracker",
+      "type": "toggle",
+      "default": "true"
+    },
+    {
+      "id": "show_timer",
+      "label": "Show Timer",
+      "type": "toggle",
+      "default": "true"
+    }
+  ]
+}

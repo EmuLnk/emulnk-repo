@@ -1,0 +1,140 @@
+{
+  "id": "SM",
+  "name": "Super Metroid",
+  "platform": "SNES",
+  "gameIds": ["SUPER METROID", "SUPERMETROID", "SuperMetroid", "Super Metroid"],
+  "dataPoints": [
+    {
+      "id": "game_state",
+      "type": "u16_le",
+      "size": 2,
+      "addresses": { "default": "0x0998" }
+    },
+    {
+      "id": "area_id",
+      "type": "u16_le",
+      "size": 2,
+      "addresses": { "default": "0x079F" }
+    },
+    {
+      "id": "room_ptr",
+      "type": "u16_le",
+      "size": 2,
+      "addresses": { "default": "0x079B" }
+    },
+    {
+      "id": "energy",
+      "type": "u16_le",
+      "size": 2,
+      "addresses": { "default": "0x09C2" }
+    },
+    {
+      "id": "max_energy",
+      "type": "u16_le",
+      "size": 2,
+      "addresses": { "default": "0x09C4" }
+    },
+    {
+      "id": "reserve_energy",
+      "type": "u16_le",
+      "size": 2,
+      "addresses": { "default": "0x09D6" }
+    },
+    {
+      "id": "max_reserve",
+      "type": "u16_le",
+      "size": 2,
+      "addresses": { "default": "0x09D4" }
+    },
+    {
+      "id": "missiles",
+      "type": "u16_le",
+      "size": 2,
+      "addresses": { "default": "0x09C6" }
+    },
+    {
+      "id": "max_missiles",
+      "type": "u16_le",
+      "size": 2,
+      "addresses": { "default": "0x09C8" }
+    },
+    {
+      "id": "supers",
+      "type": "u16_le",
+      "size": 2,
+      "addresses": { "default": "0x09CA" }
+    },
+    {
+      "id": "max_supers",
+      "type": "u16_le",
+      "size": 2,
+      "addresses": { "default": "0x09CC" }
+    },
+    {
+      "id": "power_bombs",
+      "type": "u16_le",
+      "size": 2,
+      "addresses": { "default": "0x09CE" }
+    },
+    {
+      "id": "max_power_bombs",
+      "type": "u16_le",
+      "size": 2,
+      "addresses": { "default": "0x09D0" }
+    },
+    {
+      "id": "items_collected",
+      "type": "u16_le",
+      "size": 2,
+      "addresses": { "default": "0x09A4" }
+    },
+    {
+      "id": "beams_collected",
+      "type": "u16_le",
+      "size": 2,
+      "addresses": { "default": "0x09A8" }
+    },
+    {
+      "id": "timer_hours",
+      "type": "u16_le",
+      "size": 2,
+      "addresses": { "default": "0x09E0" }
+    },
+    {
+      "id": "timer_minutes",
+      "type": "u16_le",
+      "size": 2,
+      "addresses": { "default": "0x09DE" }
+    },
+    {
+      "id": "timer_seconds",
+      "type": "u16_le",
+      "size": 2,
+      "addresses": { "default": "0x09DC" }
+    },
+    {
+      "id": "boss_flags",
+      "type": "bytes",
+      "size": 5,
+      "addresses": { "default": "0xD828" }
+    },
+    {
+      "id": "event_flags",
+      "type": "bytes",
+      "size": 3,
+      "addresses": { "default": "0xD820" }
+    },
+    {
+      "id": "item_pickups",
+      "type": "bytes",
+      "size": 64,
+      "addresses": { "default": "0xD870" }
+    },
+    {
+      "id": "enemy_hp",
+      "type": "u16_le",
+      "size": 2,
+      "addresses": { "default": "0x0F8C" }
+    }
+  ]
+}

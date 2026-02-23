@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Chozo Visor</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header: Area | Timer | Connection -->
+    <div class="header">
+        <div class="header-left" id="area-name">—</div>
+        <div class="header-right">
+            <span id="timer">0:00:00</span>
+            <div class="conn-dot" id="conn-dot"></div>
+        </div>
+    </div>
+
+    <!-- Energy -->
+    <div class="panel">
+        <div class="panel-label">Energy</div>
+        <div class="bar-row">
+            <span class="bar-label">HP</span>
+            <div class="bar-track"><div class="bar-fill energy" id="energy-bar" style="width:0%"></div></div>
+            <span class="bar-text" id="energy-text">0 / 0</span>
+        </div>
+        <div class="bar-row">
+            <span class="bar-label">Reserve</span>
+            <div class="bar-track"><div class="bar-fill reserve" id="reserve-bar" style="width:0%"></div></div>
+            <span class="bar-text" id="reserve-text">0 / 0</span>
+        </div>
+    </div>
+
+    <!-- Ammo -->
+    <div class="panel">
+        <div class="panel-label">Ammo</div>
+        <div class="ammo-grid">
+            <div class="ammo-cell ammo-missiles">
+                <div class="ammo-label">Missiles</div>
+                <div class="ammo-value" id="missiles-val">0</div>
+                <div class="ammo-max">/ <span id="missiles-max">0</span></div>
+                <div class="ammo-bar"><div class="ammo-bar-fill" id="missiles-bar" style="width:0%"></div></div>
+            </div>
+            <div class="ammo-cell ammo-supers">
+                <div class="ammo-label">Supers</div>
+                <div class="ammo-value" id="supers-val">0</div>
+                <div class="ammo-max">/ <span id="supers-max">0</span></div>
+                <div class="ammo-bar"><div class="ammo-bar-fill" id="supers-bar" style="width:0%"></div></div>
+            </div>
+            <div class="ammo-cell ammo-pbs">
+                <div class="ammo-label">P.Bombs</div>
+                <div class="ammo-value" id="pbs-val">0</div>
+                <div class="ammo-max">/ <span id="pbs-max">0</span></div>
+                <div class="ammo-bar"><div class="ammo-bar-fill" id="pbs-bar" style="width:0%"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Equipment -->
+    <div class="panel" id="equipment-panel">
+        <div class="panel-label">Equipment</div>
+        <div class="equip-grid" id="items-grid"></div>
+        <div style="height:8px"></div>
+        <div class="equip-grid" id="beams-grid"></div>
+    </div>
+
+    <!-- Boss Tracker -->
+    <div class="panel" id="boss-panel">
+        <div class="panel-label">Bosses</div>
+        <div class="boss-grid" id="boss-grid"></div>
+    </div>
+
+    <!-- Item % -->
+    <div class="panel">
+        <div class="item-pct" id="item-pct">0%</div>
+        <div class="item-pct-label">Item Collection</div>
+    </div>
+
+    <!-- Boss HP (contextual) -->
+    <div class="panel" id="boss-hp-panel" style="display:none">
+        <div class="panel-label">Enemy HP</div>
+        <div class="bar-row">
+            <div class="bar-track"><div class="bar-fill" id="boss-hp-bar" style="width:0%"></div></div>
+            <span class="bar-text" id="boss-hp-text">0</span>
+        </div>
+    </div>
+
+    <div id="status">Waiting for data...</div>
+
+<script>
+/* ── Lookup tables ── */
+
+const AREAS = {
+    0: 'Crateria', 1: 'Brinstar', 2: 'Norfair',
+    3: 'Wrecked Ship', 4: 'Maridia', 5: 'Tourian', 6: 'Ceres'
+};
+
+/* Items bitmask at $09A4 */
+const ITEMS = [
+    { name: 'Varia',    mask: 0x0001 },
+    { name: 'Spring',   mask: 0x0002 },
+    { name: 'Morph',    mask: 0x0004 },
+    { name: 'Screw',    mask: 0x0008 },
+    { name: 'Gravity',  mask: 0x0020 },
+    { name: 'Hi-Jump',  mask: 0x0100 },
+    { name: 'Space',    mask: 0x0200 },
+    { name: 'Bombs',    mask: 0x1000 },
+    { name: 'Speed',    mask: 0x2000 },
+    { name: 'Grapple',  mask: 0x4000 },
+    { name: 'X-Ray',    mask: 0x8000 }
+];
+
+/* Beams bitmask at $09A8 */
+const BEAMS = [
+    { name: 'Wave',    mask: 0x0001 },
+    { name: 'Ice',     mask: 0x0002 },
+    { name: 'Spazer',  mask: 0x0004 },
+    { name: 'Plasma',  mask: 0x0008 },
+    { name: 'Charge',  mask: 0x1000 }
+];
+
+/* Boss flags: byte index into boss_flags blob, bit mask within that byte
+   boss_flags is 5 bytes at $D828, one per area */
+const BOSSES = [
+    { name: 'Bomb Torizo',  byte: 0, bit: 0x04 },
+    { name: 'Spore Spawn',  byte: 1, bit: 0x02 },
+    { name: 'Kraid',        byte: 1, bit: 0x01 },
+    { name: 'Crocomire',    byte: 2, bit: 0x02 },
+    { name: 'Golden Torizo',byte: 2, bit: 0x04 },
+    { name: 'Ridley',       byte: 2, bit: 0x01 },
+    { name: 'Phantoon',     byte: 3, bit: 0x01 },
+    { name: 'Botwoon',      byte: 4, bit: 0x02 },
+    { name: 'Draygon',      byte: 4, bit: 0x01 }
+];
+
+/* ── State ── */
+
+let settings = { show_equipment: true, show_bosses: true, show_timer: true };
+let bossMaxHp = 0;
+
+/* ── Init DOM ── */
+
+function initGrids() {
+    const ig = document.getElementById('items-grid');
+    ITEMS.forEach(item => {
+        const chip = document.createElement('div');
+        chip.className = 'equip-chip';
+        chip.id = 'item-' + item.mask;
+        chip.textContent = item.name;
+        ig.appendChild(chip);
+    });
+
+    const bg = document.getElementById('beams-grid');
+    BEAMS.forEach(beam => {
+        const chip = document.createElement('div');
+        chip.className = 'equip-chip';
+        chip.id = 'beam-' + beam.mask;
+        chip.textContent = beam.name;
+        bg.appendChild(chip);
+    });
+
+    const bossGrid = document.getElementById('boss-grid');
+    BOSSES.forEach((boss, i) => {
+        const chip = document.createElement('div');
+        chip.className = 'boss-chip';
+        chip.id = 'boss-' + i;
+        chip.textContent = boss.name;
+        bossGrid.appendChild(chip);
+    });
+}
+initGrids();
+
+/* ── Helpers ── */
+
+function b64ToBytes(b64) {
+    const bin = atob(b64);
+    const arr = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+    return arr;
+}
+
+function countBits(b64str) {
+    const bytes = b64ToBytes(b64str);
+    let count = 0;
+    for (let i = 0; i < bytes.length; i++) {
+        let b = bytes[i];
+        while (b) { count += b & 1; b >>= 1; }
+    }
+    return count;
+}
+
+function pctBar(cur, max) {
+    if (max <= 0) return 0;
+    return Math.min(100, (cur / max) * 100);
+}
+
+/* ── Main update ── */
+
+function updateData(base64Data, isInitial) {
+    try {
+        const json = JSON.parse(atob(base64Data));
+        const v = json.values || {};
+
+        if (json.settings) {
+            settings.show_equipment = json.settings.show_equipment !== 'false';
+            settings.show_bosses = json.settings.show_bosses !== 'false';
+            settings.show_timer = json.settings.show_timer !== 'false';
+        }
+
+        const connected = json.isConnected;
+        document.body.classList.toggle('offline', !connected);
+        document.getElementById('status').textContent = connected ? 'Connected' : 'Offline';
+
+        /* Area */
+        const areaId = v.area_id || 0;
+        document.getElementById('area-name').textContent = AREAS[areaId] || 'Area ' + areaId;
+
+        /* Timer */
+        const timerEl = document.getElementById('timer');
+        if (settings.show_timer) {
+            const h = v.timer_hours || 0;
+            const m = v.timer_minutes || 0;
+            const s = v.timer_seconds || 0;
+            timerEl.textContent = h + ':' + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+            timerEl.style.display = '';
+        } else {
+            timerEl.style.display = 'none';
+        }
+
+        /* Energy */
+        const energy = v.energy || 0;
+        const maxEnergy = v.max_energy || 0;
+        document.getElementById('energy-bar').style.width = pctBar(energy, maxEnergy) + '%';
+        document.getElementById('energy-text').textContent = energy + ' / ' + maxEnergy;
+
+        const reserve = v.reserve_energy || 0;
+        const maxReserve = v.max_reserve || 0;
+        document.getElementById('reserve-bar').style.width = pctBar(reserve, maxReserve) + '%';
+        document.getElementById('reserve-text').textContent = reserve + ' / ' + maxReserve;
+
+        /* Ammo */
+        const mis = v.missiles || 0, misMax = v.max_missiles || 0;
+        const sup = v.supers || 0, supMax = v.max_supers || 0;
+        const pb = v.power_bombs || 0, pbMax = v.max_power_bombs || 0;
+
+        document.getElementById('missiles-val').textContent = mis;
+        document.getElementById('missiles-max').textContent = misMax;
+        document.getElementById('missiles-bar').style.width = pctBar(mis, misMax) + '%';
+
+        document.getElementById('supers-val').textContent = sup;
+        document.getElementById('supers-max').textContent = supMax;
+        document.getElementById('supers-bar').style.width = pctBar(sup, supMax) + '%';
+
+        document.getElementById('pbs-val').textContent = pb;
+        document.getElementById('pbs-max').textContent = pbMax;
+        document.getElementById('pbs-bar').style.width = pctBar(pb, pbMax) + '%';
+
+        /* Equipment */
+        const equipPanel = document.getElementById('equipment-panel');
+        if (settings.show_equipment) {
+            equipPanel.style.display = '';
+            const itemBits = v.items_collected || 0;
+            ITEMS.forEach(item => {
+                const el = document.getElementById('item-' + item.mask);
+                el.classList.toggle('collected', (itemBits & item.mask) !== 0);
+            });
+
+            const beamBits = v.beams_collected || 0;
+            BEAMS.forEach(beam => {
+                const el = document.getElementById('beam-' + beam.mask);
+                el.classList.toggle('collected', (beamBits & beam.mask) !== 0);
+            });
+        } else {
+            equipPanel.style.display = 'none';
+        }
+
+        /* Boss tracker */
+        const bossPanel = document.getElementById('boss-panel');
+        if (settings.show_bosses && v.boss_flags) {
+            bossPanel.style.display = '';
+            const bossBytes = b64ToBytes(v.boss_flags);
+            BOSSES.forEach((boss, i) => {
+                const el = document.getElementById('boss-' + i);
+                const defeated = bossBytes.length > boss.byte && (bossBytes[boss.byte] & boss.bit) !== 0;
+                el.classList.toggle('defeated', defeated);
+            });
+        } else {
+            bossPanel.style.display = settings.show_bosses ? '' : 'none';
+        }
+
+        /* Item % */
+        if (v.item_pickups) {
+            const bits = countBits(v.item_pickups);
+            const pct = Math.min(100, Math.round(bits / 100 * 100));
+            document.getElementById('item-pct').textContent = pct + '%';
+        }
+
+        /* Boss HP (contextual) */
+        const bossHpPanel = document.getElementById('boss-hp-panel');
+        const enemyHp = v.enemy_hp || 0;
+        const gameState = v.game_state || 0;
+
+        if (enemyHp > 0 && gameState === 0x08) {
+            bossHpPanel.style.display = '';
+            if (enemyHp > bossMaxHp) bossMaxHp = enemyHp;
+            const hpPct = pctBar(enemyHp, bossMaxHp);
+            document.getElementById('boss-hp-bar').style.width = hpPct + '%';
+            document.getElementById('boss-hp-text').textContent = enemyHp;
+        } else {
+            bossHpPanel.style.display = 'none';
+            bossMaxHp = 0;
+        }
+
+    } catch (e) {
+        document.getElementById('status').textContent = 'Error: ' + e.message;
+    }
+}
+
+function onGameClosed() {
+    document.body.classList.add('offline');
+    document.getElementById('status').textContent = 'Game closed';
+    bossMaxHp = 0;
+}
+</script>
+</body>
+</html>

@@ -36,5 +36,13 @@
     "port": 55355,
     "idAddress": "0x00200000",
     "idSize": 10
+  },
+  {
+    "id": "retroarch_snes",
+    "packageNames": ["com.retroarch.lnk.aarch64"],
+    "console": "SNES",
+    "port": 55355,
+    "idAddress": "0x00200000",
+    "idSize": 21
   }
 ]

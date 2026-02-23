@@ -1,0 +1,257 @@
+:root {
+  --bg: #0a0a1a;
+  --panel-bg: rgba(0, 0, 0, 0.80);
+  --accent: #00ff88;
+  --text: #e2e8f0;
+  --text-dim: #94a3b8;
+  --missile-color: #fbbf24;
+  --super-color: #4ade80;
+  --pb-color: #f97316;
+  --reserve-color: #60a5fa;
+  --boss-defeated: #00ff88;
+  --boss-alive: #334155;
+  --hp-low: #ef4444;
+  --bar-bg: rgba(255, 255, 255, 0.12);
+  --border-radius: 12px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+  height: 100vh;
+  width: 100vw;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  gap: 10px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 14px;
+  background: var(--panel-bg);
+  border-radius: var(--border-radius);
+  flex-shrink: 0;
+}
+
+.header-left {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.conn-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+body.offline .conn-dot { background: var(--hp-low); }
+
+/* Panels */
+.panel {
+  background: var(--panel-bg);
+  border-radius: var(--border-radius);
+  padding: 14px 16px;
+  flex-shrink: 0;
+}
+
+.panel-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+
+/* Energy bars */
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.bar-row:last-child { margin-bottom: 0; }
+
+.bar-label {
+  font-size: 13px;
+  font-weight: 600;
+  min-width: 60px;
+}
+
+.bar-track {
+  flex: 1;
+  height: 20px;
+  background: var(--bar-bg);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.2s ease;
+  min-width: 0;
+}
+
+.bar-fill.energy { background: var(--accent); }
+.bar-fill.reserve { background: var(--reserve-color); }
+
+.bar-text {
+  font-size: 13px;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+  min-width: 70px;
+  text-align: right;
+}
+
+/* Ammo grid */
+.ammo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.ammo-cell {
+  text-align: center;
+}
+
+.ammo-cell .ammo-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+}
+
+.ammo-cell .ammo-value {
+  font-size: 20px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.ammo-cell .ammo-max {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.ammo-cell .ammo-bar {
+  height: 4px;
+  background: var(--bar-bg);
+  border-radius: 2px;
+  margin-top: 4px;
+  overflow: hidden;
+}
+
+.ammo-cell .ammo-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.2s ease;
+}
+
+.ammo-missiles .ammo-value { color: var(--missile-color); }
+.ammo-missiles .ammo-bar-fill { background: var(--missile-color); }
+.ammo-supers .ammo-value { color: var(--super-color); }
+.ammo-supers .ammo-bar-fill { background: var(--super-color); }
+.ammo-pbs .ammo-value { color: var(--pb-color); }
+.ammo-pbs .ammo-bar-fill { background: var(--pb-color); }
+
+/* Equipment grid */
+.equip-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.equip-chip {
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--boss-alive);
+  color: var(--text-dim);
+  opacity: 0.35;
+  transition: opacity 0.2s, border-color 0.2s;
+}
+
+.equip-chip.collected {
+  opacity: 1;
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* Boss tracker */
+.boss-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.boss-chip {
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 16px;
+  background: var(--boss-alive);
+  color: var(--text-dim);
+  transition: background 0.2s, color 0.2s;
+}
+
+.boss-chip.defeated {
+  background: rgba(0, 255, 136, 0.15);
+  color: var(--boss-defeated);
+}
+
+/* Item % */
+.item-pct {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--accent);
+  padding: 8px 0;
+}
+
+.item-pct-label {
+  font-size: 12px;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+/* Boss HP bar */
+#boss-hp-panel {
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+#boss-hp-panel .bar-fill {
+  background: var(--hp-low);
+}
+
+#boss-hp-panel .panel-label {
+  color: var(--hp-low);
+}
+
+/* Status */
+#status {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+
+body.offline #status { color: var(--hp-low); }

@@ -1,0 +1,333 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --bg: #0a1628;
+    --panel-bg: #0d2137;
+    --card-bg: #0f2640;
+    --card-border: #1a3a5c;
+    --accent: #00d4ff;
+    --accent-dim: #007a94;
+    --text: #c8dce8;
+    --text-dim: #5a7a8a;
+    --text-bright: #ffffff;
+
+    --hp-full: #00d4ff;
+    --hp-mid: #f0a030;
+    --hp-low: #ff3040;
+    --tp-color: #a070ff;
+
+    --fire: #ff6a00;
+    --ice: #00d4ff;
+    --lightning: #ffe040;
+    --holy: #ffd700;
+    --dark: #a040ff;
+    --physical: #c8dce8;
+    --multi: #00d4ff;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-size: 13px;
+    line-height: 1.4;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+body.offline {
+    opacity: 0.5;
+}
+
+/* ── Header ── */
+#header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background: var(--panel-bg);
+    border-bottom: 1px solid var(--card-border);
+}
+
+.title {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--accent);
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--text-dim);
+}
+
+.status-dot.connected {
+    background: #00e070;
+    box-shadow: 0 0 6px rgba(0, 224, 112, 0.6);
+}
+
+/* ── Party Bar ── */
+#party-bar {
+    display: flex;
+    gap: 6px;
+    padding: 8px 10px;
+    background: var(--panel-bg);
+    border-bottom: 1px solid var(--card-border);
+    overflow-x: auto;
+}
+
+.party-slot {
+    flex: 1;
+    min-width: 0;
+    padding: 6px 8px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    text-align: center;
+}
+
+.party-slot.empty {
+    opacity: 0.3;
+}
+
+.slot-name {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--text-bright);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.slot-level {
+    font-size: 10px;
+    color: var(--accent);
+    margin-top: 2px;
+}
+
+.slot-hp-text, .slot-tp-text {
+    font-size: 9px;
+    color: var(--text-dim);
+    margin-top: 1px;
+}
+
+.slot-hp-text { color: var(--hp-full); }
+.slot-tp-text { color: var(--tp-color); }
+
+.slot-bars {
+    margin-top: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.mini-bar {
+    height: 3px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.mini-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+.tp-bar .mini-fill {
+    background: var(--tp-color);
+}
+
+/* ── Content ── */
+#content {
+    padding: 8px 10px 60px;
+}
+
+/* ── Section Headers ── */
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 4px;
+    margin-top: 4px;
+}
+
+.section-header.clickable {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.section-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+}
+
+.section-count {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    background: rgba(0, 212, 255, 0.12);
+    padding: 1px 6px;
+    border-radius: 8px;
+}
+
+.toggle-arrow {
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-left: auto;
+    transition: transform 0.2s ease;
+}
+
+/* ── Combo Cards ── */
+.combo-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: box-shadow 0.3s ease, opacity 0.3s ease, border-color 0.3s ease;
+}
+
+.combo-card.available {
+    animation: glow-pulse 3s ease-in-out infinite;
+}
+
+.combo-card.locked {
+    opacity: 0.45;
+}
+
+.combo-card.locked:hover,
+.combo-card.locked:active {
+    opacity: 0.65;
+}
+
+@keyframes glow-pulse {
+    0%, 100% { box-shadow: 0 0 6px rgba(0, 212, 255, 0.15); }
+    50% { box-shadow: 0 0 14px rgba(0, 212, 255, 0.35); }
+}
+
+/* Element-specific glow colors */
+.combo-card.fire.available {
+    animation: glow-fire 3s ease-in-out infinite;
+}
+.combo-card.ice.available {
+    animation: glow-ice 3s ease-in-out infinite;
+}
+.combo-card.lightning.available {
+    animation: glow-lightning 3s ease-in-out infinite;
+}
+.combo-card.holy.available {
+    animation: glow-holy 3s ease-in-out infinite;
+}
+.combo-card.dark.available {
+    animation: glow-dark 3s ease-in-out infinite;
+}
+
+@keyframes glow-fire {
+    0%, 100% { box-shadow: 0 0 6px rgba(255, 106, 0, 0.15); }
+    50% { box-shadow: 0 0 14px rgba(255, 106, 0, 0.35); }
+}
+
+@keyframes glow-ice {
+    0%, 100% { box-shadow: 0 0 6px rgba(0, 212, 255, 0.15); }
+    50% { box-shadow: 0 0 14px rgba(0, 212, 255, 0.35); }
+}
+
+@keyframes glow-lightning {
+    0%, 100% { box-shadow: 0 0 6px rgba(255, 224, 64, 0.15); }
+    50% { box-shadow: 0 0 14px rgba(255, 224, 64, 0.35); }
+}
+
+@keyframes glow-holy {
+    0%, 100% { box-shadow: 0 0 6px rgba(255, 215, 0, 0.15); }
+    50% { box-shadow: 0 0 14px rgba(255, 215, 0, 0.35); }
+}
+
+@keyframes glow-dark {
+    0%, 100% { box-shadow: 0 0 6px rgba(160, 64, 255, 0.15); }
+    50% { box-shadow: 0 0 14px rgba(160, 64, 255, 0.35); }
+}
+
+/* ── Card Layout ── */
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.card-name {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--text-bright);
+}
+
+.card-element {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.card-summary {
+    font-size: 11px;
+    color: var(--text);
+    margin-top: 4px;
+}
+
+.card-missing {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 4px;
+    font-style: italic;
+}
+
+/* ── Card Detail (expanded) ── */
+.card-detail {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--card-border);
+}
+
+.detail-line {
+    font-size: 11px;
+    color: var(--text);
+    padding: 2px 0;
+}
+
+.card-description {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 6px;
+    line-height: 1.5;
+}
+
+/* ── Empty State ── */
+.empty-message {
+    text-align: center;
+    color: var(--text-dim);
+    padding: 20px 0;
+    font-size: 12px;
+}
+
+/* ── Status Bar ── */
+#status {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 6px 14px;
+    font-size: 10px;
+    color: var(--text-dim);
+    background: var(--panel-bg);
+    border-top: 1px solid var(--card-border);
+    text-align: center;
+}

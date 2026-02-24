@@ -50,6 +50,16 @@
       "targetProfileId": "SM",
       "minAppVersion": 1,
       "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/MetroidVisor/preview.png"
+    },
+    {
+      "id": "PSIVComboCodex",
+      "name": "Combo Codex",
+      "author": "EmuLnk Team",
+      "version": "1.0.0",
+      "description": "Live combo tracker for Phantasy Star IV. Reads party state from Genesis RAM and shows which hidden combination attacks are currently available.",
+      "targetProfileId": "PSIV",
+      "minAppVersion": 1,
+      "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/PSIVComboCodex/preview.png"
     }
   ]
 }

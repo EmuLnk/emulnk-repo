@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Combo Codex</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="header">
+        <span class="title">COMBO CODEX</span>
+        <span class="status-dot" id="status-dot"></span>
+    </div>
+
+    <div id="party-bar"></div>
+
+    <div id="content">
+        <div id="available-section">
+            <div class="section-header">
+                <span class="section-title">AVAILABLE</span>
+                <span class="section-count" id="available-count">0</span>
+            </div>
+            <div id="available-list"></div>
+        </div>
+
+        <div id="locked-section">
+            <div class="section-header clickable" id="locked-header">
+                <span class="section-title">LOCKED</span>
+                <span class="section-count" id="locked-count">0</span>
+                <span class="toggle-arrow" id="locked-toggle">&#x25BC;</span>
+            </div>
+            <div id="locked-list"></div>
+        </div>
+    </div>
+
+    <div id="status">Waiting for data...</div>
+
+    <script src="app.js"></script>
+</body>
+</html>

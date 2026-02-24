@@ -1,0 +1,26 @@
+{
+  "id": "PSIV",
+  "name": "Phantasy Star IV",
+  "platform": "Genesis",
+  "gameIds": [
+    "MK-1307"
+  ],
+  "dataPoints": [
+    {
+      "id": "party_slots",
+      "type": "bytes",
+      "size": 5,
+      "addresses": {
+        "default": "0xF40A"
+      }
+    },
+    {
+      "id": "all_chars",
+      "type": "bytes",
+      "size": 1408,
+      "addresses": {
+        "default": "0xF508"
+      }
+    }
+  ]
+}

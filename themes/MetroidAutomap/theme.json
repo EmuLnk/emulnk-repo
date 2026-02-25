@@ -1,0 +1,39 @@
+{
+  "id": "MetroidAutomap",
+  "targetProfileId": "M1",
+  "targetConsole": "NES",
+  "meta": {
+    "name": "Zebes Auto-Map",
+    "author": "EmuLnk Team",
+    "version": "1.0.0",
+    "description": "Progressive auto-map for NES Metroid. Reveals rooms as Samus explores, plus health, missiles, equipment, and boss tracker.",
+    "minAppVersion": 1
+  },
+  "hideOverlay": false,
+  "settings": [
+    {
+      "id": "show_full_map",
+      "label": "Show Full Map",
+      "type": "toggle",
+      "default": "false"
+    },
+    {
+      "id": "show_equipment",
+      "label": "Show Equipment",
+      "type": "toggle",
+      "default": "true"
+    },
+    {
+      "id": "show_timer",
+      "label": "Show Timer",
+      "type": "toggle",
+      "default": "true"
+    },
+    {
+      "id": "auto_center",
+      "label": "Auto-Center on Samus",
+      "type": "toggle",
+      "default": "true"
+    }
+  ]
+}

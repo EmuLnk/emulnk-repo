@@ -1,0 +1,110 @@
+{
+  "id": "M1",
+  "name": "Metroid",
+  "platform": "NES",
+  "gameIds": ["70080810"],
+  "dataPoints": [
+    {
+      "id": "map_pos_y",
+      "type": "u8",
+      "size": 1,
+      "addresses": { "default": "0x004F" }
+    },
+    {
+      "id": "map_pos_x",
+      "type": "u8",
+      "size": 1,
+      "addresses": { "default": "0x0050" }
+    },
+    {
+      "id": "in_area",
+      "type": "u8",
+      "size": 1,
+      "addresses": { "default": "0x0074" }
+    },
+    {
+      "id": "room_number",
+      "type": "u8",
+      "size": 1,
+      "addresses": { "default": "0x005A" }
+    },
+    {
+      "id": "scroll_dir",
+      "type": "u8",
+      "size": 1,
+      "addresses": { "default": "0x0049" }
+    },
+    {
+      "id": "main_routine",
+      "type": "u8",
+      "size": 1,
+      "addresses": { "default": "0x001E" }
+    },
+    {
+      "id": "health",
+      "type": "bytes",
+      "size": 2,
+      "addresses": { "default": "0x0106" }
+    },
+    {
+      "id": "mb_status",
+      "type": "u8",
+      "size": 1,
+      "addresses": { "default": "0x0098" }
+    },
+    {
+      "id": "mb_hits",
+      "type": "u8",
+      "size": 1,
+      "addresses": { "default": "0x0099" }
+    },
+    {
+      "id": "energy_tanks",
+      "type": "u8",
+      "size": 1,
+      "addresses": { "default": "0x6877" }
+    },
+    {
+      "id": "equipment",
+      "type": "u8",
+      "size": 1,
+      "addresses": { "default": "0x6878" }
+    },
+    {
+      "id": "missiles_cur",
+      "type": "u8",
+      "size": 1,
+      "addresses": { "default": "0x6879" }
+    },
+    {
+      "id": "missiles_max",
+      "type": "u8",
+      "size": 1,
+      "addresses": { "default": "0x687A" }
+    },
+    {
+      "id": "kraid_status",
+      "type": "u8",
+      "size": 1,
+      "addresses": { "default": "0x687B" }
+    },
+    {
+      "id": "ridley_status",
+      "type": "u8",
+      "size": 1,
+      "addresses": { "default": "0x687C" }
+    },
+    {
+      "id": "game_age",
+      "type": "bytes",
+      "size": 3,
+      "addresses": { "default": "0x687D" }
+    },
+    {
+      "id": "missile_toggle",
+      "type": "u8",
+      "size": 1,
+      "addresses": { "default": "0x010E" }
+    }
+  ]
+}

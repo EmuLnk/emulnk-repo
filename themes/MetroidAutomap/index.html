@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Zebes Auto-Map</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header: Area name | Timer | Connection dot -->
+    <div class="header">
+        <div class="header-left" id="area-name">&mdash;</div>
+        <div class="header-right">
+            <span id="timer">0:00:00</span>
+            <div class="conn-dot" id="conn-dot"></div>
+        </div>
+    </div>
+
+    <!-- Map canvas -->
+    <div class="map-panel">
+        <canvas id="map-canvas"></canvas>
+        <button class="map-btn reset-btn" id="reset-btn">↺</button>
+        <div class="map-empty-text" id="map-empty">Exploring...</div>
+    </div>
+
+    <!-- Map legend -->
+    <div class="panel map-legend" id="map-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#30b040"></div>Brinstar</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#e04020"></div>Norfair</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#3060d0"></div>Kraid</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#9030c0"></div>Ridley</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#a0a0b0"></div>Tourian</div>
+    </div>
+
+    <!-- Health & Missiles -->
+    <div class="panel">
+        <div class="panel-label">Status</div>
+        <div class="bar-row">
+            <span class="bar-label">HP</span>
+            <div class="bar-track"><div class="bar-fill energy" id="hp-bar" style="width:0%"></div></div>
+            <span class="bar-text" id="hp-text">0 / 99</span>
+        </div>
+        <div class="bar-row">
+            <span class="bar-label">Missiles</span>
+            <div class="bar-track"><div class="bar-fill missiles" id="missile-bar" style="width:0%"></div></div>
+            <span class="bar-text" id="missile-text">0 / 0</span>
+        </div>
+        <div class="weapon-toggle">
+            <div class="weapon-chip" id="wep-beam">Beam</div>
+            <div class="weapon-chip" id="wep-missile">Missiles</div>
+        </div>
+    </div>
+
+    <!-- Equipment -->
+    <div class="panel" id="equipment-panel">
+        <div class="panel-label">Equipment</div>
+        <div class="equip-grid" id="equip-grid"></div>
+    </div>
+
+    <!-- Boss tracker -->
+    <div class="panel" id="boss-panel">
+        <div class="panel-label">Bosses</div>
+        <div class="boss-grid" id="boss-grid"></div>
+    </div>
+
+    <!-- Mother Brain HP (contextual) -->
+    <div class="panel" id="mb-panel" style="display:none">
+        <div class="panel-label">Mother Brain</div>
+        <div class="bar-row">
+            <div class="bar-track"><div class="bar-fill" id="mb-hp-bar" style="width:0%"></div></div>
+            <span class="bar-text" id="mb-hp-text">0 / 32</span>
+        </div>
+    </div>
+
+    <div id="status">Waiting for data...</div>
+
+<script>
+/* ── Area definitions ── */
+
+/* $0074 stores bank index (0-4) or area ID (0x10-0x14); mapKey normalizes both */
+var AREAS = {
+    0:    { name: 'Brinstar',      color: '#30b040', mapKey: 0x10 },
+    1:    { name: 'Norfair',       color: '#e04020', mapKey: 0x11 },
+    2:    { name: 'Tourian',       color: '#a0a0b0', mapKey: 0x13 },
+    3:    { name: "Kraid's Lair",  color: '#3060d0', mapKey: 0x12 },
+    4:    { name: "Ridley's Lair", color: '#9030c0', mapKey: 0x14 },
+    0x10: { name: 'Brinstar',      color: '#30b040', mapKey: 0x10 },
+    0x11: { name: 'Norfair',       color: '#e04020', mapKey: 0x11 },
+    0x12: { name: "Kraid's Lair",  color: '#3060d0', mapKey: 0x12 },
+    0x13: { name: 'Tourian',       color: '#a0a0b0', mapKey: 0x13 },
+    0x14: { name: "Ridley's Lair", color: '#9030c0', mapKey: 0x14 }
+};
+
+/* Equipment bitmask ($6878) */
+var EQUIPMENT = [
+    { name: 'Bombs',      bit: 0 },
+    { name: 'Hi-Jump',    bit: 1 },
+    { name: 'Long Beam',  bit: 2 },
+    { name: 'Screw Atk',  bit: 3 },
+    { name: 'Morph Ball', bit: 4 },
+    { name: 'Varia',      bit: 5 },
+    { name: 'Wave Beam',  bit: 6 },
+    { name: 'Ice Beam',   bit: 7 }
+];
+
+var BOSSES = [
+    { name: 'Kraid',  id: 'kraid' },
+    { name: 'Ridley', id: 'ridley' },
+    { name: 'Mother Brain', id: 'mb' }
+];
+
+/* "Y,X" on 32x32 WorldMap grid. 469 screens, cap rooms excluded. */
+var FULL_MAP = {
+    /* Brinstar (0x10): 191 screens */
+    0x10: new Set([
+        "2,3","2,4","2,5","2,6","2,7","2,8","2,9","2,10","2,11","2,13","2,15","2,16","2,17","2,18","2,19","2,20",
+        "3,3","3,11","3,13","3,14","3,15","3,16","3,18","3,19","3,20","3,21","3,22","3,23","3,24","3,25","3,26","3,27","3,28","3,29","3,30",
+        "4,11","4,13","4,30",
+        "5,7","5,8","5,9","5,10","5,11","5,13","5,25","5,26","5,27","5,28","5,29","5,30",
+        "6,11","6,13","6,30",
+        "7,11","7,12","7,13","7,14","7,15","7,16","7,17","7,18","7,19","7,20","7,21","7,22","7,23","7,24","7,25","7,26","7,27","7,28","7,29","7,30",
+        "8,11","8,13","8,18","8,22",
+        "9,11","9,13","9,18","9,19","9,20","9,21","9,22","9,24","9,30",
+        "10,1","10,10","10,11","10,13","10,25",
+        "11,1","11,2","11,13","11,14","11,15","11,16","11,17","11,18","11,19","11,20","11,21","11,22","11,24","11,25",
+        "12,11","12,22","12,24","12,25",
+        "13,11","13,13","13,22","13,30",
+        "14,2","14,3","14,4","14,5","14,6","14,7","14,8","14,9","14,10","14,11","14,14",
+        "15,6","15,14",
+        "16,6","16,8","16,11","16,13","16,30",
+        "17,6",
+        "18,6","18,11","18,30",
+        "19,10","19,13","19,17","19,18","19,29","19,30",
+        "20,1","20,7","20,8","20,29","20,30",
+        "21,10","21,13","21,20","21,21","21,29","21,30",
+        "22,10","22,13","22,20","22,21","22,25","22,30",
+        "23,1","23,4","23,12","23,17","23,24","23,25","23,30",
+        "24,1","24,11","24,14","24,24","24,25","24,30",
+        "25,1","25,11","25,29","25,30",
+        "26,1","26,8","26,11","26,14","26,17","26,22",
+        "27,11","27,29","27,30",
+        "28,14","28,22",
+        "29,11","29,29","29,30",
+        "30,29","30,30"
+    ]),
+
+    /* Norfair (0x11): 113 screens */
+    0x11: new Set([
+        "10,27","10,28","10,29","10,30",
+        "11,26","11,27","11,28","11,29","11,30",
+        "12,26","12,27","12,29","12,30",
+        "14,15","14,17","14,18","14,19","14,20","14,21","14,22","14,23","14,24","14,25","14,26","14,27","14,28","14,29","14,30",
+        "15,15","15,16","15,17","15,19","15,20","15,21","15,24","15,25","15,26","15,27","15,28","15,29","15,30",
+        "16,15","16,16","16,17","16,18",
+        "17,13","17,14","17,15","17,16","17,17","17,18","17,19","17,20","17,21","17,22","17,23","17,24","17,25","17,27","17,28","17,29","17,30",
+        "18,13","18,14","18,15","18,16","18,17","18,18","18,19","18,20","18,21","18,22","18,23","18,24","18,26","18,27","18,28","18,29",
+        "19,11","19,26","19,27","19,28",
+        "20,11","20,13","20,14","20,15","20,16","20,17","20,18","20,19","20,20","20,21","20,22","20,23","20,25","20,26","20,27","20,28",
+        "21,11","21,17","21,18","21,19","21,24","21,25","21,26","21,27","21,28",
+        "22,11","22,16","22,17","22,18","22,19",
+        "23,23"
+    ]),
+
+    /* Kraid's Lair (0x12): 63 screens */
+    0x12: new Set([
+        "17,8","17,9","17,10","17,11",
+        "18,7","18,8","18,9","18,10",
+        "19,6","19,7","19,8","19,9",
+        "21,1","21,2","21,3","21,4","21,6","21,7","21,8","21,9",
+        "22,1","22,2","22,3","22,4","22,5","22,6","22,7","22,8",
+        "24,4","24,5","24,6","24,7","24,8","24,9","24,10",
+        "25,7","25,10",
+        "26,4","26,5","26,6","26,7","26,9",
+        "27,1","27,2","27,3","27,4","27,5","27,6","27,7","27,8","27,9","27,10",
+        "28,3","28,4","28,5","28,6","28,7","28,8","28,9","28,10",
+        "29,8","29,9","29,10"
+    ]),
+
+    /* Tourian (0x13): 29 screens */
+    0x13: new Set([
+        "3,1",
+        "4,1","4,3",
+        "5,1","5,3",
+        "6,1","6,3",
+        "7,1","7,3","7,4","7,5","7,6","7,7","7,8","7,9","7,10",
+        "8,1","8,10",
+        "9,1","9,10",
+        "11,3","11,4","11,5","11,6","11,7","11,8","11,9","11,10","11,11"
+    ]),
+
+    /* Ridley's Lair (0x14): 73 screens */
+    0x14: new Set([
+        "24,12","24,18","24,19","24,20","24,21","24,22","24,23",
+        "25,12","25,14","25,15","25,16","25,17","25,18","25,19","25,20","25,21","25,22","25,23","25,24","25,25","25,26","25,27","25,28",
+        "26,12",
+        "27,12","27,14","27,15","27,16","27,17","27,18","27,19","27,20","27,21","27,22","27,23","27,24","27,25","27,26","27,27","27,28",
+        "28,12",
+        "29,12","29,14","29,15","29,16","29,17","29,18","29,19","29,20","29,21","29,22","29,23","29,24","29,25","29,26","29,27","29,28",
+        "30,12","30,14","30,15","30,16","30,17","30,18","30,19","30,20","30,21","30,22","30,23","30,24","30,25","30,26","30,27","30,28"
+    ])
+};
+
+var settings = { show_full_map: false, show_equipment: true, show_timer: true };
+var visited = new Map(); /* "area:y:x" -> {area, room} */
+
+function saveVisited() {
+    try {
+        var arr = [];
+        visited.forEach(function(info, key) { arr.push([key, info.area, info.room]); });
+        localStorage.setItem('metroid_visited', JSON.stringify(arr));
+    } catch (e) { /* quota or private mode — silently fail */ }
+}
+function loadVisited() {
+    try {
+        var raw = localStorage.getItem('metroid_visited');
+        if (raw) {
+            JSON.parse(raw).forEach(function(entry) {
+                if (entry.length === 3) {
+                    visited.set(entry[0], { area: entry[1], room: entry[2] });
+                } else {
+                    visited.set(entry[0], { area: entry[1], room: -1 }); /* legacy format */
+                }
+            });
+        }
+    } catch (e) { /* corrupt data — start fresh */ }
+}
+loadVisited();
+var animFrame = 0;
+var curArea = 0, curY = 0, curX = 0;
+var peakHp = 0;
+var wramAvailable = true; /* disabled if garbage detected */
+var wramCheckDone = false;
+
+var camera = { x: 16, y: 16, zoom: 1 };
+var baseCellSize = 16;
+var isPanning = false, panStart = { x: 0, y: 0 }, camStart = { x: 0, y: 0 };
+var pinchStartDist = 0, pinchStartZoom = 1;
+var lastTapTime = 0;
+var autoCenter = true;
+
+var canvas = document.getElementById('map-canvas');
+var ctx = canvas.getContext('2d');
+
+function resizeCanvas() {
+    var panel = canvas.parentElement;
+    var dpr = window.devicePixelRatio || 1;
+    var w = Math.round(panel.clientWidth * dpr);
+    var h = Math.round(panel.clientHeight * dpr);
+    if (canvas.width !== w || canvas.height !== h) {
+        canvas.width = w;
+        canvas.height = h;
+    }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+window.addEventListener('resize', function() { resizeCanvas(); drawMap(); });
+resizeCanvas();
+
+var redrawPending = false;
+function requestRedraw() {
+    if (!redrawPending) {
+        redrawPending = true;
+        requestAnimationFrame(function() {
+            redrawPending = false;
+            drawMap();
+        });
+    }
+}
+
+canvas.addEventListener('touchstart', function(e) {
+    if (e.touches.length === 1 && !autoCenter) {
+        isPanning = true;
+        panStart.x = e.touches[0].clientX;
+        panStart.y = e.touches[0].clientY;
+        camStart.x = camera.x;
+        camStart.y = camera.y;
+    } else if (e.touches.length === 2) {
+        isPanning = false;
+        var dx = e.touches[0].clientX - e.touches[1].clientX;
+        var dy = e.touches[0].clientY - e.touches[1].clientY;
+        pinchStartDist = Math.sqrt(dx * dx + dy * dy);
+        pinchStartZoom = camera.zoom;
+    }
+    e.preventDefault();
+}, { passive: false });
+
+canvas.addEventListener('touchmove', function(e) {
+    if (e.touches.length === 1 && isPanning) {
+        var dx = e.touches[0].clientX - panStart.x;
+        var dy = e.touches[0].clientY - panStart.y;
+        var scale = 1.0 / (camera.zoom * baseCellSize);
+        camera.x = camStart.x - dx * scale;
+        camera.y = camStart.y - dy * scale;
+        requestRedraw();
+    } else if (e.touches.length === 2) {
+        var tdx = e.touches[0].clientX - e.touches[1].clientX;
+        var tdy = e.touches[0].clientY - e.touches[1].clientY;
+        var dist = Math.sqrt(tdx * tdx + tdy * tdy);
+        if (pinchStartDist > 0) {
+            camera.zoom = Math.max(0.5, Math.min(5, pinchStartZoom * (dist / pinchStartDist)));
+            requestRedraw();
+        }
+    }
+    e.preventDefault();
+}, { passive: false });
+
+canvas.addEventListener('touchend', function(e) {
+    if (e.touches.length === 0) {
+        isPanning = false;
+        var now = Date.now();
+        if (now - lastTapTime < 300) {
+            camera.zoom = 1;
+            requestRedraw();
+        }
+        lastTapTime = now;
+    }
+});
+
+document.getElementById('reset-btn').onclick = function() {
+    visited.clear();
+    peakHp = 0;
+    saveVisited();
+    drawMap();
+};
+
+function initGrids() {
+    var eg = document.getElementById('equip-grid');
+    EQUIPMENT.forEach(function(eq) {
+        var chip = document.createElement('div');
+        chip.className = 'equip-chip';
+        chip.id = 'eq-' + eq.bit;
+        chip.textContent = eq.name;
+        eg.appendChild(chip);
+    });
+
+    var bg = document.getElementById('boss-grid');
+    BOSSES.forEach(function(boss) {
+        var chip = document.createElement('div');
+        chip.className = 'boss-chip';
+        chip.id = 'boss-' + boss.id;
+        chip.textContent = boss.name;
+        bg.appendChild(chip);
+    });
+}
+initGrids();
+
+function b64ToBytes(b64) {
+    var bin = atob(b64);
+    var arr = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+    return arr;
+}
+
+function pctBar(cur, max) {
+    if (max <= 0) return 0;
+    return Math.min(100, (cur / max) * 100);
+}
+
+/* $0106/$0107 split-nibble BCD: b1[7:4]=tanks, b1[3:0]=tens, b0[7:4]=ones */
+function decodeHealth(healthBytes) {
+    var b0 = healthBytes[0], b1 = healthBytes[1];
+    return ((b1 >> 4) & 0xF) * 100 + (b1 & 0xF) * 10 + ((b0 >> 4) & 0xF);
+}
+
+/* 24-bit LE tick counter, ~10.17 ticks/sec */
+function decodeGameAge(ageBytes) {
+    var ticks = ageBytes[0] | (ageBytes[1] << 8) | (ageBytes[2] << 16);
+    var totalSeconds = Math.floor(ticks / 10.17);
+    var h = Math.floor(totalSeconds / 3600);
+    var m = Math.floor((totalSeconds % 3600) / 60);
+    var s = totalSeconds % 60;
+    return { h: h, m: m, s: s, totalSeconds: totalSeconds };
+}
+
+function endingRating(totalSeconds) {
+    var hours = totalSeconds / 3600;
+    if (hours < 1) return 'Best Ending';
+    if (hours < 3) return 'Good Ending';
+    if (hours < 5) return 'Normal Ending';
+    return 'Slow Ending';
+}
+
+function drawMap() {
+    var sw = canvas.parentElement.clientWidth;
+    var sh = canvas.parentElement.clientHeight;
+    ctx.clearRect(0, 0, sw, sh);
+
+    baseCellSize = Math.max(4, Math.floor(sw / 14));
+    var cs = baseCellSize * camera.zoom;
+
+    if (autoCenter && AREAS[curArea]) {
+        camera.x = curX + 0.5;
+        camera.y = curY + 0.5;
+    }
+
+    function toSX(gx) { return (gx - camera.x) * cs + sw / 2; }
+    function toSY(gy) { return (gy - camera.y) * cs + sh / 2; }
+
+    var emptyEl = document.getElementById('map-empty');
+    var hasContent = visited.size > 0 || settings.show_full_map;
+    if (!hasContent) {
+        emptyEl.style.display = '';
+        return;
+    }
+    emptyEl.style.display = 'none';
+
+    var gap = Math.max(1, Math.floor(cs * 0.08));
+
+    /* Dim dots for unvisited cells */
+    if (settings.show_full_map) {
+        ctx.globalAlpha = 0.18;
+        var dotSize = Math.max(2, cs * 0.2);
+        for (var areaId in FULL_MAP) {
+            var color = AREAS[areaId] ? AREAS[areaId].color : '#444';
+            ctx.fillStyle = color;
+            FULL_MAP[areaId].forEach(function(key) {
+                var parts = key.split(',');
+                var sx = toSX(+parts[1]), sy = toSY(+parts[0]);
+                if (sx + cs < 0 || sx > sw || sy + cs < 0 || sy > sh) return;
+                var cx = sx + cs / 2, cy = sy + cs / 2;
+                ctx.beginPath();
+                ctx.arc(cx, cy, dotSize, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+        ctx.globalAlpha = 1;
+    }
+
+    /* Visited cells */
+    ctx.globalAlpha = 0.85;
+    visited.forEach(function(info, key) {
+        var parts = key.split(':');
+        var sx = toSX(+parts[2]), sy = toSY(+parts[1]);
+        if (sx + cs < 0 || sx > sw || sy + cs < 0 || sy > sh) return;
+        ctx.fillStyle = AREAS[info.area] ? AREAS[info.area].color : '#444';
+        ctx.fillRect(sx + gap, sy + gap, cs - gap * 2, cs - gap * 2);
+    });
+    ctx.globalAlpha = 1;
+
+    /* Room borders at transitions + explored edges */
+    var roomAt = {};
+    var visitedSet = new Set();
+    visited.forEach(function(info, key) {
+        var parts = key.split(':');
+        var coord = parts[1] + ',' + parts[2];
+        roomAt[coord] = info.room;
+        visitedSet.add(coord);
+    });
+
+    ctx.strokeStyle = 'rgba(0, 212, 255, 0.5)';
+    ctx.lineWidth = Math.max(1.5, cs * 0.12);
+    visited.forEach(function(info, key) {
+        if (info.room === -1) return;
+        var parts = key.split(':');
+        var y = +parts[1], x = +parts[2];
+        var room = info.room;
+        var sx = toSX(x), sy = toSY(y);
+        if (sx + cs < -cs || sx > sw + cs || sy + cs < -cs || sy > sh + cs) return;
+
+        var hasTop = visitedSet.has((y - 1) + ',' + x);
+        var hasBot = visitedSet.has((y + 1) + ',' + x);
+        var hasLft = visitedSet.has(y + ',' + (x - 1));
+        var hasRgt = visitedSet.has(y + ',' + (x + 1));
+        var rTop = roomAt[(y - 1) + ',' + x];
+        var rBot = roomAt[(y + 1) + ',' + x];
+        var rLft = roomAt[y + ',' + (x - 1)];
+        var rRgt = roomAt[y + ',' + (x + 1)];
+
+        if (!hasTop || (rTop !== undefined && rTop !== -1 && rTop !== room)) {
+            ctx.beginPath(); ctx.moveTo(sx + gap, sy + gap); ctx.lineTo(sx + cs - gap, sy + gap); ctx.stroke();
+        }
+        if (!hasBot || (rBot !== undefined && rBot !== -1 && rBot !== room)) {
+            ctx.beginPath(); ctx.moveTo(sx + gap, sy + cs - gap); ctx.lineTo(sx + cs - gap, sy + cs - gap); ctx.stroke();
+        }
+        if (!hasLft || (rLft !== undefined && rLft !== -1 && rLft !== room)) {
+            ctx.beginPath(); ctx.moveTo(sx + gap, sy + gap); ctx.lineTo(sx + gap, sy + cs - gap); ctx.stroke();
+        }
+        if (!hasRgt || (rRgt !== undefined && rRgt !== -1 && rRgt !== room)) {
+            ctx.beginPath(); ctx.moveTo(sx + cs - gap, sy + gap); ctx.lineTo(sx + cs - gap, sy + cs - gap); ctx.stroke();
+        }
+    });
+
+    /* Pulsing position dot */
+    if (AREAS[curArea]) {
+        var dotSX = toSX(curX) + cs / 2;
+        var dotSY = toSY(curY) + cs / 2;
+        var pulse = 0.5 + 0.5 * Math.sin(animFrame * 0.15);
+        var dotR = Math.max(2, cs * 0.25);
+
+        ctx.beginPath();
+        ctx.arc(dotSX, dotSY, dotR + 2 + pulse * 3, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(0, 212, 255, ' + (0.15 + 0.15 * pulse) + ')';
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(dotSX, dotSY, dotR, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255, 255, 255, ' + (0.7 + 0.3 * pulse) + ')';
+        ctx.fill();
+    }
+}
+
+function updateData(base64Data, isInitial) {
+    try {
+        var json = JSON.parse(atob(base64Data));
+        var v = json.values || {};
+
+        if (json.settings) {
+            settings.show_full_map = json.settings.show_full_map !== 'false';
+            settings.show_equipment = json.settings.show_equipment !== 'false';
+            settings.show_timer = json.settings.show_timer !== 'false';
+            autoCenter = json.settings.auto_center !== 'false';
+        }
+
+        var connected = json.isConnected;
+        document.body.classList.toggle('offline', !connected);
+        document.getElementById('status').textContent = connected ? 'Connected' : 'Offline';
+
+        var area = v.in_area;
+        if (area === undefined || area === null) area = 0;
+        curArea = area;
+        var areaInfo = AREAS[area];
+        var mapKey = areaInfo ? areaInfo.mapKey : -1;
+        document.getElementById('area-name').textContent = areaInfo ? areaInfo.name : '\u2014';
+
+        var posY = v.map_pos_y || 0, posX = v.map_pos_x || 0;
+        curY = posY;
+        curX = posX;
+
+        var roomNum = v.room_number || 0;
+        if (areaInfo && posY < 32 && posX < 32) {
+            var visitKey = mapKey + ':' + posY + ':' + posX;
+            if (!visited.has(visitKey)) {
+                visited.set(visitKey, { area: mapKey, room: roomNum });
+                saveVisited();
+            }
+        }
+
+        var timerEl = document.getElementById('timer');
+        if (settings.show_timer && wramAvailable && v.game_age) {
+            var ageBytes = b64ToBytes(v.game_age);
+            var time = decodeGameAge(ageBytes);
+            timerEl.textContent = time.h + ':' + String(time.m).padStart(2, '0') + ':' + String(time.s).padStart(2, '0');
+            timerEl.style.display = '';
+        } else {
+            timerEl.style.display = 'none';
+        }
+
+        var hp = 0, maxHp = 99;
+        if (v.health) {
+            var hpBytes = b64ToBytes(v.health);
+            hp = decodeHealth(hpBytes);
+        }
+        if (hp > peakHp) peakHp = hp;
+
+        /* 0 tanks=99, 1 tank=199, etc. — inferred from peak HP seen */
+        maxHp = Math.max(99, (Math.floor(peakHp / 100) + 1) * 100 - 1);
+
+        document.getElementById('hp-bar').style.width = pctBar(hp, maxHp) + '%';
+        document.getElementById('hp-text').textContent = hp + ' / ' + maxHp;
+
+        var hpBar = document.getElementById('hp-bar');
+        if (hp > 0 && hp < 30) {
+            hpBar.style.background = 'var(--hp-low)';
+        } else {
+            hpBar.style.background = '';
+        }
+
+        var misCur = wramAvailable ? (v.missiles_cur || 0) : 0;
+        var misMax = wramAvailable ? (v.missiles_max || 0) : 0;
+        document.getElementById('missile-bar').style.width = pctBar(misCur, misMax) + '%';
+        document.getElementById('missile-text').textContent = misCur + ' / ' + misMax;
+
+        var missileToggle = v.missile_toggle || 0;
+        document.getElementById('wep-beam').className = 'weapon-chip' + (missileToggle === 0 ? ' active' : '');
+        document.getElementById('wep-missile').className = 'weapon-chip' + (missileToggle !== 0 ? ' active' : '');
+
+        var equipPanel = document.getElementById('equipment-panel');
+        if (settings.show_equipment && wramAvailable) {
+            equipPanel.style.display = '';
+            var equipBits = v.equipment || 0;
+            EQUIPMENT.forEach(function(eq) {
+                var el = document.getElementById('eq-' + eq.bit);
+                el.classList.toggle('collected', (equipBits & (1 << eq.bit)) !== 0);
+            });
+        } else {
+            equipPanel.style.display = wramAvailable ? (settings.show_equipment ? '' : 'none') : 'none';
+        }
+
+        var kraidDefeated = wramAvailable && v.kraid_status ? (v.kraid_status & 0x80) !== 0 : false;
+        var ridleyDefeated = wramAvailable && v.ridley_status ? (v.ridley_status & 0x80) !== 0 : false;
+        document.getElementById('boss-kraid').classList.toggle('defeated', kraidDefeated);
+        document.getElementById('boss-ridley').classList.toggle('defeated', ridleyDefeated);
+        /* Boss panel needs WRAM; MB uses internal RAM so it's separate */
+        document.getElementById('boss-panel').style.display = wramAvailable ? '' : 'none';
+
+        var mbStatus = v.mb_status || 0;
+        var mbHits = v.mb_hits || 0;
+        var mbPanel = document.getElementById('mb-panel');
+        var mbDefeated = mbStatus >= 8;
+
+        document.getElementById('boss-mb').classList.toggle('defeated', mbDefeated);
+
+        /* Tourian = area 0x13 or bank index 2 */
+        if (mapKey === 0x13 && mbStatus > 0 && mbStatus < 8) {
+            mbPanel.style.display = '';
+            var mbMaxHits = 32;
+            document.getElementById('mb-hp-bar').style.width = pctBar(mbMaxHits - mbHits, mbMaxHits) + '%';
+            document.getElementById('mb-hp-text').textContent = (mbMaxHits - mbHits) + ' / ' + mbMaxHits;
+        } else {
+            mbPanel.style.display = 'none';
+        }
+
+        /* Detect WRAM garbage: Mesen doesn't expose $6000-$7FFF, reads return junk.
+           Check energy_tanks sanity (max 6, or 8 with glitches) vs observed HP. */
+        if (!wramCheckDone && areaInfo) {
+            var tanksVal = v.energy_tanks || 0;
+            if (tanksVal > 8) {
+                /* Impossible value → definitely garbage */
+                wramAvailable = false;
+                wramCheckDone = true;
+            } else if (peakHp > 0 && peakHp < 100 && tanksVal > 0) {
+                /* Player has never had >99 HP but WRAM says tanks > 0 → garbage */
+                wramAvailable = false;
+                wramCheckDone = true;
+            } else if (tanksVal > 0 && tanksVal <= 8 && peakHp >= tanksVal * 100) {
+                /* Consistent: tanks matches observed HP range → WRAM works */
+                wramAvailable = true;
+                wramCheckDone = true;
+            }
+            /* Otherwise keep checking (not enough data yet) */
+        }
+
+        var statusEl = document.getElementById('status');
+        if (connected && settings.show_timer && v.game_age && wramAvailable) {
+            var ageB = b64ToBytes(v.game_age);
+            var t = decodeGameAge(ageB);
+            if (t.totalSeconds > 0) {
+                statusEl.textContent = endingRating(t.totalSeconds);
+            } else {
+                statusEl.textContent = 'Connected';
+            }
+        } else if (connected) {
+            statusEl.textContent = 'Connected';
+        }
+
+        animFrame++;
+        drawMap();
+
+    } catch (e) {
+        document.getElementById('status').textContent = 'Error: ' + e.message;
+    }
+}
+
+function onGameClosed() {
+    document.body.classList.add('offline');
+    document.getElementById('status').textContent = 'Game closed';
+}
+</script>
+</body>
+</html>

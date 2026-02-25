@@ -38,6 +38,14 @@
     "idSize": 40
   },
   {
+    "id": "retroarch_nes",
+    "packageNames": ["com.retroarch.lnk.aarch64"],
+    "console": "NES",
+    "port": 55355,
+    "idAddress": "0x00200000",
+    "idSize": 40
+  },
+  {
     "id": "retroarch_ps1",
     "packageNames": ["com.retroarch.lnk.aarch64"],
     "console": "PS1",

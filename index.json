@@ -60,6 +60,16 @@
       "targetProfileId": "PSIV",
       "minAppVersion": 1,
       "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/PSIVComboCodex/preview.png"
+    },
+    {
+      "id": "MetroidAutomap",
+      "name": "Zebes Auto-Map",
+      "author": "EmuLnk Team",
+      "version": "1.0.0",
+      "description": "Progressive auto-map for NES Metroid. Reveals rooms as Samus explores, plus health, missiles, equipment, and boss tracker.",
+      "targetProfileId": "M1",
+      "minAppVersion": 1,
+      "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/MetroidAutomap/preview.png"
     }
   ]
 }

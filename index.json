@@ -70,6 +70,16 @@
       "targetProfileId": "M1",
       "minAppVersion": 1,
       "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/MetroidAutomap/preview.png"
+    },
+    {
+      "id": "CrystalHUD",
+      "name": "Crystal Companion",
+      "author": "EmuLnk Team",
+      "version": "1.0.0",
+      "description": "Dual-mode companion for Pokemon Crystal. Shows hidden DVs, Stat Exp, and Hidden Power in the overworld; reveals enemy HP, moves, and types during battle.",
+      "targetProfileId": "PMC",
+      "minAppVersion": 1,
+      "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/CrystalHUD/preview.png"
     }
   ]
 }

@@ -1,0 +1,58 @@
+{
+  "id": "PMC",
+  "name": "Pokemon Crystal",
+  "platform": "GBC",
+  "gameIds": [
+    "PM_CRYSTAL"
+  ],
+  "dataPoints": [
+    {
+      "id": "battle_mode",
+      "type": "u8",
+      "size": 1,
+      "addresses": {
+        "default": "0xD22D"
+      }
+    },
+    {
+      "id": "party_count",
+      "type": "u8",
+      "size": 1,
+      "addresses": {
+        "default": "0xDCD7"
+      }
+    },
+    {
+      "id": "party_data",
+      "type": "bytes",
+      "size": 288,
+      "addresses": {
+        "default": "0xDCDF"
+      }
+    },
+    {
+      "id": "party_nicknames",
+      "type": "bytes",
+      "size": 66,
+      "addresses": {
+        "default": "0xDE41"
+      }
+    },
+    {
+      "id": "enemy_mon",
+      "type": "bytes",
+      "size": 32,
+      "addresses": {
+        "default": "0xD206"
+      }
+    },
+    {
+      "id": "player_battle_mon",
+      "type": "bytes",
+      "size": 32,
+      "addresses": {
+        "default": "0xC62C"
+      }
+    }
+  ]
+}

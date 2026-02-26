@@ -22,12 +22,28 @@
     "idSize": 9
   },
   {
+    "id": "retroarch_gb",
+    "packageNames": ["com.retroarch.lnk.aarch64"],
+    "console": "GB",
+    "port": 55355,
+    "idAddress": "0x00200000",
+    "idSize": 40
+  },
+  {
     "id": "retroarch_gba",
     "packageNames": ["com.retroarch.lnk.aarch64"],
     "console": "GBA",
     "port": 55355,
     "idAddress": "0x080000AC",
     "idSize": 4
+  },
+  {
+    "id": "retroarch_gbc",
+    "packageNames": ["com.retroarch.lnk.aarch64"],
+    "console": "GBC",
+    "port": 55355,
+    "idAddress": "0x00200000",
+    "idSize": 40
   },
   {
     "id": "retroarch_genesis",

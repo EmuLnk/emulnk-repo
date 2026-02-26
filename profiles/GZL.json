@@ -2,6 +2,7 @@
   "id": "GZL",
   "name": "The Legend of Zelda: The Wind Waker",
   "platform": "GCN",
+  "gameIds": ["GZLE01", "GZLP01"],
   "dataPoints": [
     {
       "id": "max_health",

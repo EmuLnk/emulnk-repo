@@ -75,7 +75,7 @@
     "console": "PS1",
     "port": 55355,
     "idAddress": "0x00200000",
-    "idSize": 10
+    "idSize": 40
   },
   {
     "id": "retroarch_snes",
@@ -83,6 +83,6 @@
     "console": "SNES",
     "port": 55355,
     "idAddress": "0x00200000",
-    "idSize": 21
+    "idSize": 40
   }
 ]

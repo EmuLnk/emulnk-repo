@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Mission Briefing</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="header">
+        <span id="mission-name">GOLDENEYE 007</span>
+        <span id="difficulty-badge" style="display:none"></span>
+        <span id="timer" style="display:none"></span>
+    </div>
+
+    <div id="waiting">Waiting for mission...</div>
+
+    <div id="hud" style="display:none">
+        <div id="bars">
+            <div class="bar-row" id="health-row">
+                <span class="bar-label">Health</span>
+                <div class="bar-bg">
+                    <div class="bar-fill health" id="health-bar" style="width:0%"></div>
+                </div>
+                <span class="bar-pct" id="health-pct">0%</span>
+            </div>
+            <div class="bar-row" id="armor-row">
+                <span class="bar-label">Armor</span>
+                <div class="bar-bg">
+                    <div class="bar-fill armor" id="armor-bar" style="width:0%"></div>
+                </div>
+                <span class="bar-pct" id="armor-pct">0%</span>
+            </div>
+        </div>
+
+        <div id="objectives-section">
+            <div class="section-label">OBJECTIVES</div>
+            <div id="objectives-list"></div>
+        </div>
+
+        <div id="weapon-section">
+            <div class="weapon-row">
+                <span id="weapon-name"></span>
+                <span id="weapon-ammo"></span>
+            </div>
+            <div id="weapon-dual"></div>
+        </div>
+    </div>
+
+    <div id="status">Waiting for data...</div>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+{
+  "id": "GoldenEyeHUD",
+  "targetProfileId": "GE",
+  "targetConsole": "N64",
+  "meta": {
+    "name": "Mission Briefing",
+    "author": "EmuLnk Team",
+    "version": "1.0.0",
+    "description": "Live mission HUD for GoldenEye 007. Objective checklist, health, armor, weapon, and timer — no more pausing mid-mission.",
+    "minAppVersion": 1
+  },
+  "hideOverlay": false,
+  "settings": [
+    {
+      "id": "show_weapon",
+      "label": "Show Weapon",
+      "type": "toggle",
+      "default": "true"
+    },
+    {
+      "id": "show_timer",
+      "label": "Show Timer",
+      "type": "toggle",
+      "default": "true"
+    }
+  ]
+}

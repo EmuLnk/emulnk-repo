@@ -1,0 +1,96 @@
+{
+  "id": "GE",
+  "name": "GoldenEye 007",
+  "platform": "N64",
+  "gameIds": [
+    "NGEE"
+  ],
+  "dataPoints": [
+    {
+      "id": "level_id",
+      "type": "u32_le",
+      "size": 4,
+      "addresses": {
+        "default": "0x80048364"
+      }
+    },
+    {
+      "id": "difficulty",
+      "type": "u32_le",
+      "size": 4,
+      "addresses": {
+        "default": "0x80048384"
+      }
+    },
+    {
+      "id": "mission_timer",
+      "type": "u32_le",
+      "size": 4,
+      "addresses": {
+        "default": "0x80079A20"
+      }
+    },
+    {
+      "id": "objectives",
+      "type": "bytes",
+      "size": 40,
+      "addresses": {
+        "default": "0x80075D58"
+      }
+    },
+    {
+      "id": "health",
+      "type": "float_le",
+      "size": 4,
+      "pointer": {
+        "default": "0x8007A0B0"
+      },
+      "offset": "0x00DC"
+    },
+    {
+      "id": "armor",
+      "type": "float_le",
+      "size": 4,
+      "pointer": {
+        "default": "0x8007A0B0"
+      },
+      "offset": "0x00E0"
+    },
+    {
+      "id": "weapon_r",
+      "type": "u32_le",
+      "size": 4,
+      "pointer": {
+        "default": "0x8007A0B0"
+      },
+      "offset": "0x0800"
+    },
+    {
+      "id": "weapon_l",
+      "type": "u32_le",
+      "size": 4,
+      "pointer": {
+        "default": "0x8007A0B0"
+      },
+      "offset": "0x0804"
+    },
+    {
+      "id": "ammo_mag",
+      "type": "u32_le",
+      "size": 4,
+      "pointer": {
+        "default": "0x8007A0B0"
+      },
+      "offset": "0x089C"
+    },
+    {
+      "id": "ammo_reserve",
+      "type": "bytes",
+      "size": 120,
+      "pointer": {
+        "default": "0x8007A0B0"
+      },
+      "offset": "0x1130"
+    }
+  ]
+}

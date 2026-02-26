@@ -80,6 +80,16 @@
       "targetProfileId": "PMC",
       "minAppVersion": 1,
       "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/CrystalHUD/preview.png"
+    },
+    {
+      "id": "GoldenEyeHUD",
+      "name": "Mission Briefing",
+      "author": "EmuLnk Team",
+      "version": "1.0.0",
+      "description": "Live mission HUD for GoldenEye 007. Objective checklist, health, armor, weapon, and timer — no more pausing mid-mission.",
+      "targetProfileId": "GE",
+      "minAppVersion": 1,
+      "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/GoldenEyeHUD/preview.png"
     }
   ]
 }

@@ -4,7 +4,7 @@
   "targetConsole": "GCN",
   "meta": {
     "name": "Great Sea Navigator",
-    "author": "EmuLink Team",
+    "author": "EmuLnk Team",
     "version": "1.0.0",
     "description": "Live minimap showing Link's real-time position on the Great Sea chart. Displays heading, hearts, rupees, and compass bearing.",
     "minAppVersion": 1

@@ -1,0 +1,33 @@
+{
+  "id": "CrystalHUD",
+  "targetProfileId": "PMC",
+  "targetConsole": "GBC",
+  "meta": {
+    "name": "Crystal Companion",
+    "author": "EmuLnk Team",
+    "version": "1.0.0",
+    "description": "Dual-mode companion for Pokemon Crystal. Shows hidden DVs, Stat Exp, and Hidden Power in the overworld; reveals enemy HP, moves, and types during battle.",
+    "minAppVersion": 1
+  },
+  "hideOverlay": false,
+  "settings": [
+    {
+      "id": "show_dvs",
+      "label": "Show DVs",
+      "type": "toggle",
+      "default": "true"
+    },
+    {
+      "id": "show_stat_exp",
+      "label": "Show Stat Exp",
+      "type": "toggle",
+      "default": "true"
+    },
+    {
+      "id": "show_moves",
+      "label": "Show Moves",
+      "type": "toggle",
+      "default": "true"
+    }
+  ]
+}

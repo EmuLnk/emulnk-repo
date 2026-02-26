@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Crystal Companion</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="header">
+        <span class="title">Pokemon Crystal</span>
+        <span class="mode-badge" id="mode-badge" style="display:none">BATTLE</span>
+        <span class="party-count" id="party-count-text">0 / 6</span>
+    </div>
+
+    <!-- Party Mode -->
+    <div id="detail">
+        <div class="empty-state" id="empty-state">Waiting for data...</div>
+        <div id="poke-detail" style="display:none">
+            <div class="poke-name-row">
+                <span class="poke-name" id="d-name"></span>
+                <span class="poke-level" id="d-level">Lv.</span>
+            </div>
+            <div class="item-line" id="d-item"></div>
+
+            <div class="hp-section">
+                <div class="hp-label">
+                    <span>HP</span>
+                    <span id="d-hp-text"></span>
+                </div>
+                <div class="hp-bar-bg">
+                    <div class="hp-bar-fill" id="d-hp-bar" style="width:0%"></div>
+                </div>
+            </div>
+
+            <div class="stats-grid" id="d-stats"></div>
+
+            <div class="iv-ev-section" id="d-dvs-section">
+                <div class="iv-ev-header">DVs</div>
+                <div class="iv-ev-grid" id="d-dvs"></div>
+            </div>
+
+            <div class="iv-ev-section" id="d-statexp-section">
+                <div class="iv-ev-header">Stat Exp</div>
+                <div class="iv-ev-grid" id="d-statexp"></div>
+            </div>
+
+            <div class="hp-type-row" id="d-hp-type-row">
+                <span><span class="label">Hidden Power: </span><span class="value" id="d-hp-type"></span></span>
+                <span><span class="label">Happiness: </span><span class="value" id="d-happiness"></span></span>
+            </div>
+
+            <div class="moves-grid" id="d-moves"></div>
+        </div>
+    </div>
+
+    <div id="party-bar"></div>
+
+    <!-- Battle Mode -->
+    <div id="battle-view" style="display:none">
+        <div class="battle-panel enemy-panel">
+            <div class="battle-header">
+                <span class="battle-label">ENEMY</span>
+                <span class="battle-species" id="b-enemy-name"></span>
+                <span class="battle-level" id="b-enemy-level">Lv.</span>
+            </div>
+            <div class="hp-section">
+                <div class="hp-label">
+                    <span>HP</span>
+                    <span id="b-enemy-hp-text"></span>
+                </div>
+                <div class="hp-bar-bg">
+                    <div class="hp-bar-fill" id="b-enemy-hp-bar" style="width:0%"></div>
+                </div>
+            </div>
+            <div class="type-badges" id="b-enemy-types"></div>
+            <div id="b-enemy-status-wrap"></div>
+            <div class="battle-moves-grid" id="b-enemy-moves"></div>
+        </div>
+
+        <div class="battle-panel player-panel">
+            <div class="battle-header">
+                <span class="battle-label">YOU</span>
+                <span class="battle-species" id="b-player-name"></span>
+                <span class="battle-level" id="b-player-level">Lv.</span>
+            </div>
+            <div class="hp-section">
+                <div class="hp-label">
+                    <span>HP</span>
+                    <span id="b-player-hp-text"></span>
+                </div>
+                <div class="hp-bar-bg">
+                    <div class="hp-bar-fill" id="b-player-hp-bar" style="width:0%"></div>
+                </div>
+            </div>
+            <div id="b-player-status-wrap"></div>
+            <div class="battle-moves-grid" id="b-player-moves"></div>
+        </div>
+    </div>
+
+    <div id="status">Waiting for data...</div>
+
+<script>
+// ── Gen II Species (1-251 = NatDex directly) ──
+var SPECIES = {
+0:"\u2014",1:"Bulbasaur",2:"Ivysaur",3:"Venusaur",4:"Charmander",5:"Charmeleon",
+6:"Charizard",7:"Squirtle",8:"Wartortle",9:"Blastoise",10:"Caterpie",
+11:"Metapod",12:"Butterfree",13:"Weedle",14:"Kakuna",15:"Beedrill",
+16:"Pidgey",17:"Pidgeotto",18:"Pidgeot",19:"Rattata",20:"Raticate",
+21:"Spearow",22:"Fearow",23:"Ekans",24:"Arbok",25:"Pikachu",
+26:"Raichu",27:"Sandshrew",28:"Sandslash",29:"Nidoran-F",30:"Nidorina",
+31:"Nidoqueen",32:"Nidoran-M",33:"Nidorino",34:"Nidoking",35:"Clefairy",
+36:"Clefable",37:"Vulpix",38:"Ninetales",39:"Jigglypuff",40:"Wigglytuff",
+41:"Zubat",42:"Golbat",43:"Oddish",44:"Gloom",45:"Vileplume",
+46:"Paras",47:"Parasect",48:"Venonat",49:"Venomoth",50:"Diglett",
+51:"Dugtrio",52:"Meowth",53:"Persian",54:"Psyduck",55:"Golduck",
+56:"Mankey",57:"Primeape",58:"Growlithe",59:"Arcanine",60:"Poliwag",
+61:"Poliwhirl",62:"Poliwrath",63:"Abra",64:"Kadabra",65:"Alakazam",
+66:"Machop",67:"Machoke",68:"Machamp",69:"Bellsprout",70:"Weepinbell",
+71:"Victreebel",72:"Tentacool",73:"Tentacruel",74:"Geodude",75:"Graveler",
+76:"Golem",77:"Ponyta",78:"Rapidash",79:"Slowpoke",80:"Slowbro",
+81:"Magnemite",82:"Magneton",83:"Farfetch\u2019d",84:"Doduo",85:"Dodrio",
+86:"Seel",87:"Dewgong",88:"Grimer",89:"Muk",90:"Shellder",
+91:"Cloyster",92:"Gastly",93:"Haunter",94:"Gengar",95:"Onix",
+96:"Drowzee",97:"Hypno",98:"Krabby",99:"Kingler",100:"Voltorb",
+101:"Electrode",102:"Exeggcute",103:"Exeggutor",104:"Cubone",105:"Marowak",
+106:"Hitmonlee",107:"Hitmonchan",108:"Lickitung",109:"Koffing",110:"Weezing",
+111:"Rhyhorn",112:"Rhydon",113:"Chansey",114:"Tangela",115:"Kangaskhan",
+116:"Horsea",117:"Seadra",118:"Goldeen",119:"Seaking",120:"Staryu",
+121:"Starmie",122:"Mr. Mime",123:"Scyther",124:"Jynx",125:"Electabuzz",
+126:"Magmar",127:"Pinsir",128:"Tauros",129:"Magikarp",130:"Gyarados",
+131:"Lapras",132:"Ditto",133:"Eevee",134:"Vaporeon",135:"Jolteon",
+136:"Flareon",137:"Porygon",138:"Omanyte",139:"Omastar",140:"Kabuto",
+141:"Kabutops",142:"Aerodactyl",143:"Snorlax",144:"Articuno",145:"Zapdos",
+146:"Moltres",147:"Dratini",148:"Dragonair",149:"Dragonite",150:"Mewtwo",
+151:"Mew",152:"Chikorita",153:"Bayleef",154:"Meganium",155:"Cyndaquil",
+156:"Quilava",157:"Typhlosion",158:"Totodile",159:"Croconaw",160:"Feraligatr",
+161:"Sentret",162:"Furret",163:"Hoothoot",164:"Noctowl",165:"Ledyba",
+166:"Ledian",167:"Spinarak",168:"Ariados",169:"Crobat",170:"Chinchou",
+171:"Lanturn",172:"Pichu",173:"Cleffa",174:"Igglybuff",175:"Togepi",
+176:"Togetic",177:"Natu",178:"Xatu",179:"Mareep",180:"Flaaffy",
+181:"Ampharos",182:"Bellossom",183:"Marill",184:"Azumarill",185:"Sudowoodo",
+186:"Politoed",187:"Hoppip",188:"Skiploom",189:"Jumpluff",190:"Aipom",
+191:"Sunkern",192:"Sunflora",193:"Yanma",194:"Wooper",195:"Quagsire",
+196:"Espeon",197:"Umbreon",198:"Murkrow",199:"Slowking",200:"Misdreavus",
+201:"Unown",202:"Wobbuffet",203:"Girafarig",204:"Pineco",205:"Forretress",
+206:"Dunsparce",207:"Gligar",208:"Steelix",209:"Snubbull",210:"Granbull",
+211:"Qwilfish",212:"Scizor",213:"Shuckle",214:"Heracross",215:"Sneasel",
+216:"Teddiursa",217:"Ursaring",218:"Slugma",219:"Magcargo",220:"Swinub",
+221:"Piloswine",222:"Corsola",223:"Remoraid",224:"Octillery",225:"Delibird",
+226:"Mantine",227:"Skarmory",228:"Houndour",229:"Houndoom",230:"Kingdra",
+231:"Phanpy",232:"Donphan",233:"Porygon2",234:"Stantler",235:"Smeargle",
+236:"Tyrogue",237:"Hitmontop",238:"Smoochum",239:"Elekid",240:"Magby",
+241:"Miltank",242:"Blissey",243:"Raikou",244:"Entei",245:"Suicune",
+246:"Larvitar",247:"Pupitar",248:"Tyranitar",249:"Lugia",250:"Ho-Oh",
+251:"Celebi"
+};
+
+// ── Gen II Moves (1-251) ──
+var MOVES = {
+0:"\u2014",1:"Pound",2:"Karate Chop",3:"Double Slap",4:"Comet Punch",5:"Mega Punch",
+6:"Pay Day",7:"Fire Punch",8:"Ice Punch",9:"Thunder Punch",10:"Scratch",
+11:"Vice Grip",12:"Guillotine",13:"Razor Wind",14:"Swords Dance",15:"Cut",
+16:"Gust",17:"Wing Attack",18:"Whirlwind",19:"Fly",20:"Bind",
+21:"Slam",22:"Vine Whip",23:"Stomp",24:"Double Kick",25:"Mega Kick",
+26:"Jump Kick",27:"Rolling Kick",28:"Sand Attack",29:"Headbutt",30:"Horn Attack",
+31:"Fury Attack",32:"Horn Drill",33:"Tackle",34:"Body Slam",35:"Wrap",
+36:"Take Down",37:"Thrash",38:"Double-Edge",39:"Tail Whip",40:"Poison Sting",
+41:"Twineedle",42:"Pin Missile",43:"Leer",44:"Bite",45:"Growl",
+46:"Roar",47:"Sing",48:"Supersonic",49:"Sonic Boom",50:"Disable",
+51:"Acid",52:"Ember",53:"Flamethrower",54:"Mist",55:"Water Gun",
+56:"Hydro Pump",57:"Surf",58:"Ice Beam",59:"Blizzard",60:"Psybeam",
+61:"Bubble Beam",62:"Aurora Beam",63:"Hyper Beam",64:"Peck",65:"Drill Peck",
+66:"Submission",67:"Low Kick",68:"Counter",69:"Seismic Toss",70:"Strength",
+71:"Absorb",72:"Mega Drain",73:"Leech Seed",74:"Growth",75:"Razor Leaf",
+76:"Solar Beam",77:"Poison Powder",78:"Stun Spore",79:"Sleep Powder",80:"Petal Dance",
+81:"String Shot",82:"Dragon Rage",83:"Fire Spin",84:"Thunder Shock",85:"Thunderbolt",
+86:"Thunder Wave",87:"Thunder",88:"Rock Throw",89:"Earthquake",90:"Fissure",
+91:"Dig",92:"Toxic",93:"Confusion",94:"Psychic",95:"Hypnosis",
+96:"Meditate",97:"Agility",98:"Quick Attack",99:"Rage",100:"Teleport",
+101:"Night Shade",102:"Mimic",103:"Screech",104:"Double Team",105:"Recover",
+106:"Harden",107:"Minimize",108:"Smokescreen",109:"Confuse Ray",110:"Withdraw",
+111:"Defense Curl",112:"Barrier",113:"Light Screen",114:"Haze",115:"Reflect",
+116:"Focus Energy",117:"Bide",118:"Metronome",119:"Mirror Move",120:"Self-Destruct",
+121:"Egg Bomb",122:"Lick",123:"Smog",124:"Sludge",125:"Bone Club",
+126:"Fire Blast",127:"Waterfall",128:"Clamp",129:"Swift",130:"Skull Bash",
+131:"Spike Cannon",132:"Constrict",133:"Amnesia",134:"Kinesis",135:"Soft-Boiled",
+136:"High Jump Kick",137:"Glare",138:"Dream Eater",139:"Poison Gas",140:"Barrage",
+141:"Leech Life",142:"Lovely Kiss",143:"Sky Attack",144:"Transform",145:"Bubble",
+146:"Dizzy Punch",147:"Spore",148:"Flash",149:"Psywave",150:"Splash",
+151:"Acid Armor",152:"Crabhammer",153:"Explosion",154:"Fury Swipes",155:"Bonemerang",
+156:"Rest",157:"Rock Slide",158:"Hyper Fang",159:"Sharpen",160:"Conversion",
+161:"Tri Attack",162:"Super Fang",163:"Slash",164:"Substitute",165:"Struggle",
+166:"Sketch",167:"Triple Kick",168:"Thief",169:"Spider Web",170:"Mind Reader",
+171:"Nightmare",172:"Flame Wheel",173:"Snore",174:"Curse",175:"Flail",
+176:"Conversion 2",177:"Aeroblast",178:"Cotton Spore",179:"Reversal",180:"Spite",
+181:"Powder Snow",182:"Protect",183:"Mach Punch",184:"Scary Face",185:"Faint Attack",
+186:"Sweet Kiss",187:"Belly Drum",188:"Sludge Bomb",189:"Mud-Slap",190:"Octazooka",
+191:"Spikes",192:"Zap Cannon",193:"Foresight",194:"Destiny Bond",195:"Perish Song",
+196:"Icy Wind",197:"Detect",198:"Bone Rush",199:"Lock-On",200:"Outrage",
+201:"Sandstorm",202:"Giga Drain",203:"Endure",204:"Charm",205:"Rollout",
+206:"False Swipe",207:"Swagger",208:"Milk Drink",209:"Spark",210:"Fury Cutter",
+211:"Steel Wing",212:"Mean Look",213:"Attract",214:"Sleep Talk",215:"Heal Bell",
+216:"Return",217:"Present",218:"Frustration",219:"Safeguard",220:"Pain Split",
+221:"Sacred Fire",222:"Magnitude",223:"Dynamic Punch",224:"Megahorn",225:"Dragon Breath",
+226:"Baton Pass",227:"Encore",228:"Pursuit",229:"Rapid Spin",230:"Sweet Scent",
+231:"Iron Tail",232:"Metal Claw",233:"Vital Throw",234:"Morning Sun",235:"Synthesis",
+236:"Moonlight",237:"Hidden Power",238:"Cross Chop",239:"Twister",240:"Rain Dance",
+241:"Sunny Day",242:"Crunch",243:"Mirror Coat",244:"Psych Up",245:"Extreme Speed",
+246:"Ancient Power",247:"Shadow Ball",248:"Future Sight",249:"Rock Smash",250:"Whirlpool",
+251:"Beat Up"
+};
+
+// ── Gen II Items (from pret/pokecrystal) ──
+var ITEMS = {
+0:"\u2014",1:"Master Ball",2:"Ultra Ball",3:"BrightPowder",4:"Great Ball",5:"Poke Ball",
+7:"Bicycle",8:"Moon Stone",9:"Antidote",10:"Burn Heal",11:"Ice Heal",
+12:"Awakening",13:"Parlyz Heal",14:"Full Restore",15:"Max Potion",16:"Hyper Potion",
+17:"Super Potion",18:"Potion",19:"Escape Rope",20:"Repel",21:"Max Elixir",
+22:"Fire Stone",23:"Thunderstone",24:"Water Stone",26:"HP Up",27:"Protein",
+28:"Iron",29:"Carbos",30:"Lucky Punch",31:"Calcium",32:"Rare Candy",
+33:"X Accuracy",34:"Leaf Stone",35:"Metal Powder",36:"Nugget",37:"Poke Doll",
+38:"Full Heal",39:"Revive",40:"Max Revive",41:"Guard Spec.",42:"Super Repel",
+43:"Max Repel",44:"Dire Hit",46:"Fresh Water",47:"Soda Pop",48:"Lemonade",
+49:"X Attack",51:"X Defend",52:"X Speed",53:"X Special",54:"Coin Case",
+55:"Itemfinder",57:"Exp. Share",58:"Old Rod",59:"Good Rod",60:"Silver Leaf",
+61:"Super Rod",62:"PP Up",63:"Ether",64:"Max Ether",65:"Elixir",
+66:"Red Scale",67:"SecretPotion",68:"S.S. Ticket",69:"Mystery Egg",70:"Clear Bell",
+71:"Silver Wing",72:"Moomoo Milk",73:"Quick Claw",74:"PSNCureBerry",75:"Gold Leaf",
+76:"Soft Sand",77:"Sharp Beak",78:"PRZCureBerry",79:"Burnt Berry",80:"Ice Berry",
+81:"Poison Barb",82:"King's Rock",83:"Bitter Berry",84:"Mint Berry",
+85:"Red Apricorn",86:"TinyMushroom",87:"Big Mushroom",88:"SilverPowder",
+89:"Blu Apricorn",91:"Amulet Coin",92:"Ylw Apricorn",93:"Grn Apricorn",
+94:"Cleanse Tag",95:"Mystic Water",96:"TwistedSpoon",97:"Wht Apricorn",
+98:"BlackBelt",99:"Blk Apricorn",101:"Pnk Apricorn",102:"BlackGlasses",
+103:"SlowpokeTail",104:"Pink Bow",105:"Stick",106:"Smoke Ball",
+107:"NeverMeltIce",108:"Magnet",109:"MiracleBerry",110:"Pearl",111:"Big Pearl",
+112:"Everstone",113:"Spell Tag",114:"RageCandyBar",115:"GS Ball",116:"Blue Card",
+117:"Miracle Seed",118:"Thick Club",119:"Focus Band",121:"EnergyPowder",
+122:"Energy Root",123:"Heal Powder",124:"Revival Herb",125:"Hard Stone",
+126:"Lucky Egg",127:"Card Key",128:"Machine Part",129:"Egg Ticket",130:"Lost Item",
+131:"Stardust",132:"Star Piece",133:"Basement Key",134:"Pass",138:"Charcoal",
+139:"Berry Juice",140:"Scope Lens",143:"Metal Coat",144:"Dragon Fang",
+146:"Leftovers",150:"MysteryBerry",151:"Dragon Scale",152:"Berserk Gene",
+156:"Sacred Ash",157:"Heavy Ball",158:"Flower Mail",159:"Level Ball",
+160:"Lure Ball",161:"Fast Ball",163:"Light Ball",164:"Friend Ball",
+165:"Moon Ball",166:"Love Ball",167:"Normal Box",168:"Gorgeous Box",
+169:"Sun Stone",170:"Polkadot Bow",172:"Up-Grade",173:"Berry",174:"Gold Berry",
+175:"SquirtBottle",177:"Park Ball",178:"Rainbow Wing",180:"Brick Piece",
+181:"Surf Mail",182:"LiteBlueMail",183:"PortraitMail",184:"Lovely Mail",
+185:"Eon Mail",186:"Morph Mail",187:"BlueSky Mail",188:"Music Mail",189:"Mirage Mail"
+};
+
+// ── Gen II Type IDs (sparse) ──
+var TYPE_NAMES = {
+0:"Normal",1:"Fighting",2:"Flying",3:"Poison",4:"Ground",5:"Rock",
+7:"Bug",8:"Ghost",9:"Steel",20:"Fire",21:"Water",22:"Grass",
+23:"Electric",24:"Psychic",25:"Ice",26:"Dragon",27:"Dark"
+};
+
+var TYPE_COLORS = {
+0:"#A8A878",1:"#C03028",2:"#A890F0",3:"#A040A0",4:"#E0C068",5:"#B8A038",
+7:"#A8B820",8:"#705898",9:"#B8B8D0",20:"#F08030",21:"#6890F0",22:"#78C850",
+23:"#F8D030",24:"#F85888",25:"#98D8D8",26:"#7038F8",27:"#705848"
+};
+
+// ── Hidden Power Types (Gen II) ──
+var HP_TYPES = [
+  'Fighting','Flying','Poison','Ground','Rock','Bug',
+  'Ghost','Steel','Fire','Water','Grass','Electric',
+  'Psychic','Ice','Dragon','Dark'
+];
+
+// ── Gen II Character Decoding ──
+// Pokemon Gen II uses a custom charset: 0x50=terminator, 0x7F=space,
+// 0x80-0x99=A-Z, 0xA0-0xB9=a-z, 0xF6-0xFF=0-9
+function decodeGen2String(bytes, maxLen) {
+    var s = '';
+    for (var i = 0; i < maxLen; i++) {
+        var c = bytes[i];
+        if (c === 0x50) break;
+        if (c === 0x7F) { s += ' '; }
+        else if (c >= 0x80 && c <= 0x99) { s += String.fromCharCode(65 + c - 0x80); }
+        else if (c >= 0xA0 && c <= 0xB9) { s += String.fromCharCode(97 + c - 0xA0); }
+        else if (c >= 0xF6 && c <= 0xFF) { s += String.fromCharCode(48 + c - 0xF6); }
+        else if (c === 0xE0) { s += "'"; }
+        else if (c === 0xE3) { s += '-'; }
+        else if (c === 0xE6) { s += '?'; }
+        else if (c === 0xE7) { s += '!'; }
+        else if (c === 0xE8) { s += '.'; }
+        else if (c === 0xEF) { s += '\u2642'; }
+        else if (c === 0xF3) { s += '/'; }
+        else if (c === 0xF4) { s += ','; }
+        else if (c === 0xF5) { s += '\u2640'; }
+        else { s += '?'; }
+    }
+    return s;
+}
+
+// ── DV Decoding ──
+function decodeDVs(byte0, byte1) {
+    var atk = (byte0 >> 4) & 0x0F;
+    var def = byte0 & 0x0F;
+    var spd = (byte1 >> 4) & 0x0F;
+    var spc = byte1 & 0x0F;
+    // HP DV = LSB of each other DV concatenated
+    var hp = ((atk & 1) << 3) | ((def & 1) << 2) | ((spd & 1) << 1) | (spc & 1);
+    return { hp: hp, atk: atk, def: def, spd: spd, spc: spc };
+}
+
+// ── Gen II Hidden Power ──
+function calcHiddenPowerGen2(dvs) {
+    var typeIdx = ((dvs.atk & 3) << 2) | (dvs.def & 3);
+    var bit3Atk = (dvs.atk >> 3) & 1;
+    var bit3Def = (dvs.def >> 3) & 1;
+    var bit3Spd = (dvs.spd >> 3) & 1;
+    var bit3Spc = (dvs.spc >> 3) & 1;
+    var power = Math.floor((5 * (bit3Atk * 8 + bit3Def * 4 + bit3Spd * 2 + bit3Spc) + (dvs.spc & 3)) / 2) + 31;
+    return { type: HP_TYPES[typeIdx], power: power };
+}
+
+// ── Status Decoding ──
+function decodeStatus(val) {
+    if (!val) return null;
+    var sleepTurns = val & 0x07;
+    if (sleepTurns > 0) return { name: 'SLP', cls: 'slp' };
+    if (val & 0x08) return { name: 'PSN', cls: 'psn' };
+    if (val & 0x10) return { name: 'BRN', cls: 'brn' };
+    if (val & 0x20) return { name: 'FRZ', cls: 'frz' };
+    if (val & 0x40) return { name: 'PAR', cls: 'par' };
+    return null;
+}
+
+// ── Big-endian u16 helper ──
+function u16be(dv, off) { return (dv.getUint8(off) << 8) | dv.getUint8(off + 1); }
+
+// ── State ──
+var selectedSlot = 0;
+var partyData = [null, null, null, null, null, null];
+var partyCount = 0;
+var battleMode = 0;
+var enemyMon = null;
+var playerBattleMon = null;
+var settings = { show_dvs: true, show_stat_exp: true, show_moves: true };
+
+// ── Parse Party Mon (48 bytes) ──
+function parsePartyMon(dv, off, nickname) {
+    if (off + 48 > dv.byteLength) return null;
+
+    var speciesId = dv.getUint8(off + 0x00);
+    if (speciesId === 0) return null;
+
+    var heldItem = dv.getUint8(off + 0x01);
+    var moves = [dv.getUint8(off+0x02), dv.getUint8(off+0x03), dv.getUint8(off+0x04), dv.getUint8(off+0x05)];
+
+    var statExp = {
+        hp:  u16be(dv, off + 0x0B),
+        atk: u16be(dv, off + 0x0D),
+        def: u16be(dv, off + 0x0F),
+        spd: u16be(dv, off + 0x11),
+        spc: u16be(dv, off + 0x13)
+    };
+
+    var dvs = decodeDVs(dv.getUint8(off + 0x15), dv.getUint8(off + 0x16));
+    var pp = [dv.getUint8(off+0x17), dv.getUint8(off+0x18), dv.getUint8(off+0x19), dv.getUint8(off+0x1A)];
+    var ppValues = [];
+    for (var pi = 0; pi < 4; pi++) ppValues.push(pp[pi] & 0x3F); // bits 6-7 = PP Ups
+    var happiness = dv.getUint8(off + 0x1B);
+    var level = dv.getUint8(off + 0x1F);
+    var status = dv.getUint8(off + 0x20);
+    var hp = u16be(dv, off + 0x22);
+    var maxhp = u16be(dv, off + 0x24);
+    var atk = u16be(dv, off + 0x26);
+    var def_ = u16be(dv, off + 0x28);
+    var spd = u16be(dv, off + 0x2A);
+    var spatk = u16be(dv, off + 0x2C);
+    var spdef = u16be(dv, off + 0x2E);
+
+    var hiddenPower = calcHiddenPowerGen2(dvs);
+    var speciesName = SPECIES[speciesId] || ('Pokemon #' + speciesId);
+
+    return {
+        speciesId: speciesId, speciesName: speciesName, nickname: nickname || speciesName,
+        heldItem: heldItem, moves: moves, ppValues: ppValues, level: level,
+        status: decodeStatus(status),
+        hp: hp, maxhp: maxhp, atk: atk, def: def_, spd: spd, spatk: spatk, spdef: spdef,
+        dvs: dvs, statExp: statExp, happiness: happiness, hiddenPower: hiddenPower
+    };
+}
+
+// ── Parse Battle Mon (32 bytes) ──
+function parseBattleMon(dv, off) {
+    if (off + 32 > dv.byteLength) return null;
+
+    var speciesId = dv.getUint8(off + 0x00);
+    if (speciesId === 0) return null;
+
+    var heldItem = dv.getUint8(off + 0x01);
+    var moves = [dv.getUint8(off+0x02), dv.getUint8(off+0x03), dv.getUint8(off+0x04), dv.getUint8(off+0x05)];
+    var dvs = decodeDVs(dv.getUint8(off + 0x06), dv.getUint8(off + 0x07));
+    var pp = [dv.getUint8(off+0x08), dv.getUint8(off+0x09), dv.getUint8(off+0x0A), dv.getUint8(off+0x0B)];
+    var ppValues = [];
+    for (var pi = 0; pi < 4; pi++) ppValues.push(pp[pi] & 0x3F); // bits 6-7 = PP Ups
+    var level = dv.getUint8(off + 0x0D);
+    var status = dv.getUint8(off + 0x0E);
+    var hp = u16be(dv, off + 0x10);
+    var maxhp = u16be(dv, off + 0x12);
+    var atk = u16be(dv, off + 0x14);
+    var def_ = u16be(dv, off + 0x16);
+    var spd = u16be(dv, off + 0x18);
+    var spatk = u16be(dv, off + 0x1A);
+    var spdef = u16be(dv, off + 0x1C);
+    var type1 = dv.getUint8(off + 0x1E);
+    var type2 = dv.getUint8(off + 0x1F);
+
+    return {
+        speciesId: speciesId, speciesName: SPECIES[speciesId] || ('Pokemon #' + speciesId),
+        heldItem: heldItem, moves: moves, ppValues: ppValues, dvs: dvs, level: level,
+        status: decodeStatus(status),
+        hp: hp, maxhp: maxhp, atk: atk, def: def_, spd: spd, spatk: spatk, spdef: spdef,
+        type1: type1, type2: type2
+    };
+}
+
+// ── Decode base64 to Uint8Array ──
+function b64ToBytes(b64) {
+    var bin = atob(b64);
+    var bytes = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return bytes;
+}
+
+// ── Process incoming data ──
+function processData(v) {
+    var newCount = Math.min(v['party_count'] || 0, 6);
+    if (newCount === 0 && partyCount > 0) return;
+    battleMode = v['battle_mode'] || 0;
+    partyCount = newCount;
+
+    var rawParty = v['party_data'];
+    var rawNicks = v['party_nicknames'];
+    if (!rawParty) return;
+
+    var partyBytes = b64ToBytes(rawParty);
+    var partyDv = new DataView(partyBytes.buffer);
+
+    var nickBytes = null;
+    if (rawNicks) nickBytes = b64ToBytes(rawNicks);
+
+    for (var i = 0; i < 6; i++) {
+        if (i >= partyCount) { partyData[i] = null; continue; }
+        try {
+            var nick = null;
+            if (nickBytes) {
+                var nickSlice = nickBytes.slice(i * 11, i * 11 + 11);
+                nick = decodeGen2String(nickSlice, 11);
+            }
+            var parsed = parsePartyMon(partyDv, i * 48, nick);
+            if (parsed) partyData[i] = parsed;
+        } catch (e) { /* keep previous */ }
+    }
+
+    var rawEnemy = v['enemy_mon'];
+    if (rawEnemy) {
+        try {
+            var eb = b64ToBytes(rawEnemy);
+            enemyMon = parseBattleMon(new DataView(eb.buffer), 0);
+        } catch (e) { enemyMon = null; }
+    }
+
+    var rawPlayer = v['player_battle_mon'];
+    if (rawPlayer) {
+        try {
+            var pb = b64ToBytes(rawPlayer);
+            playerBattleMon = parseBattleMon(new DataView(pb.buffer), 0);
+        } catch (e) { playerBattleMon = null; }
+    }
+}
+
+// ── Rendering Helpers ──
+function getHpColor(pct) {
+    if (pct > 0.5) return 'var(--hp-full)';
+    if (pct > 0.2) return 'var(--hp-mid)';
+    return 'var(--hp-low)';
+}
+
+function setHpBar(barId, textId, hp, maxhp) {
+    var pct = maxhp > 0 ? hp / maxhp : 0;
+    document.getElementById(textId).textContent = hp + ' / ' + maxhp;
+    var bar = document.getElementById(barId);
+    bar.style.width = (pct * 100).toFixed(1) + '%';
+    bar.style.backgroundColor = getHpColor(pct);
+}
+
+function setStatusBadge(wrapId, status) {
+    var wrap = document.getElementById(wrapId);
+    if (!status) { wrap.textContent = ''; return; }
+    var span = document.createElement('span');
+    span.className = 'status-badge ' + status.cls;
+    span.textContent = status.name;
+    wrap.textContent = '';
+    wrap.appendChild(span);
+}
+
+function buildMoveSlot(moveName, pp, showPP, isEmpty) {
+    var div = document.createElement('div');
+    div.className = 'move-slot' + (isEmpty ? ' empty' : '');
+    div.textContent = moveName;
+    if (showPP && !isEmpty && pp !== undefined) {
+        var ppSpan = document.createElement('span');
+        ppSpan.className = 'pp';
+        ppSpan.textContent = pp;
+        div.appendChild(ppSpan);
+    }
+    return div;
+}
+
+function renderMovesInto(elId, moves, ppValues, showPP) {
+    var el = document.getElementById(elId);
+    el.textContent = '';
+    for (var i = 0; i < moves.length; i++) {
+        var m = moves[i];
+        var name = MOVES[m] || '\u2014';
+        el.appendChild(buildMoveSlot(name, ppValues ? ppValues[i] : undefined, showPP, m === 0));
+    }
+}
+
+// ── Build a grid of label/value pairs (for DVs and Stat Exp) ──
+function fillGrid(elId, labels, values, perfectVal) {
+    var el = document.getElementById(elId);
+    el.textContent = '';
+    for (var i = 0; i < labels.length; i++) {
+        var lbl = document.createElement('div');
+        lbl.className = 'label';
+        lbl.textContent = labels[i];
+        el.appendChild(lbl);
+    }
+    for (var j = 0; j < values.length; j++) {
+        var v = document.createElement('div');
+        var cls = 'val';
+        if (values[j] >= perfectVal) cls += ' perfect';
+        else if (values[j] === 0) cls += ' zero';
+        v.className = cls;
+        v.textContent = values[j];
+        el.appendChild(v);
+    }
+}
+
+// ── Build stat rows (for stats grid) ──
+function fillStats(elId, statDefs, mon) {
+    var el = document.getElementById(elId);
+    el.textContent = '';
+    var maxStat = 1;
+    for (var i = 0; i < statDefs.length; i++) {
+        var val = mon[statDefs[i].key];
+        if (val > maxStat) maxStat = val;
+    }
+    for (var j = 0; j < statDefs.length; j++) {
+        var sd = statDefs[j];
+        var sval = mon[sd.key];
+        var pct = (sval / maxStat * 100).toFixed(1);
+
+        var lbl = document.createElement('div');
+        lbl.className = 'stat-label';
+        lbl.textContent = sd.label;
+        el.appendChild(lbl);
+
+        var barBg = document.createElement('div');
+        barBg.className = 'stat-bar-bg';
+        var barFill = document.createElement('div');
+        barFill.className = 'stat-bar-fill';
+        barFill.style.width = pct + '%';
+        barBg.appendChild(barFill);
+        el.appendChild(barBg);
+
+        var valDiv = document.createElement('div');
+        valDiv.className = 'stat-val';
+        valDiv.textContent = sval;
+        el.appendChild(valDiv);
+    }
+}
+
+// ── Party Mode Rendering ──
+function renderDetail() {
+    var detail = document.getElementById('poke-detail');
+    var empty = document.getElementById('empty-state');
+
+    if (partyCount === 0 || !partyData[selectedSlot]) {
+        detail.style.display = 'none';
+        empty.style.display = 'flex';
+        empty.textContent = partyCount === 0 ? 'No Pokemon in party' : 'Empty slot';
+        return;
+    }
+
+    detail.style.display = 'block';
+    empty.style.display = 'none';
+
+    var mon = partyData[selectedSlot];
+
+    document.getElementById('d-name').textContent = mon.nickname || mon.speciesName;
+    document.getElementById('d-level').textContent = 'Lv.' + mon.level;
+
+    var itemName = ITEMS[mon.heldItem] || (mon.heldItem > 0 ? 'Item #' + mon.heldItem : '');
+    document.getElementById('d-item').textContent = itemName ? 'Held: ' + itemName : '';
+
+    setHpBar('d-hp-bar', 'd-hp-text', mon.hp, mon.maxhp);
+
+    var statDefs = [
+        { key: 'atk', label: 'ATK' },
+        { key: 'def', label: 'DEF' },
+        { key: 'spatk', label: 'SPA' },
+        { key: 'spdef', label: 'SPD' },
+        { key: 'spd', label: 'SPE' }
+    ];
+    fillStats('d-stats', statDefs, mon);
+
+    // DVs (0-15, perfect = 15)
+    var dvsSection = document.getElementById('d-dvs-section');
+    dvsSection.style.display = settings.show_dvs ? 'block' : 'none';
+    if (settings.show_dvs) {
+        var dvLabels = ['HP','Atk','Def','Spd','Spc'];
+        var dvVals = [mon.dvs.hp, mon.dvs.atk, mon.dvs.def, mon.dvs.spd, mon.dvs.spc];
+        fillGrid('d-dvs', dvLabels, dvVals, 15);
+    }
+
+    // Stat Exp (0-65535, perfect = 65535)
+    var seSection = document.getElementById('d-statexp-section');
+    seSection.style.display = settings.show_stat_exp ? 'block' : 'none';
+    if (settings.show_stat_exp) {
+        var seLabels = ['HP','Atk','Def','Spd','Spc'];
+        var seVals = [mon.statExp.hp, mon.statExp.atk, mon.statExp.def, mon.statExp.spd, mon.statExp.spc];
+        fillGrid('d-statexp', seLabels, seVals, 65535);
+    }
+
+    document.getElementById('d-hp-type').textContent =
+        mon.hiddenPower.type + ' ' + mon.hiddenPower.power;
+    document.getElementById('d-happiness').textContent = mon.happiness;
+
+    var movesEl = document.getElementById('d-moves');
+    movesEl.style.display = settings.show_moves ? 'grid' : 'none';
+    if (settings.show_moves) {
+        renderMovesInto('d-moves', mon.moves, mon.ppValues, true);
+    }
+}
+
+function renderPartyBar() {
+    var bar = document.getElementById('party-bar');
+    bar.textContent = '';
+    document.getElementById('party-count-text').textContent = partyCount + ' / 6';
+
+    for (var i = 0; i < 6; i++) {
+        var slot = document.createElement('div');
+        slot.className = 'party-slot';
+        if (i === selectedSlot) slot.classList.add('active');
+
+        var mon = partyData[i];
+        if (!mon || i >= partyCount) {
+            slot.classList.add('empty-slot');
+            var n1 = document.createElement('div'); n1.className = 'mini-name'; n1.textContent = '\u2014';
+            var l1 = document.createElement('div'); l1.className = 'mini-level'; l1.textContent = '\u2014';
+            var hb1 = document.createElement('div'); hb1.className = 'mini-hp-bg';
+            hb1.appendChild(document.createElement('div')).className = 'mini-hp-fill';
+            slot.appendChild(n1); slot.appendChild(l1); slot.appendChild(hb1);
+        } else {
+            if (mon.hp === 0) slot.classList.add('fainted');
+            var abbr = (mon.nickname || mon.speciesName).substring(0, 5).toUpperCase();
+            var hpPct = mon.maxhp > 0 ? (mon.hp / mon.maxhp * 100).toFixed(0) : 0;
+
+            var n2 = document.createElement('div'); n2.className = 'mini-name'; n2.textContent = abbr;
+            var l2 = document.createElement('div'); l2.className = 'mini-level'; l2.textContent = 'Lv.' + mon.level;
+            var hb2 = document.createElement('div'); hb2.className = 'mini-hp-bg';
+            var hf2 = document.createElement('div'); hf2.className = 'mini-hp-fill';
+            hf2.style.width = hpPct + '%';
+            hf2.style.background = getHpColor(mon.maxhp > 0 ? mon.hp/mon.maxhp : 0);
+            hb2.appendChild(hf2);
+            slot.appendChild(n2); slot.appendChild(l2); slot.appendChild(hb2);
+        }
+
+        (function(idx) {
+            slot.addEventListener('click', function() {
+                if (idx < partyCount) {
+                    selectedSlot = idx;
+                    renderPartyBar();
+                    renderDetail();
+                }
+            });
+        })(i);
+
+        bar.appendChild(slot);
+    }
+}
+
+// ── Battle Mode Rendering ──
+function clearBattlePanel(prefix) {
+    document.getElementById(prefix + '-name').textContent = '';
+    document.getElementById(prefix + '-level').textContent = '';
+    document.getElementById(prefix + '-hp-text').textContent = '';
+    document.getElementById(prefix + '-hp-bar').style.width = '0%';
+    var status = document.getElementById(prefix + '-status-wrap');
+    if (status) status.textContent = '';
+    var moves = document.getElementById(prefix + '-moves');
+    if (moves) moves.textContent = '';
+    var types = document.getElementById(prefix + '-types');
+    if (types) types.textContent = '';
+}
+
+function renderBattle() {
+    if (enemyMon) {
+        document.getElementById('b-enemy-name').textContent = enemyMon.speciesName;
+        document.getElementById('b-enemy-level').textContent = 'Lv.' + enemyMon.level;
+        setHpBar('b-enemy-hp-bar', 'b-enemy-hp-text', enemyMon.hp, enemyMon.maxhp);
+
+        var typesEl = document.getElementById('b-enemy-types');
+        typesEl.textContent = '';
+        var t1name = TYPE_NAMES[enemyMon.type1];
+        if (t1name) {
+            var badge1 = document.createElement('span');
+            badge1.className = 'type-badge';
+            badge1.style.background = TYPE_COLORS[enemyMon.type1] || '#888';
+            badge1.textContent = t1name;
+            typesEl.appendChild(badge1);
+        }
+        if (enemyMon.type2 !== enemyMon.type1) {
+            var t2name = TYPE_NAMES[enemyMon.type2];
+            if (t2name) {
+                var badge2 = document.createElement('span');
+                badge2.className = 'type-badge';
+                badge2.style.background = TYPE_COLORS[enemyMon.type2] || '#888';
+                badge2.textContent = t2name;
+                typesEl.appendChild(badge2);
+            }
+        }
+
+        setStatusBadge('b-enemy-status-wrap', enemyMon.status);
+        renderMovesInto('b-enemy-moves', enemyMon.moves, null, false);
+    } else {
+        clearBattlePanel('b-enemy');
+    }
+
+    if (playerBattleMon) {
+        document.getElementById('b-player-name').textContent = playerBattleMon.speciesName;
+        document.getElementById('b-player-level').textContent = 'Lv.' + playerBattleMon.level;
+        setHpBar('b-player-hp-bar', 'b-player-hp-text', playerBattleMon.hp, playerBattleMon.maxhp);
+        setStatusBadge('b-player-status-wrap', playerBattleMon.status);
+        renderMovesInto('b-player-moves', playerBattleMon.moves, playerBattleMon.ppValues, true);
+    } else {
+        clearBattlePanel('b-player');
+    }
+}
+
+// ── Mode Switching ──
+function updateView() {
+    var inBattle = battleMode !== 0;
+    var badge = document.getElementById('mode-badge');
+
+    document.getElementById('detail').style.display = inBattle ? 'none' : '';
+    document.getElementById('party-bar').style.display = inBattle ? 'none' : '';
+    document.getElementById('battle-view').style.display = inBattle ? '' : 'none';
+
+    if (inBattle) {
+        badge.style.display = '';
+        badge.textContent = battleMode === 2 ? 'TRAINER' : 'WILD';
+        renderBattle();
+    } else {
+        badge.style.display = 'none';
+        renderPartyBar();
+        renderDetail();
+    }
+}
+
+// ── EmuLnk API ──
+function updateData(base64Data, isInitial) {
+    try {
+        var json = JSON.parse(atob(base64Data));
+        var v = json.values || {};
+
+        if (json.settings) {
+            settings.show_dvs = json.settings.show_dvs !== 'false';
+            settings.show_stat_exp = json.settings.show_stat_exp !== 'false';
+            settings.show_moves = json.settings.show_moves !== 'false';
+        }
+
+        document.body.classList.toggle('offline', !json.isConnected);
+        document.getElementById('status').textContent =
+            json.isConnected ? 'Connected' : 'Offline';
+
+        processData(v);
+
+        if (selectedSlot >= partyCount && partyCount > 0) {
+            selectedSlot = 0;
+        }
+
+        updateView();
+    } catch (e) {
+        document.getElementById('status').textContent = 'Error: ' + e.message;
+    }
+}
+
+function onGameClosed() {
+    document.body.classList.add('offline');
+    document.getElementById('status').textContent = 'Game closed';
+    partyData = [null, null, null, null, null, null];
+    partyCount = 0;
+    battleMode = 0;
+    selectedSlot = 0;
+    enemyMon = null;
+    playerBattleMon = null;
+    updateView();
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:transparent;font-family:-apple-system,'Segoe UI',sans-serif;-webkit-user-select:none;user-select:none}
+#panel{width:100%;height:100%;background:rgba(0,0,0,0.75);border-radius:8px;padding:6px;display:flex;flex-direction:column;align-items:center}
+#title{color:#00E5FF;font-size:11px;margin-bottom:4px;font-weight:600}
+#grid{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:2px;flex:1;width:100%}
+.dir{display:flex;align-items:center;justify-content:center;color:#d4e8ff;font-size:clamp(10px,3vw,13px);font-weight:600;border-radius:4px;background:rgba(255,255,255,0.08);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.dir:active{background:rgba(0,229,255,0.3)}
+.dir.center{background:transparent;cursor:default}
+.dir.active-wind{background:rgba(0,229,255,0.2);color:#00E5FF}
+#current{color:#d4e8ff;font-size:10px;margin-top:3px;opacity:0.7}
+</style>
+</head>
+<body>
+<div id="panel">
+  <div id="title">Set Wind</div>
+  <div id="grid"></div>
+  <div id="current"></div>
+</div>
+<script>
+'use strict';
+// Raw u16 values: N=49152, NE=57344, E=0, SE=8192, S=16384, SW=24576, W=32768, NW=40960
+var WIND_DIRS=[
+  {label:'NW',raw:40960},{label:'N',raw:49152},{label:'NE',raw:57344},
+  {label:'W',raw:32768},null,{label:'E',raw:0},
+  {label:'SW',raw:24576},{label:'S',raw:16384},{label:'SE',raw:8192}
+];
+var currentWindRaw=0;
+
+function decodeB64(e){try{var b=atob(e),a=new Uint8Array(b.length);for(var i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return new TextDecoder('utf-8').decode(a)}catch(x){return atob(e)}}
+
+window.updateData=function(d,enc){
+  try{
+    var p=enc?JSON.parse(decodeB64(d)):typeof d==='string'?JSON.parse(d):d;
+    var v=p.values||{};
+    currentWindRaw=v.wind_direction||0;
+    updateActiveIndicator();
+  }catch(e){}
+};
+
+function updateActiveIndicator(){
+  var cells=document.querySelectorAll('.dir');
+  cells.forEach(function(c){
+    var raw=c.getAttribute('data-raw');
+    if(raw!==null){
+      if(parseInt(raw)===currentWindRaw)c.classList.add('active-wind');
+      else c.classList.remove('active-wind');
+    }
+  });
+  var dirs=['E','SE','S','SW','W','NW','N','NE'];
+  var idx=Math.round(currentWindRaw/8192)%8;
+  document.getElementById('current').textContent='Current: '+dirs[idx];
+}
+
+function init(){
+  var grid=document.getElementById('grid');
+  for(var i=0;i<WIND_DIRS.length;i++){
+    var cell=document.createElement('div');
+    if(WIND_DIRS[i]){
+      cell.className='dir';
+      cell.textContent=WIND_DIRS[i].label;
+      cell.setAttribute('data-raw',WIND_DIRS[i].raw);
+      cell.addEventListener('click',function(){
+        var raw=parseInt(this.getAttribute('data-raw'));
+        try{parent.emulink.writeVar('wind_direction',raw)}catch(e){}
+      });
+    } else {
+      cell.className='dir center';
+      cell.textContent='\u2022';
+    }
+    grid.appendChild(cell);
+  }
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+</script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:transparent;font-family:-apple-system,'Segoe UI',sans-serif;-webkit-user-select:none;user-select:none}
+#hearts{display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:rgba(0,0,0,0.6);border-radius:8px;padding:4px 8px;flex-wrap:wrap;gap:1px}
+.heart{font-size:clamp(12px,4vw,20px);transition:opacity 0.2s}
+.heart.full{color:#e44}
+.heart.half{color:#e44;opacity:0.6}
+.heart.empty{color:#444}
+#hp-text{color:#d4e8ff;font-size:clamp(10px,3vw,14px);margin-left:6px;white-space:nowrap;font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+<div id="hearts"></div>
+<script>
+'use strict';
+function decodeB64(e){try{var b=atob(e),a=new Uint8Array(b.length);for(var i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return new TextDecoder('utf-8').decode(a)}catch(x){return atob(e)}}
+
+window.updateData=function(d,enc){
+  try{
+    var p=enc?JSON.parse(decodeB64(d)):typeof d==='string'?JSON.parse(d):d;
+    var v=p.values||{};
+    var hp=(v.health||0)/4;
+    var maxHp=(v.max_health||0)/4;
+    renderHearts(hp,maxHp);
+  }catch(e){}
+};
+
+function renderHearts(hp,maxHp){
+  var el=document.getElementById('hearts');
+  // Clear existing children
+  while(el.firstChild)el.removeChild(el.firstChild);
+
+  var fullHearts=Math.floor(hp);
+  var hasHalf=hp%1>=0.25;
+  var total=Math.max(1,Math.ceil(maxHp));
+
+  for(var i=0;i<total;i++){
+    var span=document.createElement('span');
+    span.textContent='\u2665';
+    if(i<fullHearts){span.className='heart full'}
+    else if(i===fullHearts&&hasHalf){span.className='heart half'}
+    else{span.className='heart empty'}
+    el.appendChild(span);
+  }
+
+  var hpText=document.createElement('span');
+  hpText.id='hp-text';
+  var hpStr=hp%1===0?hp.toFixed(0):hp.toFixed(1);
+  hpText.textContent=hpStr+'/'+maxHp.toFixed(0);
+  el.appendChild(hpText);
+}
+renderHearts(0,0);
+</script>
+</body>
+</html>

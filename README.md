@@ -19,7 +19,7 @@
 consoles.json          # System definitions (id, port, idAddress, idSize)
 index.json             # Theme catalog for the in-app gallery
 profiles/*.json        # Game profiles with memory data points
-themes/*/              # Theme folders (theme.json + HTML/CSS/JS)
+themes/*/              # Theme, overlay, and bundle folders
 ```
 
 ## Documentation

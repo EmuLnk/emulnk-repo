@@ -4,14 +4,18 @@
     "packageNames": ["org.emulnk.dolphinlnk"],
     "console": "GCN",
     "port": 55355,
-    "idAddress": "0x80000000"
+    "idAddress": "0x80000000",
+    "idSize": 6,
+    "emulatorId": "dolphin"
   },
   {
     "id": "dolphin_wii",
     "packageNames": ["org.emulnk.dolphinlnk"],
     "console": "WII",
-    "port": 55356,
-    "idAddress": "0x80000000"
+    "port": 55355,
+    "idAddress": "0x80000000",
+    "idSize": 6,
+    "emulatorId": "dolphin"
   },
   {
     "id": "ppsspp",
@@ -19,7 +23,8 @@
     "console": "PSP",
     "port": 55355,
     "idAddress": "0x00013FF0",
-    "idSize": 9
+    "idSize": 9,
+    "emulatorId": "ppsspp"
   },
   {
     "id": "retroarch_gb",
@@ -27,7 +32,8 @@
     "console": "GB",
     "port": 55355,
     "idAddress": "0x00200000",
-    "idSize": 40
+    "idSize": 40,
+    "emulatorId": "retroarch"
   },
   {
     "id": "retroarch_gba",
@@ -35,7 +41,8 @@
     "console": "GBA",
     "port": 55355,
     "idAddress": "0x080000AC",
-    "idSize": 4
+    "idSize": 4,
+    "emulatorId": "retroarch"
   },
   {
     "id": "retroarch_gbc",
@@ -43,7 +50,8 @@
     "console": "GBC",
     "port": 55355,
     "idAddress": "0x00200000",
-    "idSize": 40
+    "idSize": 40,
+    "emulatorId": "retroarch"
   },
   {
     "id": "retroarch_genesis",
@@ -51,7 +59,8 @@
     "console": "Genesis",
     "port": 55355,
     "idAddress": "0x00200000",
-    "idSize": 40
+    "idSize": 40,
+    "emulatorId": "retroarch"
   },
   {
     "id": "retroarch_n64",
@@ -59,7 +68,8 @@
     "console": "N64",
     "port": 55355,
     "idAddress": "0x00200000",
-    "idSize": 40
+    "idSize": 40,
+    "emulatorId": "retroarch"
   },
   {
     "id": "retroarch_nes",
@@ -67,7 +77,8 @@
     "console": "NES",
     "port": 55355,
     "idAddress": "0x00200000",
-    "idSize": 40
+    "idSize": 40,
+    "emulatorId": "retroarch"
   },
   {
     "id": "retroarch_ps1",
@@ -75,7 +86,8 @@
     "console": "PS1",
     "port": 55355,
     "idAddress": "0x00200000",
-    "idSize": 40
+    "idSize": 40,
+    "emulatorId": "retroarch"
   },
   {
     "id": "retroarch_snes",
@@ -83,6 +95,7 @@
     "console": "SNES",
     "port": 55355,
     "idAddress": "0x00200000",
-    "idSize": 40
+    "idSize": 40,
+    "emulatorId": "retroarch"
   }
 ]

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:transparent;font-family:-apple-system,'Segoe UI',sans-serif;-webkit-user-select:none;user-select:none}
+#rupees{display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:rgba(0,0,0,0.6);border-radius:8px;padding:4px 8px;color:#5f5;font-weight:700;font-size:clamp(14px,5vw,22px);font-variant-numeric:tabular-nums}
+#gem{margin-right:4px;font-size:clamp(12px,4vw,18px)}
+</style>
+</head>
+<body>
+<div id="rupees"><span id="gem">&#x1F48E;</span><span id="count">0</span></div>
+<script>
+'use strict';
+function decodeB64(e){try{var b=atob(e),a=new Uint8Array(b.length);for(var i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return new TextDecoder('utf-8').decode(a)}catch(x){return atob(e)}}
+
+window.updateData=function(d,enc){
+  try{
+    var p=enc?JSON.parse(decodeB64(d)):typeof d==='string'?JSON.parse(d):d;
+    var v=p.values||{};
+    document.getElementById('count').textContent=v.rupees||0;
+  }catch(e){}
+};
+</script>
+</body>
+</html>

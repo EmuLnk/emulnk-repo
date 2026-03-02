@@ -8,6 +8,7 @@
       "version": "1.0.0",
       "description": "Live minimap showing Link's real-time position on the Great Sea chart with heading, hearts, and compass.",
       "targetProfileId": "GZL",
+      "type": "theme",
       "minAppVersion": 1,
       "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/WindWakerMinimap/preview.png"
     },
@@ -18,6 +19,7 @@
       "version": "1.0.0",
       "description": "Live monster HP bar and radar for Monster Hunter Freedom Unite. Shows hidden monster health, species name, and real-time positions on a radar map.",
       "targetProfileId": "MHFU",
+      "type": "theme",
       "minAppVersion": 1,
       "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/MHFUHunterHUD/preview.png"
     },
@@ -28,6 +30,7 @@
       "version": "1.0.0",
       "description": "Real-time party viewer for Pokemon Emerald. Shows IVs, EVs, natures, stats, moves, friendship, and Hidden Power.",
       "targetProfileId": "BPE",
+      "type": "theme",
       "minAppVersion": 1,
       "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/EmeraldPartyHUD/preview.png"
     },
@@ -38,6 +41,7 @@
       "version": "1.0.0",
       "description": "Always-on battle HUD for Final Fantasy VII. Shows enemy HP, weaknesses, absorbs.",
       "targetProfileId": "FF7",
+      "type": "theme",
       "minAppVersion": 1,
       "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/FF7SenseHUD/preview.png"
     },
@@ -48,6 +52,7 @@
       "version": "1.0.0",
       "description": "Real-time status HUD for Super Metroid. Energy, ammo, equipment, boss tracker, and item %.",
       "targetProfileId": "SM",
+      "type": "theme",
       "minAppVersion": 1,
       "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/MetroidVisor/preview.png"
     },
@@ -58,6 +63,7 @@
       "version": "1.0.0",
       "description": "Live combo tracker for Phantasy Star IV. Reads party state from Genesis RAM and shows which hidden combination attacks are currently available.",
       "targetProfileId": "PSIV",
+      "type": "theme",
       "minAppVersion": 1,
       "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/PSIVComboCodex/preview.png"
     },
@@ -68,6 +74,7 @@
       "version": "1.0.0",
       "description": "Progressive auto-map for NES Metroid. Reveals rooms as Samus explores, plus health, missiles, equipment, and boss tracker.",
       "targetProfileId": "M1",
+      "type": "theme",
       "minAppVersion": 1,
       "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/MetroidAutomap/preview.png"
     },
@@ -78,8 +85,20 @@
       "version": "1.0.0",
       "description": "Dual-mode companion for Pokemon Crystal. Shows hidden DVs, Stat Exp, and Hidden Power in the overworld; reveals enemy HP, moves, and types during battle.",
       "targetProfileId": "PMC",
+      "type": "theme",
       "minAppVersion": 1,
       "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/CrystalHUD/preview.png"
+    },
+    {
+      "id": "WindWakerWidgets",
+      "name": "Great Sea Widgets",
+      "author": "EmuLnk Team",
+      "version": "1.0.0",
+      "description": "Widget-based overlay for Wind Waker. Minimap, hearts, rupees, compass, and wind control as individual draggable widgets.",
+      "targetProfileId": "GZL",
+      "type": "overlay",
+      "minAppVersion": 1,
+      "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/WindWakerWidgets/preview.png"
     },
     {
       "id": "GoldenEyeHUD",
@@ -88,6 +107,7 @@
       "version": "1.0.0",
       "description": "Live mission HUD for GoldenEye 007. Objective checklist, health, armor, weapon, and timer — no more pausing mid-mission.",
       "targetProfileId": "GE",
+      "type": "theme",
       "minAppVersion": 1,
       "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/GoldenEyeHUD/preview.png"
     }

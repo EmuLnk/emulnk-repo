@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:transparent;-webkit-user-select:none;user-select:none}
+canvas{width:100%;height:100%;display:block;border-radius:8px}
+</style>
+</head>
+<body>
+<canvas id="map"></canvas>
+<script>
+'use strict';
+var WORLD_MIN=-350000,WORLD_MAX=350000,WORLD_RANGE=WORLD_MAX-WORLD_MIN;
+var ISLAND_GRID=[
+  ['Forsaken\nFortress','Four-Eye\nReef','Western Fairy\nIsland','Three-Eye\nReef','Needle Rock\nIsle','Diamond Steppe\nIsland','Horseshoe\nIsland'],
+  ['Star\nIsland','Northern Fairy\nIsland','Gale\nIsle','Crescent Moon\nIsland','Seven-Star\nIsles','Overlook\nIsland','Stone Watcher\nIsland'],
+  ['Islet of\nSteel','Mother &\nChild Isles','Spectacle\nIsland','Windfall\nIsland','Pawprint\nIsle','Dragon Roost\nIsland','Flight Control\nPlatform'],
+  ['Rock Spire\nIsle','Tingle\nIsland','Northern\nTriangle Isle','Eastern Fairy\nIsland','Fire\nMountain','Star Belt\nArchipelago','Private\nOasis'],
+  ['Bomb\nIsland','Bird\'s Peak\nRock','Southern Fairy\nIsland','Ice Ring\nIsle','Forest\nHaven','Cliff Plateau\nIsles','Shark\nIsland'],
+  ['Greatfish\nIsle','Cyclops\nReef','Six-Eye\nReef','Tower of the\nGods','Eastern\nTriangle Isle','Thorned Fairy\nIsland','Southern\nTriangle Isle'],
+  ['Angular\nIsles','Boating\nCourse','Five-Star\nIsles','Headstone\nIsland','Two-Eye\nReef','Angular\nIsles','Five-Eye\nReef']
+];
+
+var lastSeaPos={nx:0.5,nz:0.5,rot:0};
+var isOnSea=true;
+var canvas,ctx,offCanvas,offCtx,offDirty=true;
+var customMapImg=null,customMapLoaded=false,customMapFailed=false;
+
+function decodeB64(e){try{var b=atob(e),a=new Uint8Array(b.length);for(var i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return new TextDecoder('utf-8').decode(a)}catch(x){return atob(e)}}
+
+window.updateData=function(d,enc){
+  try{
+    var p=enc?JSON.parse(decodeB64(d)):typeof d==='string'?JSON.parse(d):d;
+    var v=p.values||{};
+    var stageRaw=v.stage_id_raw||0,stageName='';
+    if(stageRaw>0)stageName=String.fromCharCode((stageRaw>>>24)&0xFF,(stageRaw>>>16)&0xFF,(stageRaw>>>8)&0xFF);
+    isOnSea=(stageName==='sea');
+    if(isOnSea||stageRaw===0){
+      lastSeaPos.nx=(v.pos_x||0-WORLD_MIN)/WORLD_RANGE;
+      lastSeaPos.nz=(v.pos_z||0-WORLD_MIN)/WORLD_RANGE;
+      lastSeaPos.nx=((v.pos_x||0)-WORLD_MIN)/WORLD_RANGE;
+      lastSeaPos.nz=((v.pos_z||0)-WORLD_MIN)/WORLD_RANGE;
+      lastSeaPos.rot=v.rotation_y||0;
+    }
+  }catch(e){}
+};
+
+function drawOffscreen(w,h){
+  if(!offCanvas){offCanvas=document.createElement('canvas');offCtx=offCanvas.getContext('2d')}
+  offCanvas.width=w;offCanvas.height=h;var c=offCtx;
+  if(customMapLoaded&&customMapImg){c.drawImage(customMapImg,0,0,w,h)}
+  else{var g=c.createLinearGradient(0,0,0,h);g.addColorStop(0,'#0a2a4a');g.addColorStop(0.5,'#0d3b66');g.addColorStop(1,'#0a2a4a');c.fillStyle=g;c.fillRect(0,0,w,h);c.strokeStyle='rgba(100,180,255,0.08)';c.lineWidth=1.5;for(var wy=0;wy<h;wy+=24){c.beginPath();for(var wx=0;wx<w;wx+=4){var yOff=Math.sin((wx+wy*0.7)*0.02)*6;if(wx===0)c.moveTo(wx,wy+yOff);else c.lineTo(wx,wy+yOff)}c.stroke()}}
+  c.strokeStyle='rgba(255,255,255,0.15)';c.lineWidth=1;
+  for(var i=1;i<7;i++){var gx=(i/7)*w,gy=(i/7)*h;c.beginPath();c.moveTo(gx,0);c.lineTo(gx,h);c.stroke();c.beginPath();c.moveTo(0,gy);c.lineTo(w,gy);c.stroke()}
+  c.font=Math.max(8,Math.round(w/80))+'px sans-serif';c.fillStyle='rgba(255,255,255,0.6)';c.textAlign='center';c.textBaseline='middle';
+  for(var row=0;row<7;row++)for(var col=0;col<7;col++){var cx=((col+0.5)/7)*w,cy=((row+0.5)/7)*h,lines=ISLAND_GRID[row][col].split('\n'),lineH=Math.max(9,Math.round(w/70)),startY=cy-((lines.length-1)*lineH)/2;for(var li=0;li<lines.length;li++)c.fillText(lines[li],cx,startY+li*lineH)}
+  offDirty=false;
+}
+
+function render(){
+  if(!canvas)return;
+  var dpr=window.devicePixelRatio||1,dw=canvas.clientWidth,dh=canvas.clientHeight;
+  if(canvas.width!==dw*dpr||canvas.height!==dh*dpr){canvas.width=dw*dpr;canvas.height=dh*dpr;offDirty=true}
+  var w=canvas.width,h=canvas.height;
+  ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,w,h);
+  var ms=Math.max(w,h);if(ms>4096)ms=4096;
+  if(offDirty||!offCanvas||offCanvas.width!==Math.round(ms))drawOffscreen(Math.round(ms),Math.round(ms));
+  ctx.drawImage(offCanvas,0,0,offCanvas.width,offCanvas.height,0,0,w,h);
+  var bx=lastSeaPos.nx*w,by=lastSeaPos.nz*h;
+  // Draw boat
+  var size=8*dpr,rad=(lastSeaPos.rot-90)*Math.PI/180;
+  ctx.save();ctx.translate(bx,by);ctx.rotate(rad);
+  ctx.beginPath();ctx.moveTo(size,0);ctx.lineTo(-size*0.6,-size*0.5);ctx.lineTo(-size*0.4,0);ctx.lineTo(-size*0.6,size*0.5);ctx.closePath();
+  ctx.fillStyle='#FFD700';ctx.fill();ctx.strokeStyle='#A08000';ctx.lineWidth=1.5*dpr;ctx.stroke();
+  ctx.beginPath();ctx.arc(0,0,2*dpr,0,Math.PI*2);ctx.fillStyle='#FFF';ctx.fill();ctx.restore();
+  ctx.beginPath();ctx.arc(bx,by,size*1.5,0,Math.PI*2);ctx.strokeStyle='rgba(255,215,0,0.3)';ctx.lineWidth=2*dpr;ctx.stroke();
+  if(!isOnSea){ctx.fillStyle='rgba(0,0,0,0.5)';ctx.fillRect(0,0,w,h);ctx.font=(14*dpr)+'px sans-serif';ctx.fillStyle='rgba(255,255,255,0.7)';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('Indoor Area',w/2,h/2)}
+  requestAnimationFrame(render);
+}
+
+function init(){
+  canvas=document.getElementById('map');ctx=canvas.getContext('2d');
+  customMapImg=new Image();customMapImg.onload=function(){customMapLoaded=true;offDirty=true};customMapImg.onerror=function(){customMapFailed=true};customMapImg.src='assets/sea_chart.png';
+  requestAnimationFrame(render);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+</script>
+</body>
+</html>

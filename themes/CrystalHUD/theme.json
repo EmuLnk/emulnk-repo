@@ -28,6 +28,12 @@
       "label": "Show Moves",
       "type": "toggle",
       "default": "true"
+    },
+    {
+      "id": "show_type_effectiveness",
+      "label": "Type Effectiveness",
+      "type": "toggle",
+      "default": "true"
     }
   ]
 }

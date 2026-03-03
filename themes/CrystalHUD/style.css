@@ -384,6 +384,47 @@ body {
   gap: 4px;
 }
 
+/* ── Type Effectiveness Indicators ── */
+.move-slot.eff-super {
+  border-left: 3px solid #4ade80;
+  background: rgba(74, 222, 128, 0.08);
+}
+
+.move-slot.eff-resist {
+  border-left: 3px solid #fb923c;
+  opacity: 0.85;
+}
+
+.move-slot.eff-immune {
+  border-left: 3px solid #ef4444;
+  opacity: 0.5;
+}
+
+.eff-badge {
+  float: right;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 3px;
+  margin-left: 4px;
+  line-height: 1.4;
+}
+
+.eff-super .eff-badge {
+  background: rgba(74, 222, 128, 0.2);
+  color: #4ade80;
+}
+
+.eff-resist .eff-badge {
+  background: rgba(251, 146, 60, 0.2);
+  color: #fb923c;
+}
+
+.eff-immune .eff-badge {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
 /* ── Status ── */
 #status {
   text-align: center;

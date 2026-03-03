@@ -110,6 +110,16 @@
       "type": "theme",
       "minAppVersion": 1,
       "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/GoldenEyeHUD/preview.png"
+    },
+    {
+      "id": "CrystalWidgets",
+      "name": "Crystal Widgets",
+      "author": "EmuLnk Team",
+      "version": "2.0.0",
+      "description": "Minimal type badges for Pokemon Crystal battles. Two tiny widgets you can place next to the HP bars.",
+      "targetProfileId": "PMC",
+      "type": "overlay",
+      "minAppVersion": 1
     }
   ]
 }

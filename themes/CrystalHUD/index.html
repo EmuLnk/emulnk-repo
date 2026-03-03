@@ -93,6 +93,7 @@
                     <div class="hp-bar-fill" id="b-player-hp-bar" style="width:0%"></div>
                 </div>
             </div>
+            <div class="type-badges" id="b-player-types"></div>
             <div id="b-player-status-wrap"></div>
             <div class="battle-moves-grid" id="b-player-moves"></div>
         </div>
@@ -271,6 +272,75 @@ var HP_TYPES = [
   'Psychic','Ice','Dragon','Dark'
 ];
 
+// ── Gen II Type Effectiveness Chart (sparse: only non-1x entries) ──
+// Keys are attacker type ID → defender type ID → multiplier
+var TYPE_CHART = {
+  0:{5:0.5,8:0,9:0.5},
+  1:{0:2,25:2,5:2,27:2,2:0.5,3:0.5,7:0.5,24:0.5,8:0,9:2},
+  2:{1:2,7:2,22:2,23:0.5,5:0.5,9:0.5},
+  3:{22:2,3:0.5,4:0.5,5:0.5,8:0.5,9:0},
+  4:{20:2,23:2,3:2,5:2,9:2,7:0.5,22:0.5,2:0},
+  5:{20:2,25:2,2:2,7:2,1:0.5,4:0.5,9:0.5},
+  7:{22:2,24:2,27:2,20:0.5,1:0.5,2:0.5,3:0.5,8:0.5,9:0.5},
+  8:{8:2,24:2,0:0,27:0.5,9:0.5},
+  9:{25:2,5:2,20:0.5,21:0.5,23:0.5,9:0.5},
+  20:{22:2,25:2,7:2,9:2,20:0.5,21:0.5,5:0.5,26:0.5},
+  21:{20:2,4:2,5:2,21:0.5,22:0.5,26:0.5},
+  22:{21:2,4:2,5:2,20:0.5,22:0.5,3:0.5,2:0.5,7:0.5,26:0.5,9:0.5},
+  23:{21:2,2:2,22:0.5,23:0.5,26:0.5,4:0},
+  24:{1:2,3:2,24:0.5,9:0.5,27:0},
+  25:{22:2,4:2,2:2,26:2,20:0.5,21:0.5,25:0.5,9:0.5},
+  26:{26:2,9:0.5},
+  27:{24:2,8:2,1:0.5,27:0.5,9:0.5}
+};
+
+// ── Move ID → Type ID (0-251, sourced from pret/pokecrystal) ──
+var MOVE_TYPES = [
+  0, 0, 1, 0, 0, 0, 0,20,25,23,  //   0-9
+  0, 0, 0, 0, 0, 0, 2, 2, 0, 2,  //  10-19
+  0, 0,22, 0, 1, 0, 1, 1, 4, 0,  //  20-29
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  //  30-39
+  3, 7, 7, 0,27, 0, 0, 0, 0, 0,  //  40-49
+  0, 3,20,20,25,21,21,21,25,25,  //  50-59
+ 24,21,25, 0, 2, 2, 1, 1, 1, 1,  //  60-69
+  0,22,22,22, 0,22,22, 3,22,22,  //  70-79
+ 22, 7,26,20,23,23,23,23, 5, 4,  //  80-89
+  4, 4, 3,24,24,24,24,24, 0, 0,  //  90-99
+ 24, 8, 0, 0, 0, 0, 0, 0, 0, 8,  // 100-109
+ 21, 0,24,24,25,24, 0, 0, 0, 2,  // 110-119
+  0, 0, 8, 3, 3, 4,20,21,21, 0,  // 120-129
+  0, 0, 0,24,24, 0, 1, 0,24, 3,  // 130-139
+  0, 7, 0, 2, 0,21, 0,22, 0,24,  // 140-149
+  0, 3,21, 0, 0, 4,24, 5, 0, 0,  // 150-159
+  0, 0, 0, 0, 0, 0, 0, 1,27, 7,  // 160-169
+  0, 8,20, 0, 0, 0, 0, 2,22, 1,  // 170-179
+  8,25, 0, 1, 0,27, 0, 0, 3, 4,  // 180-189
+ 21, 4,23, 0, 8, 0,25, 1, 4, 0,  // 190-199
+ 26, 5,22, 0, 0, 5, 0, 0, 0,23,  // 200-209
+  7, 9, 0, 0, 0, 0, 0, 0, 0, 0,  // 210-219
+  0,20, 4, 1, 7,26, 0, 0,27, 0,  // 220-229
+  0, 9, 9, 1, 0,22, 0, 0, 1,26,  // 230-239
+ 21,20,27,24, 0, 0, 5, 8,24, 1,  // 240-249
+ 21,27                             // 250-251
+];
+
+// ── Status / Non-damaging move IDs (no effectiveness badge) ──
+var STATUS_MOVES = new Set([
+  14,18,28,39,43,45,46,47,48,50,54,73,74,77,78,79,81,86,92,95,
+  96,97,100,102,103,104,105,106,107,108,109,110,111,112,113,114,
+  115,116,118,119,133,134,135,137,139,142,144,147,148,150,151,156,
+  159,160,164,166,169,170,171,174,176,178,180,182,184,186,187,191,
+  193,194,195,197,199,201,203,204,207,208,212,213,214,215,219,220,
+  226,227,230,234,235,236,240,241,244
+]);
+
+// ── Type Name → Type ID (for Hidden Power lookup) ──
+var TYPE_NAME_TO_ID = {
+  'Normal':0,'Fighting':1,'Flying':2,'Poison':3,'Ground':4,'Rock':5,
+  'Bug':7,'Ghost':8,'Steel':9,'Fire':20,'Water':21,'Grass':22,
+  'Electric':23,'Psychic':24,'Ice':25,'Dragon':26,'Dark':27
+};
+
 // ── Gen II Character Decoding ──
 // Pokemon Gen II uses a custom charset: 0x50=terminator, 0x7F=space,
 // 0x80-0x99=A-Z, 0xA0-0xB9=a-z, 0xF6-0xFF=0-9
@@ -319,6 +389,38 @@ function calcHiddenPowerGen2(dvs) {
     return { type: HP_TYPES[typeIdx], power: power };
 }
 
+// ── Type Effectiveness Calculation ──
+function calcEffectiveness(moveId, attackerDVs, defType1, defType2) {
+    if (moveId === 0) return null;
+    if (STATUS_MOVES.has(moveId)) return null;
+
+    var moveType;
+    if (moveId === 237) { // Hidden Power: derive type from DVs
+        var hp = calcHiddenPowerGen2(attackerDVs);
+        moveType = TYPE_NAME_TO_ID[hp.type];
+    } else {
+        moveType = MOVE_TYPES[moveId];
+    }
+    if (moveType === undefined) return null;
+
+    var mult = 1;
+    var chart = TYPE_CHART[moveType];
+    if (chart) {
+        if (chart[defType1] !== undefined) mult *= chart[defType1];
+        if (defType1 !== defType2 && chart[defType2] !== undefined) mult *= chart[defType2];
+    }
+
+    if (mult === 1) return null; // neutral — no badge
+    var label;
+    if (mult === 0) label = '0x';
+    else if (mult === 4) label = '4x';
+    else if (mult === 2) label = '2x';
+    else if (mult === 0.5) label = '\u00BDx';
+    else if (mult === 0.25) label = '\u00BCx';
+    else label = mult + 'x';
+    return { multiplier: mult, label: label };
+}
+
 // ── Status Decoding ──
 function decodeStatus(val) {
     if (!val) return null;
@@ -341,7 +443,7 @@ var partyCount = 0;
 var battleMode = 0;
 var enemyMon = null;
 var playerBattleMon = null;
-var settings = { show_dvs: true, show_stat_exp: true, show_moves: true };
+var settings = { show_dvs: true, show_stat_exp: true, show_moves: true, show_type_effectiveness: true };
 
 // ── Parse Party Mon (48 bytes) ──
 function parsePartyMon(dv, off, nickname) {
@@ -502,10 +604,23 @@ function setStatusBadge(wrapId, status) {
     wrap.appendChild(span);
 }
 
-function buildMoveSlot(moveName, pp, showPP, isEmpty) {
+function buildMoveSlot(moveName, pp, showPP, isEmpty, effectiveness) {
     var div = document.createElement('div');
-    div.className = 'move-slot' + (isEmpty ? ' empty' : '');
+    var cls = 'move-slot';
+    if (isEmpty) cls += ' empty';
+    if (effectiveness) {
+        if (effectiveness.multiplier >= 2) cls += ' eff-super';
+        else if (effectiveness.multiplier === 0) cls += ' eff-immune';
+        else cls += ' eff-resist';
+    }
+    div.className = cls;
     div.textContent = moveName;
+    if (effectiveness) {
+        var badge = document.createElement('span');
+        badge.className = 'eff-badge';
+        badge.textContent = effectiveness.label;
+        div.appendChild(badge);
+    }
     if (showPP && !isEmpty && pp !== undefined) {
         var ppSpan = document.createElement('span');
         ppSpan.className = 'pp';
@@ -515,13 +630,17 @@ function buildMoveSlot(moveName, pp, showPP, isEmpty) {
     return div;
 }
 
-function renderMovesInto(elId, moves, ppValues, showPP) {
+function renderMovesInto(elId, moves, ppValues, showPP, attackerDVs, defType1, defType2) {
     var el = document.getElementById(elId);
     el.textContent = '';
     for (var i = 0; i < moves.length; i++) {
         var m = moves[i];
         var name = MOVES[m] || '\u2014';
-        el.appendChild(buildMoveSlot(name, ppValues ? ppValues[i] : undefined, showPP, m === 0));
+        var eff = null;
+        if (settings.show_type_effectiveness && defType1 !== undefined) {
+            eff = calcEffectiveness(m, attackerDVs, defType1, defType2);
+        }
+        el.appendChild(buildMoveSlot(name, ppValues ? ppValues[i] : undefined, showPP, m === 0, eff));
     }
 }
 
@@ -732,7 +851,10 @@ function renderBattle() {
         }
 
         setStatusBadge('b-enemy-status-wrap', enemyMon.status);
-        renderMovesInto('b-enemy-moves', enemyMon.moves, null, false);
+
+        var eDefT1 = playerBattleMon ? playerBattleMon.type1 : undefined;
+        var eDefT2 = playerBattleMon ? playerBattleMon.type2 : undefined;
+        renderMovesInto('b-enemy-moves', enemyMon.moves, null, false, enemyMon.dvs, eDefT1, eDefT2);
     } else {
         clearBattlePanel('b-enemy');
     }
@@ -741,8 +863,33 @@ function renderBattle() {
         document.getElementById('b-player-name').textContent = playerBattleMon.speciesName;
         document.getElementById('b-player-level').textContent = 'Lv.' + playerBattleMon.level;
         setHpBar('b-player-hp-bar', 'b-player-hp-text', playerBattleMon.hp, playerBattleMon.maxhp);
+
+        var pTypesEl = document.getElementById('b-player-types');
+        pTypesEl.textContent = '';
+        var pt1name = TYPE_NAMES[playerBattleMon.type1];
+        if (pt1name) {
+            var pbadge1 = document.createElement('span');
+            pbadge1.className = 'type-badge';
+            pbadge1.style.background = TYPE_COLORS[playerBattleMon.type1] || '#888';
+            pbadge1.textContent = pt1name;
+            pTypesEl.appendChild(pbadge1);
+        }
+        if (playerBattleMon.type2 !== playerBattleMon.type1) {
+            var pt2name = TYPE_NAMES[playerBattleMon.type2];
+            if (pt2name) {
+                var pbadge2 = document.createElement('span');
+                pbadge2.className = 'type-badge';
+                pbadge2.style.background = TYPE_COLORS[playerBattleMon.type2] || '#888';
+                pbadge2.textContent = pt2name;
+                pTypesEl.appendChild(pbadge2);
+            }
+        }
+
         setStatusBadge('b-player-status-wrap', playerBattleMon.status);
-        renderMovesInto('b-player-moves', playerBattleMon.moves, playerBattleMon.ppValues, true);
+
+        var pDefT1 = enemyMon ? enemyMon.type1 : undefined;
+        var pDefT2 = enemyMon ? enemyMon.type2 : undefined;
+        renderMovesInto('b-player-moves', playerBattleMon.moves, playerBattleMon.ppValues, true, playerBattleMon.dvs, pDefT1, pDefT2);
     } else {
         clearBattlePanel('b-player');
     }
@@ -778,6 +925,7 @@ function updateData(base64Data, isInitial) {
             settings.show_dvs = json.settings.show_dvs !== 'false';
             settings.show_stat_exp = json.settings.show_stat_exp !== 'false';
             settings.show_moves = json.settings.show_moves !== 'false';
+            settings.show_type_effectiveness = json.settings.show_type_effectiveness !== 'false';
         }
 
         document.body.classList.toggle('offline', !json.isConnected);

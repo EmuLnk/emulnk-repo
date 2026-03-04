@@ -27,6 +27,15 @@
     "emulatorId": "ppsspp"
   },
   {
+    "id": "melonds_nds",
+    "packageNames": ["org.emulnk.melondslnk"],
+    "console": "NDS",
+    "port": 55355,
+    "idAddress": "0x00200000",
+    "idSize": 8,
+    "emulatorId": "melonds"
+  },
+  {
     "id": "retroarch_gb",
     "packageNames": ["com.retroarch.lnk.aarch64"],
     "console": "GB",

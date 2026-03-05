@@ -1,0 +1,30 @@
+{
+  "id": "IPKE",
+  "name": "Pokemon HeartGold",
+  "platform": "NDS",
+  "gameIds": [
+    "IPKE"
+  ],
+  "dataPoints": [
+    {
+      "id": "enemy_battle_mon",
+      "type": "bytes",
+      "size": 48,
+      "pointer": { "default": "0x02111880" },
+      "offset": "0x49ED4"
+    },
+    {
+      "id": "player_battle_mon",
+      "type": "bytes",
+      "size": 48,
+      "pointer": { "default": "0x02111880" },
+      "offset": "0x49E14"
+    },
+    {
+      "id": "battle_active",
+      "type": "u16_le",
+      "size": 2,
+      "addresses": { "default": "0x02247612" }
+    }
+  ]
+}

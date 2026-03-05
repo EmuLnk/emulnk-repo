@@ -120,6 +120,16 @@
       "targetProfileId": "PMC",
       "type": "overlay",
       "minAppVersion": 1
+    },
+    {
+      "id": "HeartGoldWidgets",
+      "name": "HeartGold Widgets",
+      "author": "EmuLnk Team",
+      "version": "1.0.0",
+      "description": "Minimal type badges for Pokemon HeartGold battles. Two tiny widgets you can place next to the HP bars.",
+      "targetProfileId": "IPKE",
+      "type": "overlay",
+      "minAppVersion": 1
     }
   ]
 }

@@ -159,12 +159,13 @@ function calcEffectiveness(moveId, defType1, defType2, defAbility) {
 }
 
 // ── Multiplier → SVG asset path ──
-var ICON_MAP = {};
-ICON_MAP[2]    = '../assets/arrow-up.svg';
-ICON_MAP[4]    = '../assets/double-arrow-up.svg';
-ICON_MAP[0.5]  = '../assets/arrow-down.svg';
-ICON_MAP[0.25] = '../assets/double-arrow-down.svg';
-ICON_MAP[0]    = '../assets/cross.svg';
+var ICON_MAP = {
+  2:    '../assets/arrow-up.svg',
+  4:    '../assets/double-arrow-up.svg',
+  0.5:  '../assets/arrow-down.svg',
+  0.25: '../assets/double-arrow-down.svg',
+  0:    '../assets/cross.svg'
+};
 
 var rows = [
   document.getElementById('r0'),

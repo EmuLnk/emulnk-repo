@@ -4,36 +4,94 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-html,body{width:100%;height:100%;overflow:visible;background:transparent;font-family:-apple-system,'Segoe UI',Roboto,sans-serif;-webkit-user-select:none;user-select:none}
-#w{display:none;width:100%;height:100%;flex-direction:column;align-items:center;justify-content:center;gap:4%}
-#w.on{display:flex}
-.t{font-size:min(28vw, 38vh);font-weight:700;font-family:'SF Mono',ui-monospace,monospace;text-transform:uppercase;letter-spacing:0.4px;padding:2% 8%;border-radius:3px;color:#fff;white-space:nowrap;line-height:1.2;text-align:center}
+* { margin: 0; padding: 0; box-sizing: border-box }
+
+html, body {
+  width: 100%; height: 100%; overflow: visible;
+  background: transparent;
+  font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+  -webkit-user-select: none; user-select: none;
+}
+
+#w {
+  display: none;
+  width: 100%; height: 100%;
+  flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 4%;
+}
+
+#w.on { display: flex }
+
+.t {
+  font-size: min(28vw, 38vh);
+  font-weight: 700;
+  font-family: 'SF Mono', ui-monospace, monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  padding: 2% 8%;
+  border-radius: 3px;
+  color: #fff;
+  white-space: nowrap;
+  line-height: 1.2;
+  text-align: center;
+}
 </style>
 </head>
 <body>
 <div id="w"></div>
 <script>
 'use strict';
-var TN={0:'NRM',1:'FGT',2:'FLY',3:'PSN',4:'GND',5:'RCK',6:'BUG',7:'GHO',8:'STL',10:'FIR',11:'WTR',12:'GRS',13:'ELC',14:'PSY',15:'ICE',16:'DRG',17:'DRK'};
-var TC={0:'#A8A878',1:'#C03028',2:'#A890F0',3:'#A040A0',4:'#E0C068',5:'#B8A038',6:'#A8B820',7:'#705898',8:'#B8B8D0',10:'#F08030',11:'#6890F0',12:'#78C850',13:'#F8D030',14:'#F85888',15:'#98D8D8',16:'#7038F8',17:'#705848'};
-window.updateData=function(d){
-try{
-var raw=JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(d),function(c){return c.charCodeAt(0)})));
-var v=raw.values||{};
-var w=document.getElementById('w');
-if(v.battle_active!==0x2801){w.className='';return;}
-var rp=v.player_battle_mon;
-if(!rp){w.className='';return;}
-var b=Uint8Array.from(atob(rp),function(c){return c.charCodeAt(0)});
-if(b.length<38){w.className='';return;}
-var t1=b[0x24],t2=b[0x25];
-if(TN[t1]===undefined){w.className='';return;}
-w.textContent='';
-var s=document.createElement('span');s.className='t';s.style.background=TC[t1]||'#888';s.textContent=TN[t1];w.appendChild(s);
-if(t2!==t1&&TN[t2]!==undefined){var s2=document.createElement('span');s2.className='t';s2.style.background=TC[t2]||'#888';s2.textContent=TN[t2];w.appendChild(s2);}
-w.className='on';
-}catch(e){}
+
+var TN = {
+  0:'NRM', 1:'FGT', 2:'FLY', 3:'PSN', 4:'GND', 5:'RCK',
+  6:'BUG', 7:'GHO', 8:'STL', 10:'FIR', 11:'WTR', 12:'GRS',
+  13:'ELC', 14:'PSY', 15:'ICE', 16:'DRG', 17:'DRK'
+};
+
+var TC = {
+  0:'#A8A878', 1:'#C03028', 2:'#A890F0', 3:'#A040A0', 4:'#E0C068', 5:'#B8A038',
+  6:'#A8B820', 7:'#705898', 8:'#B8B8D0', 10:'#F08030', 11:'#6890F0', 12:'#78C850',
+  13:'#F8D030', 14:'#F85888', 15:'#98D8D8', 16:'#7038F8', 17:'#705848'
+};
+
+window.updateData = function(d) {
+  try {
+    var raw = JSON.parse(new TextDecoder().decode(
+      Uint8Array.from(atob(d), function(c) { return c.charCodeAt(0) })
+    ));
+    var v = raw.values || {};
+    var w = document.getElementById('w');
+
+    if (v.battle_active !== 0x2801) { w.className = ''; return; }
+
+    var rp = v.player_battle_mon;
+    if (!rp) { w.className = ''; return; }
+
+    var b = Uint8Array.from(atob(rp), function(c) { return c.charCodeAt(0) });
+    if (b.length < 38) { w.className = ''; return; }
+
+    var t1 = b[0x24], t2 = b[0x25];
+    if (TN[t1] === undefined) { w.className = ''; return; }
+
+    w.textContent = '';
+
+    var s = document.createElement('span');
+    s.className = 't';
+    s.style.background = TC[t1] || '#888';
+    s.textContent = TN[t1];
+    w.appendChild(s);
+
+    if (t2 !== t1 && TN[t2] !== undefined) {
+      var s2 = document.createElement('span');
+      s2.className = 't';
+      s2.style.background = TC[t2] || '#888';
+      s2.textContent = TN[t2];
+      w.appendChild(s2);
+    }
+
+    w.className = 'on';
+  } catch(e) {}
 };
 </script>
 </body>

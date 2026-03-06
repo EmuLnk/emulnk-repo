@@ -118,5 +118,15 @@
     "idAddress": "0x00200000",
     "idSize": 40,
     "emulatorId": "retroarch"
+  },
+  {
+    "id": "azahar_3ds",
+    "name": "3DS (Azahar)",
+    "packageNames": ["org.emulnk.azaharlnk"],
+    "console": "3DS",
+    "port": 55355,
+    "idAddress": "0x00200000",
+    "idSize": 20,
+    "emulatorId": "azahar"
   }
 ]

@@ -130,6 +130,16 @@
       "targetProfileId": "IPKE",
       "type": "overlay",
       "minAppVersion": 1
+    },
+    {
+      "id": "HeartGoldMoveEff",
+      "name": "HeartGold Move Effectiveness",
+      "author": "EmuLnk Team",
+      "version": "1.0.0",
+      "description": "Move effectiveness overlay for Pokemon HeartGold battles. Shows type advantage badges next to the move list.",
+      "targetProfileId": "IPKE",
+      "type": "overlay",
+      "minAppVersion": 1
     }
   ]
 }

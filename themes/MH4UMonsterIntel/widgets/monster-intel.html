@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box }
+
+html, body {
+  width: 100%; height: 100%; overflow: hidden;
+  background: transparent;
+  font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+  -webkit-user-select: none; user-select: none;
+}
+
+#panel {
+  display: none;
+  flex-direction: column;
+  padding: 4px 0;
+  gap: 2px;
+}
+#panel.on { display: flex }
+
+.row { display: flex; align-items: center; gap: 6px }
+
+.txt {
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.9), 0 0 6px rgba(0,0,0,0.7);
+  white-space: nowrap;
+}
+
+#name { font-size: 12px; overflow: hidden; text-overflow: ellipsis }
+#hp-pct { font-size: 11px; margin-left: auto }
+
+#rage-icon { display: none; width: 14px; height: 14px; flex-shrink: 0 }
+#rage-icon.on { display: block }
+
+.hp-track {
+  width: 100%; height: 6px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 3px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+
+#hp-bar {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.2s ease, background-color 0.3s ease;
+  box-shadow: 0 0 4px rgba(255,255,255,0.2);
+}
+
+#hp-detail {
+  font-size: 9px; font-weight: 600;
+  color: rgba(255,255,255,0.7);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.9);
+  text-align: right;
+}
+</style>
+</head>
+<body>
+<div id="panel">
+  <div class="row">
+    <span id="name" class="txt">Monster</span>
+    <!-- Pulsing spark icon, visible when enraged -->
+    <svg id="rage-icon" viewBox="0 0 24 24" fill="none">
+      <path d="M12 6l1.5 3.5L17 11l-3.5 1.5L12 16l-1.5-3.5L7 11l3.5-1.5z" fill="#f97316">
+        <animate attributeName="opacity" values="1;0.4;1" dur="0.8s" repeatCount="indefinite"/>
+      </path>
+      <path d="M12 2l1 2.5L15.5 5l-2 1.5.5 2.5-2-1.5L10 9l.5-2.5L8.5 5l2.5-.5z" fill="#ff6b00">
+        <animate attributeName="opacity" values="0.7;0.2;0.7" dur="0.6s" repeatCount="indefinite"/>
+      </path>
+      <path d="M17 8l.7 1.5 1.3.5-1 1 .2 1.5-1.2-.8-1.2.8.2-1.5-1-1 1.3-.5z" fill="#ffaa00">
+        <animate attributeName="opacity" values="0.5;0.1;0.5" dur="1s" repeatCount="indefinite"/>
+      </path>
+    </svg>
+    <span id="hp-pct" class="txt"></span>
+  </div>
+  <div class="hp-track">
+    <div id="hp-bar" style="width:0%"></div>
+  </div>
+  <div id="hp-detail"></div>
+</div>
+<script>
+'use strict';
+
+// Credits:
+//   Monster ID/name mapping: Alexander-Lancellott/MH-HP-Overlay-For-3DS-Emulator
+//   Memory offsets: Apail59820/MH4U-Plugin (CTRPF), blackrose28 (NTR plugin)
+
+// Large monster IDs
+var NAMES = {
+  1:'Rathian',2:'Rathalos',3:'Pink Rathian',4:'Azure Rathalos',
+  5:'Gold Rathian',6:'Silver Rathalos',7:'Yian Kut-Ku',8:'Blue Yian Kut-Ku',
+  9:'Gypceros',10:'Purple Gypceros',11:'Tigrex',12:'Brute Tigrex',
+  13:'Gendrome',14:'Iodrome',15:'Great Jaggi',16:'Velocidrome',
+  17:'Congalala',18:'Emerald Congalala',19:'Rajang',20:'Kecha Wacha',
+  21:'Tetsucabra',22:'Zamtrios',23:'Najarala',24:'Dalamadur',
+  25:'Seltas',26:'Seltas Queen',27:'Nerscylla',28:'Gore Magala',
+  29:'Shagaru Magala',30:'Yian Garuga',31:'Kushala Daora',32:'Teostra',
+  33:'Akantor',34:'Kirin',35:'Oroshi Kirin',36:'Khezu',37:'Red Khezu',
+  38:'Basarios',39:'Ruby Basarios',40:'Gravios',41:'Black Gravios',
+  42:'Deviljho',43:'Savage Deviljho',44:'Brachydios',45:'Golden Rajang',
+  46:"Dah'ren Mohran",47:'Lagombi',48:'Zinogre',49:'Stygian Zinogre',
+  77:'Black Fatalis',78:'Crimson Fatalis',79:'White Fatalis',
+  80:'Molten Tigrex',82:'Rusted Kushala',88:'Seregios',89:'Gogmazios',
+  90:'Ash Kecha Wacha',91:'Berserk Tetsucabra',92:'Tigerstripe Zamtrios',
+  93:'Tidal Najarala',94:'Desert Seltas',95:'Desert Seltas Queen',
+  96:'Shrouded Nerscylla',97:'Chaotic Gore Magala',98:'Raging Brachydios',
+  99:'Diablos',100:'Black Diablos',101:'Monoblos',102:'White Monoblos',
+  103:'Chameleos',105:'Cephadrome',107:'Daimyo Hermitaur',
+  108:'Plum Daimyo Hermitaur',116:'Ukanlos'
+};
+
+// Small monster IDs — filtered out from display
+var SMALL_SET = {};
+[50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,
+ 70,71,72,73,74,75,76,81,84,85,86,87,104,106,109,118,123
+].forEach(function(id) { SMALL_SET[id] = true });
+
+function hpColor(pct) {
+  if (pct > 0.5) return '#4ade80';
+  if (pct > 0.25) return '#facc15';
+  return '#ef4444';
+}
+
+// Called by the companion app with base64-encoded JSON payload
+window.updateData = function(d) {
+  try {
+    var raw = JSON.parse(new TextDecoder().decode(
+      Uint8Array.from(atob(d), function(c) { return c.charCodeAt(0) })
+    ));
+    var v = raw.values || {};
+    var panel = document.getElementById('panel');
+    var mid = v.monster1_id || 0;
+    var hp = v.monster1_hp || 0;
+    var maxHp = v.monster1_max_hp || 0;
+
+    // Hide for no monster or small monsters
+    if (mid === 0 || hp === 0 || SMALL_SET[mid]) {
+      panel.className = '';
+      return;
+    }
+    panel.className = 'on';
+
+    document.getElementById('name').textContent = NAMES[mid] || 'Monster ' + mid;
+
+    var pct = maxHp > 0 ? Math.min(hp / maxHp, 1) : 0;
+    var hpBar = document.getElementById('hp-bar');
+    hpBar.style.width = (pct * 100).toFixed(1) + '%';
+    hpBar.style.backgroundColor = hpColor(pct);
+
+    document.getElementById('hp-pct').textContent = (pct * 100).toFixed(0) + '%';
+    document.getElementById('hp-detail').textContent = hp + ' / ' + maxHp;
+    document.getElementById('rage-icon').className = (v.monster1_rage || 0) > 0 ? 'on' : '';
+  } catch(e) {}
+};
+
+window.onGameClosed = function() {
+  document.getElementById('panel').className = '';
+};
+</script>
+</body>
+</html>

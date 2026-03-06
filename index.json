@@ -140,6 +140,16 @@
       "targetProfileId": "IPKE",
       "type": "overlay",
       "minAppVersion": 1
+    },
+    {
+      "id": "MH4UMonsterIntel",
+      "name": "Monster Intel",
+      "author": "EmuLnk Team",
+      "version": "1.0.0",
+      "description": "All-in-one monster overlay for MH4U. Shows HP, enrage, fatigue, and status ailments in real-time.",
+      "targetProfileId": "MH4U",
+      "type": "overlay",
+      "minAppVersion": 1
     }
   ]
 }

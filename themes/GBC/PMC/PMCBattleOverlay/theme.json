@@ -1,0 +1,55 @@
+{
+  "id": "PMCBattleOverlay",
+  "targetProfileId": "PMC",
+  "targetConsole": "GBC",
+  "type": "overlay",
+  "meta": {
+    "name": "Crystal Widgets",
+    "author": "EmuLnk Team",
+    "version": "2.1.0",
+    "description": "Minimal type badges and move effectiveness overlay for Pokemon Crystal battles. Tiny widgets you can place next to HP bars and the move list.",
+    "minAppVersion": 1
+  },
+  "hideOverlay": false,
+  "widgets": [
+    {
+      "id": "foe-type",
+      "label": "Foe Type",
+      "src": "widgets/foe-type.html",
+      "defaultWidth": 48,
+      "defaultHeight": 60,
+      "defaultX": 140,
+      "defaultY": 30,
+      "resizable": true,
+      "transparent": true,
+      "minWidth": 36,
+      "minHeight": 40
+    },
+    {
+      "id": "you-type",
+      "label": "Your Type",
+      "src": "widgets/you-type.html",
+      "defaultWidth": 48,
+      "defaultHeight": 60,
+      "defaultX": 140,
+      "defaultY": 200,
+      "resizable": true,
+      "transparent": true,
+      "minWidth": 36,
+      "minHeight": 40
+    },
+    {
+      "id": "move-eff",
+      "label": "Move Effectiveness",
+      "src": "widgets/move-eff.html",
+      "defaultWidth": 36,
+      "defaultHeight": 160,
+      "defaultX": 50,
+      "defaultY": 80,
+      "resizable": true,
+      "transparent": true,
+      "minWidth": 24,
+      "minHeight": 80
+    }
+  ]
+}

@@ -16,10 +16,55 @@
 ## Contents
 
 ```
-consoles.json          # System definitions (id, port, idAddress, idSize)
-index.json             # Theme catalog for the in-app gallery
-profiles/*.json        # Game profiles with memory data points
-themes/*/              # Theme, overlay, and bundle folders
+consoles.json                              # System definitions (id, port, idAddress, idSize)
+index.json                                 # Theme catalog for the in-app gallery (v2)
+profiles/*.json                            # Game profiles with memory data points
+covers/                                    # Game cover images (WebP, named {profileId}.webp)
+icons/                                     # Console icons (WebP, named {console}.webp)
+themes/{console}/{profileId}/{themeId}/    # Theme, overlay, and bundle folders
+scripts/validate.js                        # CI validation script
+```
+
+### Folder Structure
+
+```
+themes/
+  GCN/
+    GZL/
+      GZLNavigator/        # theme  - minimap
+      GZLSeaOverlay/       # overlay - draggable widgets
+  GBC/
+    PMC/
+      PMCCompanion/        # theme  - companion
+      PMCBattleOverlay/    # overlay - type badges + move effectiveness
+  GBA/
+    BPE/
+      BPEPartyHUD/         # theme  - party viewer
+  NDS/
+    IPKE/
+      IPKETypeBadges/      # overlay - type badges
+      IPKEMoveEff/         # overlay - move effectiveness
+  3DS/
+    MH4U/
+      MH4UMonsterIntel/    # overlay - monster HP
+  PSP/
+    MHFU/
+      MHFUHunterHUD/       # theme  - HP bar + radar
+  PS1/
+    FF7/
+      FF7BattleHUD/        # theme  - enemy HP + weaknesses
+  SNES/
+    SM/
+      SMVisor/             # theme  - status HUD
+  NES/
+    M1/
+      M1Automap/           # theme  - auto-map
+  N64/
+    GE/
+      GEMissionHUD/        # theme  - mission HUD
+  Genesis/
+    PSIV/
+      PSIVComboCodex/      # theme  - combo tracker
 ```
 
 ## Documentation
@@ -31,6 +76,7 @@ themes/*/              # Theme, overlay, and bundle folders
 | [Theme API](https://github.com/EmuLnk/emulnk-repo/wiki/Theme-API) | JavaScript bridge methods |
 | [Profile Format](https://github.com/EmuLnk/emulnk-repo/wiki/Profile-Format) | Data point definitions |
 | [Platform Quirks](https://github.com/EmuLnk/emulnk-repo/wiki/Platform-Quirks) | System-specific memory notes |
+| [Contributing](https://github.com/EmuLnk/emulnk-repo/wiki/Contributing) | How to submit themes and profiles |
 
 ## Project Repos
 

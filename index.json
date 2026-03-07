@@ -80,6 +80,7 @@
       "profileId": "IPKE",
       "name": "Pokemon HeartGold",
       "console": "NDS",
+      "hasWidgets": true,
       "themes": [
         {
           "id": "IPKETypeBadges",

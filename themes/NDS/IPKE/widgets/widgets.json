@@ -43,7 +43,7 @@
     "transparent": true,
     "minWidth": 80,
     "minHeight": 80,
-    "screenTarget": "primary",
+    "screenTarget": "secondary",
     "description": "2x2 grid showing type effectiveness arrows for your four moves against the foe.",
     "tags": ["moves", "battle", "types"]
   }

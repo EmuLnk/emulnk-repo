@@ -3,6 +3,7 @@
   "targetProfileId": "IPKE",
   "targetConsole": "NDS",
   "type": "overlay",
+  "screenTarget": "secondary",
   "meta": {
     "name": "HeartGold Move Effectiveness",
     "author": "EmuLnk Team",

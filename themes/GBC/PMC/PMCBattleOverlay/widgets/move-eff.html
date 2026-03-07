@@ -4,12 +4,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-html,body{width:100%;height:100%;overflow:visible;background:transparent;font-family:-apple-system,'Segoe UI',Roboto,sans-serif;-webkit-user-select:none;user-select:none}
-#w{display:none;width:100%;height:100%;flex-direction:column;align-items:center;justify-content:space-evenly}
-#w.on{display:flex}
-.r{width:100%;display:flex;align-items:center;justify-content:center;height:25%}
-.b{font-size:min(60vw, 20vh);font-weight:700;font-family:'SF Mono',ui-monospace,monospace;text-transform:uppercase;letter-spacing:0.4px;padding:2% 10%;border-radius:3px;color:#fff;white-space:nowrap;line-height:1.2;text-align:center}
+* { margin: 0; padding: 0; box-sizing: border-box }
+html, body {
+  width: 100%; height: 100%; overflow: visible;
+  background: transparent;
+  -webkit-user-select: none; user-select: none;
+}
+#w {
+  display: none;
+  width: 100%; height: 100%;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 4%;
+}
+#w.on { display: grid }
+.r { position: relative }
+.r img {
+  position: absolute;
+  top: 2px; right: 2px;
+  width: 28%; height: 28%;
+  object-fit: contain;
+}
 </style>
 </head>
 <body>
@@ -136,25 +151,17 @@ if(chart){
 if(chart[defType1]!==undefined)mult*=chart[defType1];
 if(defType1!==defType2&&chart[defType2]!==undefined)mult*=chart[defType2];
 }
-if(mult===1)return null;
-var label;
-if(mult===0)label='0x';
-else if(mult===4)label='4x';
-else if(mult===2)label='2x';
-else if(mult===0.5)label='\u00BDx';
-else if(mult===0.25)label='\u00BCx';
-else label=mult+'x';
-return {multiplier:mult,label:label};
+return mult;
 }
 
-// ── Badge Colors ──
-function badgeColor(mult){
-if(mult>=4)return '#16a34a';
-if(mult>=2)return '#22c55e';
-if(mult===0)return '#ef4444';
-if(mult<=0.25)return '#d97706';
-return '#f59e0b';
-}
+// ── Multiplier → SVG asset path ──
+var ICON_MAP = {
+  2:    '../assets/arrow-up.svg',
+  4:    '../assets/double-arrow-up.svg',
+  0.5:  '../assets/arrow-down.svg',
+  0.25: '../assets/double-arrow-down.svg',
+  0:    '../assets/cross.svg'
+};
 
 var rows=[
 document.getElementById('r0'),
@@ -181,13 +188,14 @@ var defType1=be[0x1E],defType2=be[0x1F];
 for(var i=0;i<4;i++){
 var row=rows[i];
 row.textContent='';
-var eff=calcEffectiveness(moves[i],dvs,defType1,defType2);
-if(eff){
-var b=document.createElement('span');
-b.className='b';
-b.style.background=badgeColor(eff.multiplier);
-b.textContent=eff.label;
-row.appendChild(b);
+var mult=calcEffectiveness(moves[i],dvs,defType1,defType2);
+if(mult!==null&&mult!==1){
+var src=ICON_MAP[mult];
+if(src){
+var img=document.createElement('img');
+img.src=src;
+row.appendChild(img);
+}
 }
 }
 w.className='on';

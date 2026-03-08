@@ -3,6 +3,7 @@
   "targetProfileId": "PMC",
   "targetConsole": "GBC",
   "type": "overlay",
+  "screenTarget": "primary",
   "meta": {
     "name": "Crystal Widgets",
     "author": "EmuLnk Team",

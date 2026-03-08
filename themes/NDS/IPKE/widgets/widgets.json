@@ -1,0 +1,50 @@
+[
+  {
+    "id": "you-type",
+    "label": "Your Type",
+    "src": "you-type.html",
+    "defaultWidth": 80,
+    "defaultHeight": 100,
+    "defaultX": 10,
+    "defaultY": 200,
+    "resizable": true,
+    "transparent": true,
+    "minWidth": 50,
+    "minHeight": 60,
+    "screenTarget": "primary",
+    "description": "Shows your active Pokemon's type badges during battle.",
+    "tags": ["types", "battle"]
+  },
+  {
+    "id": "foe-type",
+    "label": "Foe Type",
+    "src": "foe-type.html",
+    "defaultWidth": 80,
+    "defaultHeight": 100,
+    "defaultX": 10,
+    "defaultY": 10,
+    "resizable": true,
+    "transparent": true,
+    "minWidth": 50,
+    "minHeight": 60,
+    "screenTarget": "primary",
+    "description": "Shows the enemy Pokemon's type badges during battle.",
+    "tags": ["types", "battle"]
+  },
+  {
+    "id": "move-eff",
+    "label": "Move Effectiveness",
+    "src": "move-eff.html",
+    "defaultWidth": 160,
+    "defaultHeight": 160,
+    "defaultX": 100,
+    "defaultY": 200,
+    "resizable": true,
+    "transparent": true,
+    "minWidth": 80,
+    "minHeight": 80,
+    "screenTarget": "secondary",
+    "description": "2x2 grid showing type effectiveness arrows for your four moves against the foe.",
+    "tags": ["moves", "battle", "types"]
+  }
+]

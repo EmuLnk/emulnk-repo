@@ -1,0 +1,82 @@
+{
+  "id": "GZLSeaOverlay",
+  "targetProfileId": "GZL",
+  "targetConsole": "GCN",
+  "type": "overlay",
+  "screenTarget": "primary",
+  "meta": {
+    "name": "Great Sea Widgets",
+    "author": "EmuLnk Team",
+    "version": "1.0.0",
+    "description": "Widget-based overlay for Wind Waker. Includes minimap, hearts, rupees, compass, and wind control. Drag and resize freely.",
+    "minAppVersion": 1
+  },
+  "hideOverlay": false,
+  "widgets": [
+    {
+      "id": "minimap",
+      "label": "Sea Chart",
+      "src": "widgets/minimap.html",
+      "defaultWidth": 280,
+      "defaultHeight": 280,
+      "defaultX": 10,
+      "defaultY": 10,
+      "resizable": true,
+      "transparent": true,
+      "minWidth": 120,
+      "minHeight": 120
+    },
+    {
+      "id": "hearts",
+      "label": "Hearts",
+      "src": "widgets/hearts.html",
+      "defaultWidth": 160,
+      "defaultHeight": 48,
+      "defaultX": 300,
+      "defaultY": 10,
+      "resizable": true,
+      "transparent": true,
+      "minWidth": 80,
+      "minHeight": 32
+    },
+    {
+      "id": "rupees",
+      "label": "Rupees",
+      "src": "widgets/rupees.html",
+      "defaultWidth": 100,
+      "defaultHeight": 44,
+      "defaultX": 470,
+      "defaultY": 10,
+      "resizable": true,
+      "transparent": true,
+      "minWidth": 60,
+      "minHeight": 32
+    },
+    {
+      "id": "compass",
+      "label": "Compass",
+      "src": "widgets/compass.html",
+      "defaultWidth": 100,
+      "defaultHeight": 100,
+      "defaultX": 580,
+      "defaultY": 10,
+      "resizable": true,
+      "transparent": true,
+      "minWidth": 60,
+      "minHeight": 60
+    },
+    {
+      "id": "wind-control",
+      "label": "Wind Control",
+      "src": "widgets/wind-control.html",
+      "defaultWidth": 140,
+      "defaultHeight": 160,
+      "defaultX": 580,
+      "defaultY": 120,
+      "resizable": false,
+      "transparent": true,
+      "minWidth": 120,
+      "minHeight": 140
+    }
+  ]
+}

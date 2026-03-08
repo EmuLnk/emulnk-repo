@@ -3,11 +3,12 @@
   "targetProfileId": "GZL",
   "targetConsole": "GCN",
   "type": "overlay",
+  "screenTarget": "primary",
   "meta": {
     "name": "Great Sea Widgets",
     "author": "EmuLnk Team",
     "version": "1.0.0",
-    "description": "Widget-based overlay for Wind Waker. Includes minimap, hearts, rupees, compass, and wind control — drag and resize freely.",
+    "description": "Widget-based overlay for Wind Waker. Includes minimap, hearts, rupees, compass, and wind control. Drag and resize freely.",
     "minAppVersion": 1
   },
   "hideOverlay": false,

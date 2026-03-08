@@ -7,7 +7,7 @@
     "name": "Mission HUD",
     "author": "EmuLnk Team",
     "version": "1.0.0",
-    "description": "Live mission HUD for GoldenEye 007. Objective checklist, health, armor, weapon, and timer — no more pausing mid-mission.",
+    "description": "Live mission HUD for GoldenEye 007. Objective checklist, health, armor, weapon, and timer. No more pausing mid-mission.",
     "minAppVersion": 1
   },
   "hideOverlay": false,

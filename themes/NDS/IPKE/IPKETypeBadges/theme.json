@@ -3,6 +3,7 @@
   "targetProfileId": "IPKE",
   "targetConsole": "NDS",
   "type": "overlay",
+  "screenTarget": "primary",
   "meta": {
     "name": "HeartGold Widgets",
     "author": "EmuLnk Team",

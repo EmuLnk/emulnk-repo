@@ -1,155 +1,233 @@
 {
-  "version": "1.0",
-  "themes": [
+  "version": "2.0",
+  "games": [
     {
-      "id": "WindWakerMinimap",
-      "name": "Great Sea Navigator",
-      "author": "EmuLink Team",
-      "version": "1.0.0",
-      "description": "Live minimap showing Link's real-time position on the Great Sea chart with heading, hearts, and compass.",
-      "targetProfileId": "GZL",
-      "type": "theme",
-      "minAppVersion": 1,
-      "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/WindWakerMinimap/preview.png"
+      "profileId": "GZL",
+      "name": "The Legend of Zelda: The Wind Waker",
+      "console": "GCN",
+      "themes": [
+        {
+          "id": "GZLNavigator",
+          "name": "Navigator",
+          "author": "EmuLnk Team",
+          "version": "1.0.0",
+          "type": "theme",
+          "tags": ["minimap", "navigation", "stats"],
+          "description": "Minimap with real-time position, heading, hearts, rupees, and compass.",
+          "minAppVersion": 1,
+          "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/GCN/GZL/GZLNavigator/preview.png"
+        },
+        {
+          "id": "GZLSeaOverlay",
+          "name": "Sea Overlay",
+          "author": "EmuLnk Team",
+          "version": "1.0.0",
+          "type": "overlay",
+          "tags": ["minimap", "stats"],
+          "description": "Draggable overlay widgets: minimap, hearts, rupees, compass, wind control.",
+          "minAppVersion": 1,
+          "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/GCN/GZL/GZLSeaOverlay/preview.png"
+        }
+      ]
     },
     {
-      "id": "MHFUHunterHUD",
-      "name": "Hunter's Eye",
-      "author": "EmuLnk Team",
-      "version": "1.0.0",
-      "description": "Live monster HP bar and radar for Monster Hunter Freedom Unite. Shows hidden monster health, species name, and real-time positions on a radar map.",
-      "targetProfileId": "MHFU",
-      "type": "theme",
-      "minAppVersion": 1,
-      "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/MHFUHunterHUD/preview.png"
+      "profileId": "PMC",
+      "name": "Pokemon Crystal",
+      "console": "GBC",
+      "themes": [
+        {
+          "id": "PMCCompanion",
+          "name": "Companion",
+          "author": "EmuLnk Team",
+          "version": "1.0.0",
+          "type": "theme",
+          "tags": ["stats", "battle", "types"],
+          "description": "DVs, Stat Exp, and Hidden Power in the overworld. Enemy HP, moves, and types in battle.",
+          "minAppVersion": 1,
+          "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/GBC/PMC/PMCCompanion/preview.png"
+        },
+        {
+          "id": "PMCBattleOverlay",
+          "name": "Battle Overlay",
+          "author": "EmuLnk Team",
+          "version": "2.1.0",
+          "type": "overlay",
+          "tags": ["types", "battle", "moves"],
+          "description": "Type badges and move effectiveness widgets for battle.",
+          "minAppVersion": 1
+        }
+      ]
     },
     {
-      "id": "EmeraldPartyHUD",
-      "name": "Pokemon Stats",
-      "author": "EmuLnk Team",
-      "version": "1.0.0",
-      "description": "Real-time party viewer for Pokemon Emerald. Shows IVs, EVs, natures, stats, moves, friendship, and Hidden Power.",
-      "targetProfileId": "BPE",
-      "type": "theme",
-      "minAppVersion": 1,
-      "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/EmeraldPartyHUD/preview.png"
+      "profileId": "BPE",
+      "name": "Pokemon Emerald",
+      "console": "GBA",
+      "themes": [
+        {
+          "id": "BPEPartyHUD",
+          "name": "Party HUD",
+          "author": "EmuLnk Team",
+          "version": "1.0.0",
+          "type": "theme",
+          "tags": ["stats", "party"],
+          "description": "Party viewer with IVs, EVs, natures, stats, moves, friendship, and Hidden Power.",
+          "minAppVersion": 1,
+          "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/GBA/BPE/BPEPartyHUD/preview.png"
+        }
+      ]
     },
     {
-      "id": "FF7SenseHUD",
-      "name": "Battle HUD",
-      "author": "EmuLnk Team",
-      "version": "1.0.0",
-      "description": "Always-on battle HUD for Final Fantasy VII. Shows enemy HP, weaknesses, absorbs.",
-      "targetProfileId": "FF7",
-      "type": "theme",
-      "minAppVersion": 1,
-      "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/FF7SenseHUD/preview.png"
+      "profileId": "IPKE",
+      "name": "Pokemon HeartGold",
+      "console": "NDS",
+      "hasWidgets": true,
+      "themes": [
+        {
+          "id": "IPKETypeBadges",
+          "name": "Type Badges",
+          "author": "EmuLnk Team",
+          "version": "1.0.0",
+          "type": "overlay",
+          "tags": ["types", "battle"],
+          "description": "Type badge widgets for both Pokemon in battle.",
+          "minAppVersion": 1
+        },
+        {
+          "id": "IPKEMoveEff",
+          "name": "Move Effectiveness",
+          "author": "EmuLnk Team",
+          "version": "1.0.0",
+          "type": "overlay",
+          "tags": ["moves", "battle", "types"],
+          "description": "Type advantage badges next to the move list in battle.",
+          "minAppVersion": 1
+        }
+      ]
     },
     {
-      "id": "MetroidVisor",
-      "name": "Visor",
-      "author": "EmuLnk Team",
-      "version": "1.0.0",
-      "description": "Real-time status HUD for Super Metroid. Energy, ammo, equipment, boss tracker, and item %.",
-      "targetProfileId": "SM",
-      "type": "theme",
-      "minAppVersion": 1,
-      "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/MetroidVisor/preview.png"
+      "profileId": "MH4U",
+      "name": "Monster Hunter 4 Ultimate",
+      "console": "3DS",
+      "themes": [
+        {
+          "id": "MH4UMonsterIntel",
+          "name": "Monster Intel",
+          "author": "EmuLnk Team",
+          "version": "1.0.0",
+          "type": "overlay",
+          "tags": ["combat", "stats"],
+          "description": "Monster HP, enrage, fatigue, and status ailments.",
+          "minAppVersion": 1
+        }
+      ]
     },
     {
-      "id": "PSIVComboCodex",
-      "name": "Combo Codex",
-      "author": "EmuLnk Team",
-      "version": "1.0.0",
-      "description": "Live combo tracker for Phantasy Star IV. Reads party state from Genesis RAM and shows which hidden combination attacks are currently available.",
-      "targetProfileId": "PSIV",
-      "type": "theme",
-      "minAppVersion": 1,
-      "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/PSIVComboCodex/preview.png"
+      "profileId": "MHFU",
+      "name": "Monster Hunter Freedom Unite",
+      "console": "PSP",
+      "themes": [
+        {
+          "id": "MHFUHunterHUD",
+          "name": "Hunter HUD",
+          "author": "EmuLnk Team",
+          "version": "1.0.0",
+          "type": "theme",
+          "tags": ["combat", "radar", "stats"],
+          "description": "Monster HP bar, species name, and position radar.",
+          "minAppVersion": 1,
+          "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/PSP/MHFU/MHFUHunterHUD/preview.png"
+        }
+      ]
     },
     {
-      "id": "MetroidAutomap",
-      "name": "Zebes Auto-Map",
-      "author": "EmuLnk Team",
-      "version": "1.0.0",
-      "description": "Progressive auto-map for NES Metroid. Reveals rooms as Samus explores, plus health, missiles, equipment, and boss tracker.",
-      "targetProfileId": "M1",
-      "type": "theme",
-      "minAppVersion": 1,
-      "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/MetroidAutomap/preview.png"
+      "profileId": "FF7",
+      "name": "Final Fantasy VII",
+      "console": "PS1",
+      "themes": [
+        {
+          "id": "FF7BattleHUD",
+          "name": "Battle HUD",
+          "author": "EmuLnk Team",
+          "version": "1.0.0",
+          "type": "theme",
+          "tags": ["battle", "combat", "stats"],
+          "description": "Enemy HP, weaknesses, and absorbs.",
+          "minAppVersion": 1,
+          "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/PS1/FF7/FF7BattleHUD/preview.png"
+        }
+      ]
     },
     {
-      "id": "CrystalHUD",
-      "name": "Crystal Companion",
-      "author": "EmuLnk Team",
-      "version": "1.0.0",
-      "description": "Dual-mode companion for Pokemon Crystal. Shows hidden DVs, Stat Exp, and Hidden Power in the overworld; reveals enemy HP, moves, and types during battle.",
-      "targetProfileId": "PMC",
-      "type": "theme",
-      "minAppVersion": 1,
-      "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/CrystalHUD/preview.png"
+      "profileId": "SM",
+      "name": "Super Metroid",
+      "console": "SNES",
+      "themes": [
+        {
+          "id": "SMVisor",
+          "name": "Visor",
+          "author": "EmuLnk Team",
+          "version": "1.0.0",
+          "type": "theme",
+          "tags": ["stats", "tracker"],
+          "description": "Energy, ammo, equipment, boss tracker, and item %.",
+          "minAppVersion": 1,
+          "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/SNES/SM/SMVisor/preview.png"
+        }
+      ]
     },
     {
-      "id": "WindWakerWidgets",
-      "name": "Great Sea Widgets",
-      "author": "EmuLnk Team",
-      "version": "1.0.0",
-      "description": "Widget-based overlay for Wind Waker. Minimap, hearts, rupees, compass, and wind control as individual draggable widgets.",
-      "targetProfileId": "GZL",
-      "type": "overlay",
-      "minAppVersion": 1,
-      "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/WindWakerWidgets/preview.png"
+      "profileId": "M1",
+      "name": "Metroid",
+      "console": "NES",
+      "themes": [
+        {
+          "id": "M1Automap",
+          "name": "Auto-Map",
+          "author": "EmuLnk Team",
+          "version": "1.0.0",
+          "type": "theme",
+          "tags": ["minimap", "tracker", "stats"],
+          "description": "Progressive auto-map that reveals rooms as you explore. Health, missiles, equipment, and boss tracker.",
+          "minAppVersion": 1,
+          "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/NES/M1/M1Automap/preview.png"
+        }
+      ]
     },
     {
-      "id": "GoldenEyeHUD",
-      "name": "Mission Briefing",
-      "author": "EmuLnk Team",
-      "version": "1.0.0",
-      "description": "Live mission HUD for GoldenEye 007. Objective checklist, health, armor, weapon, and timer — no more pausing mid-mission.",
-      "targetProfileId": "GE",
-      "type": "theme",
-      "minAppVersion": 1,
-      "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/GoldenEyeHUD/preview.png"
+      "profileId": "GE",
+      "name": "GoldenEye 007",
+      "console": "N64",
+      "themes": [
+        {
+          "id": "GEMissionHUD",
+          "name": "Mission HUD",
+          "author": "EmuLnk Team",
+          "version": "1.0.0",
+          "type": "theme",
+          "tags": ["tracker", "combat", "stats"],
+          "description": "Objective checklist, health, armor, weapon, and timer.",
+          "minAppVersion": 1,
+          "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/N64/GE/GEMissionHUD/preview.png"
+        }
+      ]
     },
     {
-      "id": "CrystalWidgets",
-      "name": "Crystal Widgets",
-      "author": "EmuLnk Team",
-      "version": "2.0.0",
-      "description": "Minimal type badges for Pokemon Crystal battles. Two tiny widgets you can place next to the HP bars.",
-      "targetProfileId": "PMC",
-      "type": "overlay",
-      "minAppVersion": 1
-    },
-    {
-      "id": "HeartGoldWidgets",
-      "name": "HeartGold Widgets",
-      "author": "EmuLnk Team",
-      "version": "1.0.0",
-      "description": "Minimal type badges for Pokemon HeartGold battles. Two tiny widgets you can place next to the HP bars.",
-      "targetProfileId": "IPKE",
-      "type": "overlay",
-      "minAppVersion": 1
-    },
-    {
-      "id": "HeartGoldMoveEff",
-      "name": "HeartGold Move Effectiveness",
-      "author": "EmuLnk Team",
-      "version": "1.0.0",
-      "description": "Move effectiveness overlay for Pokemon HeartGold battles. Shows type advantage badges next to the move list.",
-      "targetProfileId": "IPKE",
-      "type": "overlay",
-      "minAppVersion": 1
-    },
-    {
-      "id": "MH4UMonsterIntel",
-      "name": "Monster Intel",
-      "author": "EmuLnk Team",
-      "version": "1.0.0",
-      "description": "All-in-one monster overlay for MH4U. Shows HP, enrage, fatigue, and status ailments in real-time.",
-      "targetProfileId": "MH4U",
-      "type": "overlay",
-      "minAppVersion": 1
+      "profileId": "PSIV",
+      "name": "Phantasy Star IV",
+      "console": "Genesis",
+      "themes": [
+        {
+          "id": "PSIVComboCodex",
+          "name": "Combo Tracker",
+          "author": "EmuLnk Team",
+          "version": "1.0.0",
+          "type": "theme",
+          "tags": ["combat", "party"],
+          "description": "Shows which combination attacks are available based on current party.",
+          "minAppVersion": 1,
+          "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/Genesis/PSIV/PSIVComboCodex/preview.png"
+        }
+      ]
     }
   ]
 }

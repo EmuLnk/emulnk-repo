@@ -1,0 +1,28 @@
+{
+  "id": "PSIVComboCodex",
+  "type": "theme",
+  "targetProfileId": "PSIV",
+  "targetConsole": "Genesis",
+  "meta": {
+    "name": "Combo Tracker",
+    "author": "EmuLnk Team",
+    "version": "1.0.0",
+    "description": "Live combo tracker for Phantasy Star IV. Reads party state from Genesis RAM and shows which hidden combination attacks are currently available.",
+    "minAppVersion": 1
+  },
+  "hideOverlay": false,
+  "settings": [
+    {
+      "id": "show_locked",
+      "label": "Show Locked Combos",
+      "type": "toggle",
+      "default": "true"
+    },
+    {
+      "id": "show_party",
+      "label": "Show Party Stats",
+      "type": "toggle",
+      "default": "true"
+    }
+  ]
+}

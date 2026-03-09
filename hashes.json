@@ -1,10 +1,12 @@
 {
   "65581ef54ca858242db11429f469295f": {
     "profileId": "lazarus_v2",
-    "label": "Pokémon Lazarus v2.0"
+    "label": "Pokémon Lazarus",
+    "version": "v2.0"
   },
   "605b89b67018abcea91e693a4dd25be3": {
     "profileId": "BPE",
-    "label": "Pokémon Emerald (USA/EUR)"
+    "label": "Pokémon Emerald",
+    "version": "USA/EUR"
   }
 }

@@ -3,5 +3,22 @@
   "name": "Pokémon Lazarus v2.0",
   "platform": "GBA",
   "gameIds": [],
-  "dataPoints": []
+  "dataPoints": [
+    {
+      "id": "party_count",
+      "type": "u8",
+      "size": 1,
+      "addresses": {
+        "default": "0x0201B95D"
+      }
+    },
+    {
+      "id": "party_data",
+      "type": "bytes",
+      "size": 600,
+      "addresses": {
+        "default": "0x0201B960"
+      }
+    }
+  ]
 }

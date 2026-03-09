@@ -16,7 +16,7 @@
 ## Contents
 
 ```
-consoles.json                              # System definitions (id, port, idAddress, idSize)
+consoles.json                              # System definitions (id, console, port, packageNames)
 index.json                                 # Theme catalog for the in-app gallery (v2)
 profiles/*.json                            # Game profiles with memory data points
 covers/                                    # Game cover images (WebP, named {profileId}.webp)

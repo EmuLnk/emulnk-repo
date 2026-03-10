@@ -8,5 +8,10 @@
     "profileId": "BPE",
     "label": "Pokémon Emerald",
     "version": "USA/EUR"
+  },
+  "757ce8cbc2462669393ad71235b4fa95": {
+    "profileId": "GZL",
+    "label": "The Legend of Zelda: The Wind Waker",
+    "version": "USA"
   }
 }

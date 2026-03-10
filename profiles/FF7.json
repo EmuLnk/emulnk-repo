@@ -2,7 +2,7 @@
   "id": "FF7",
   "name": "Final Fantasy VII",
   "platform": "PS1",
-  "gameIds": ["SCUS94163", "SCUS-94163"],
+  "gameIds": ["SCUS-94163-0"],
   "bundles": {
     "save": {
       "base": "0x0009C738"

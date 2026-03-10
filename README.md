@@ -17,6 +17,7 @@
 
 ```
 consoles.json                              # System definitions (id, console, port, packageNames)
+hashes.json                                # ROM hash → profile mapping for exact detection
 index.json                                 # Theme catalog for the in-app gallery (v2)
 profiles/*.json                            # Game profiles with memory data points
 covers/                                    # Game cover images (WebP, named {profileId}.webp)

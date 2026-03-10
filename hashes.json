@@ -18,5 +18,15 @@
     "profileId": "MH4U",
     "label": "Monster Hunter 4 Ultimate",
     "version": "USA"
+  },
+  "258cea3a62ac0d6eb04b5a0fd764d788": {
+    "profileId": "IPKE",
+    "label": "Pokémon HeartGold",
+    "version": "USA"
+  },
+  "6f25e799abe051a2fc4aff7335b50706": {
+    "profileId": "MHFU",
+    "label": "Monster Hunter Freedom Unite",
+    "version": "EUR"
   }
 }

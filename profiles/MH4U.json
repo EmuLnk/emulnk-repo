@@ -3,33 +3,38 @@
   "name": "Monster Hunter 4 Ultimate",
   "platform": "3DS",
   "gameIds": ["0004000000126300"],
+  "bundles": {
+    "monster1": {
+      "pointer": "0x081C72E0"
+    }
+  },
   "dataPoints": [
     {
       "id": "monster1_id",
       "type": "u8",
       "size": 1,
-      "pointer": { "default": "0x081C72E0" },
+      "bundle": "monster1",
       "offset": "0xFF0"
     },
     {
       "id": "monster1_hp",
       "type": "u32_le",
       "size": 4,
-      "pointer": { "default": "0x081C72E0" },
+      "bundle": "monster1",
       "offset": "0x1218"
     },
     {
       "id": "monster1_max_hp",
       "type": "u32_le",
       "size": 4,
-      "pointer": { "default": "0x081C72E0" },
+      "bundle": "monster1",
       "offset": "0x121C"
     },
     {
       "id": "monster1_rage",
       "type": "float_le",
       "size": 4,
-      "pointer": { "default": "0x081C72E0" },
+      "bundle": "monster1",
       "offset": "0x135C"
     }
   ]

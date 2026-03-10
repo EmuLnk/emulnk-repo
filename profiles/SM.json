@@ -3,138 +3,174 @@
   "name": "Super Metroid",
   "platform": "SNES",
   "gameIds": ["SUPER METROID", "SUPERMETROID", "SuperMetroid", "Super Metroid"],
+  "bundles": {
+    "map": {
+      "base": "0x079B"
+    },
+    "state": {
+      "base": "0x0998"
+    },
+    "player": {
+      "base": "0x09A4"
+    },
+    "flags": {
+      "base": "0xD820"
+    }
+  },
   "dataPoints": [
     {
-      "id": "game_state",
+      "id": "room_ptr",
       "type": "u16_le",
       "size": 2,
-      "addresses": { "default": "0x0998" }
+      "bundle": "map",
+      "offset": "0x0"
     },
     {
       "id": "area_id",
       "type": "u16_le",
       "size": 2,
-      "addresses": { "default": "0x079F" }
+      "bundle": "map",
+      "offset": "0x4"
     },
     {
-      "id": "room_ptr",
+      "id": "game_state",
       "type": "u16_le",
       "size": 2,
-      "addresses": { "default": "0x079B" }
-    },
-    {
-      "id": "energy",
-      "type": "u16_le",
-      "size": 2,
-      "addresses": { "default": "0x09C2" }
-    },
-    {
-      "id": "max_energy",
-      "type": "u16_le",
-      "size": 2,
-      "addresses": { "default": "0x09C4" }
-    },
-    {
-      "id": "reserve_energy",
-      "type": "u16_le",
-      "size": 2,
-      "addresses": { "default": "0x09D6" }
-    },
-    {
-      "id": "max_reserve",
-      "type": "u16_le",
-      "size": 2,
-      "addresses": { "default": "0x09D4" }
-    },
-    {
-      "id": "missiles",
-      "type": "u16_le",
-      "size": 2,
-      "addresses": { "default": "0x09C6" }
-    },
-    {
-      "id": "max_missiles",
-      "type": "u16_le",
-      "size": 2,
-      "addresses": { "default": "0x09C8" }
-    },
-    {
-      "id": "supers",
-      "type": "u16_le",
-      "size": 2,
-      "addresses": { "default": "0x09CA" }
-    },
-    {
-      "id": "max_supers",
-      "type": "u16_le",
-      "size": 2,
-      "addresses": { "default": "0x09CC" }
-    },
-    {
-      "id": "power_bombs",
-      "type": "u16_le",
-      "size": 2,
-      "addresses": { "default": "0x09CE" }
-    },
-    {
-      "id": "max_power_bombs",
-      "type": "u16_le",
-      "size": 2,
-      "addresses": { "default": "0x09D0" }
-    },
-    {
-      "id": "items_collected",
-      "type": "u16_le",
-      "size": 2,
-      "addresses": { "default": "0x09A4" }
-    },
-    {
-      "id": "beams_collected",
-      "type": "u16_le",
-      "size": 2,
-      "addresses": { "default": "0x09A8" }
-    },
-    {
-      "id": "timer_hours",
-      "type": "u16_le",
-      "size": 2,
-      "addresses": { "default": "0x09E0" }
-    },
-    {
-      "id": "timer_minutes",
-      "type": "u16_le",
-      "size": 2,
-      "addresses": { "default": "0x09DE" }
-    },
-    {
-      "id": "timer_seconds",
-      "type": "u16_le",
-      "size": 2,
-      "addresses": { "default": "0x09DC" }
-    },
-    {
-      "id": "boss_flags",
-      "type": "bytes",
-      "size": 5,
-      "addresses": { "default": "0xD828" }
-    },
-    {
-      "id": "event_flags",
-      "type": "bytes",
-      "size": 3,
-      "addresses": { "default": "0xD820" }
-    },
-    {
-      "id": "item_pickups",
-      "type": "bytes",
-      "size": 64,
-      "addresses": { "default": "0xD870" }
+      "bundle": "state",
+      "offset": "0x0"
     },
     {
       "id": "enemy_hp",
       "type": "u16_le",
       "size": 2,
-      "addresses": { "default": "0x0F8C" }
+      "bundle": "state",
+      "offset": "0x5F4"
+    },
+    {
+      "id": "items_collected",
+      "type": "u16_le",
+      "size": 2,
+      "bundle": "player",
+      "offset": "0x0"
+    },
+    {
+      "id": "beams_collected",
+      "type": "u16_le",
+      "size": 2,
+      "bundle": "player",
+      "offset": "0x4"
+    },
+    {
+      "id": "energy",
+      "type": "u16_le",
+      "size": 2,
+      "bundle": "player",
+      "offset": "0x1E"
+    },
+    {
+      "id": "max_energy",
+      "type": "u16_le",
+      "size": 2,
+      "bundle": "player",
+      "offset": "0x20"
+    },
+    {
+      "id": "missiles",
+      "type": "u16_le",
+      "size": 2,
+      "bundle": "player",
+      "offset": "0x22"
+    },
+    {
+      "id": "max_missiles",
+      "type": "u16_le",
+      "size": 2,
+      "bundle": "player",
+      "offset": "0x24"
+    },
+    {
+      "id": "supers",
+      "type": "u16_le",
+      "size": 2,
+      "bundle": "player",
+      "offset": "0x26"
+    },
+    {
+      "id": "max_supers",
+      "type": "u16_le",
+      "size": 2,
+      "bundle": "player",
+      "offset": "0x28"
+    },
+    {
+      "id": "power_bombs",
+      "type": "u16_le",
+      "size": 2,
+      "bundle": "player",
+      "offset": "0x2A"
+    },
+    {
+      "id": "max_power_bombs",
+      "type": "u16_le",
+      "size": 2,
+      "bundle": "player",
+      "offset": "0x2C"
+    },
+    {
+      "id": "max_reserve",
+      "type": "u16_le",
+      "size": 2,
+      "bundle": "player",
+      "offset": "0x30"
+    },
+    {
+      "id": "reserve_energy",
+      "type": "u16_le",
+      "size": 2,
+      "bundle": "player",
+      "offset": "0x32"
+    },
+    {
+      "id": "timer_seconds",
+      "type": "u16_le",
+      "size": 2,
+      "bundle": "player",
+      "offset": "0x38"
+    },
+    {
+      "id": "timer_minutes",
+      "type": "u16_le",
+      "size": 2,
+      "bundle": "player",
+      "offset": "0x3A"
+    },
+    {
+      "id": "timer_hours",
+      "type": "u16_le",
+      "size": 2,
+      "bundle": "player",
+      "offset": "0x3C"
+    },
+    {
+      "id": "event_flags",
+      "type": "bytes",
+      "size": 3,
+      "bundle": "flags",
+      "offset": "0x0"
+    },
+    {
+      "id": "boss_flags",
+      "type": "bytes",
+      "size": 5,
+      "bundle": "flags",
+      "offset": "0x8"
+    },
+    {
+      "id": "item_pickups",
+      "type": "bytes",
+      "size": 64,
+      "bundle": "flags",
+      "offset": "0x50"
     }
   ]
 }

@@ -3,108 +3,136 @@
   "name": "Metroid",
   "platform": "NES",
   "gameIds": ["70080810"],
+  "bundles": {
+    "state": {
+      "base": "0x001E"
+    },
+    "player": {
+      "base": "0x0106"
+    },
+    "sram": {
+      "base": "0x6877"
+    }
+  },
   "dataPoints": [
     {
-      "id": "map_pos_y",
+      "id": "main_routine",
       "type": "u8",
       "size": 1,
-      "addresses": { "default": "0x004F" }
-    },
-    {
-      "id": "map_pos_x",
-      "type": "u8",
-      "size": 1,
-      "addresses": { "default": "0x0050" }
-    },
-    {
-      "id": "in_area",
-      "type": "u8",
-      "size": 1,
-      "addresses": { "default": "0x0074" }
-    },
-    {
-      "id": "room_number",
-      "type": "u8",
-      "size": 1,
-      "addresses": { "default": "0x005A" }
+      "bundle": "state",
+      "offset": "0x0"
     },
     {
       "id": "scroll_dir",
       "type": "u8",
       "size": 1,
-      "addresses": { "default": "0x0049" }
+      "bundle": "state",
+      "offset": "0x2B"
     },
     {
-      "id": "main_routine",
+      "id": "map_pos_y",
       "type": "u8",
       "size": 1,
-      "addresses": { "default": "0x001E" }
+      "bundle": "state",
+      "offset": "0x31"
     },
     {
-      "id": "health",
-      "type": "bytes",
-      "size": 2,
-      "addresses": { "default": "0x0106" }
+      "id": "map_pos_x",
+      "type": "u8",
+      "size": 1,
+      "bundle": "state",
+      "offset": "0x32"
+    },
+    {
+      "id": "room_number",
+      "type": "u8",
+      "size": 1,
+      "bundle": "state",
+      "offset": "0x3C"
+    },
+    {
+      "id": "in_area",
+      "type": "u8",
+      "size": 1,
+      "bundle": "state",
+      "offset": "0x56"
     },
     {
       "id": "mb_status",
       "type": "u8",
       "size": 1,
-      "addresses": { "default": "0x0098" }
+      "bundle": "state",
+      "offset": "0x7A"
     },
     {
       "id": "mb_hits",
       "type": "u8",
       "size": 1,
-      "addresses": { "default": "0x0099" }
+      "bundle": "state",
+      "offset": "0x7B"
     },
     {
-      "id": "energy_tanks",
-      "type": "u8",
-      "size": 1,
-      "addresses": { "default": "0x6877" }
-    },
-    {
-      "id": "equipment",
-      "type": "u8",
-      "size": 1,
-      "addresses": { "default": "0x6878" }
-    },
-    {
-      "id": "missiles_cur",
-      "type": "u8",
-      "size": 1,
-      "addresses": { "default": "0x6879" }
-    },
-    {
-      "id": "missiles_max",
-      "type": "u8",
-      "size": 1,
-      "addresses": { "default": "0x687A" }
-    },
-    {
-      "id": "kraid_status",
-      "type": "u8",
-      "size": 1,
-      "addresses": { "default": "0x687B" }
-    },
-    {
-      "id": "ridley_status",
-      "type": "u8",
-      "size": 1,
-      "addresses": { "default": "0x687C" }
-    },
-    {
-      "id": "game_age",
+      "id": "health",
       "type": "bytes",
-      "size": 3,
-      "addresses": { "default": "0x687D" }
+      "size": 2,
+      "bundle": "player",
+      "offset": "0x0"
     },
     {
       "id": "missile_toggle",
       "type": "u8",
       "size": 1,
-      "addresses": { "default": "0x010E" }
+      "bundle": "player",
+      "offset": "0x8"
+    },
+    {
+      "id": "energy_tanks",
+      "type": "u8",
+      "size": 1,
+      "bundle": "sram",
+      "offset": "0x0"
+    },
+    {
+      "id": "equipment",
+      "type": "u8",
+      "size": 1,
+      "bundle": "sram",
+      "offset": "0x1"
+    },
+    {
+      "id": "missiles_cur",
+      "type": "u8",
+      "size": 1,
+      "bundle": "sram",
+      "offset": "0x2"
+    },
+    {
+      "id": "missiles_max",
+      "type": "u8",
+      "size": 1,
+      "bundle": "sram",
+      "offset": "0x3"
+    },
+    {
+      "id": "kraid_status",
+      "type": "u8",
+      "size": 1,
+      "bundle": "sram",
+      "offset": "0x4"
+    },
+    {
+      "id": "ridley_status",
+      "type": "u8",
+      "size": 1,
+      "bundle": "sram",
+      "offset": "0x5"
+    },
+    {
+      "id": "game_age",
+      "type": "bytes",
+      "size": 3,
+      "bundle": "sram",
+      "offset": "0x6"
     }
   ]
 }

@@ -3,126 +3,132 @@
   "name": "The Legend of Zelda: The Wind Waker",
   "platform": "GCN",
   "gameIds": ["GZLE01", "GZLP01"],
-  "dataPoints": [
-    {
-      "id": "max_health",
-      "type": "u16_be",
-      "size": 2,
-      "addresses": {
+  "bundles": {
+    "player": {
+      "base": {
         "GZLE01": "0x803C4C08",
         "GZLP01": "0x803C4D00",
         "default": "0x803C4C08"
       }
     },
+    "stage": {
+      "base": {
+        "GZLE01": "0x803C9D3C",
+        "default": "0x803C9D3C"
+      }
+    },
+    "position": {
+      "base": {
+        "GZLE01": "0x803E440C",
+        "default": "0x803E440C"
+      }
+    },
+    "wind": {
+      "base": {
+        "GZLE01": "0x803E545A",
+        "default": "0x803E545A"
+      }
+    },
+    "camera": {
+      "base": {
+        "GZLE01": "0x803F6F12",
+        "default": "0x803F6F12"
+      }
+    }
+  },
+  "dataPoints": [
+    {
+      "id": "max_health",
+      "type": "u16_be",
+      "size": 2,
+      "bundle": "player",
+      "offset": "0x0"
+    },
     {
       "id": "health",
       "type": "u16_be",
       "size": 2,
-      "addresses": {
-        "GZLE01": "0x803C4C0A",
-        "default": "0x803C4C0A"
-      }
+      "bundle": "player",
+      "offset": "0x2"
     },
     {
       "id": "rupees",
       "type": "u16_be",
       "size": 2,
-      "addresses": {
-        "GZLE01": "0x803C4C0C",
-        "default": "0x803C4C0C"
-      }
-    },
-    {
-      "id": "magic_current",
-      "type": "u8",
-      "size": 1,
-      "addresses": {
-        "GZLE01": "0x803C4C1C",
-        "default": "0x803C4C1C"
-      }
+      "bundle": "player",
+      "offset": "0x4"
     },
     {
       "id": "magic_max",
       "type": "u8",
       "size": 1,
-      "addresses": {
-        "GZLE01": "0x803C4C1B",
-        "default": "0x803C4C1B"
-      }
+      "bundle": "player",
+      "offset": "0x13"
+    },
+    {
+      "id": "magic_current",
+      "type": "u8",
+      "size": 1,
+      "bundle": "player",
+      "offset": "0x14"
     },
     {
       "id": "arrows",
       "type": "u8",
       "size": 1,
-      "addresses": {
-        "GZLE01": "0x803C4C77",
-        "default": "0x803C4C77"
-      }
+      "bundle": "player",
+      "offset": "0x6F"
     },
     {
       "id": "bombs",
       "type": "u8",
       "size": 1,
-      "addresses": {
-        "GZLE01": "0x803C4C78",
-        "default": "0x803C4C78"
-      }
-    },
-    {
-      "id": "pos_x",
-      "type": "float_be",
-      "size": 4,
-      "addresses": {
-        "GZLE01": "0x803E440C",
-        "default": "0x803E440C"
-      }
-    },
-    {
-      "id": "pos_y",
-      "type": "float_be",
-      "size": 4,
-      "addresses": {
-        "GZLE01": "0x803E4410",
-        "default": "0x803E4410"
-      }
-    },
-    {
-      "id": "pos_z",
-      "type": "float_be",
-      "size": 4,
-      "addresses": {
-        "GZLE01": "0x803E4414",
-        "default": "0x803E4414"
-      }
-    },
-    {
-      "id": "rotation_y",
-      "type": "u16_be",
-      "size": 2,
-      "formula": "(98304 - v) % 65536 / 65536.0 * 360.0",
-      "addresses": {
-        "GZLE01": "0x803F6F12",
-        "default": "0x803F6F12"
-      }
+      "bundle": "player",
+      "offset": "0x70"
     },
     {
       "id": "stage_id_raw",
       "type": "u32_be",
       "size": 4,
-      "addresses": {
-        "GZLE01": "0x803C9D3C",
-        "default": "0x803C9D3C"
-      }
+      "bundle": "stage",
+      "offset": "0x0"
+    },
+    {
+      "id": "pos_x",
+      "type": "float_be",
+      "size": 4,
+      "bundle": "position",
+      "offset": "0x0"
+    },
+    {
+      "id": "pos_y",
+      "type": "float_be",
+      "size": 4,
+      "bundle": "position",
+      "offset": "0x4"
+    },
+    {
+      "id": "pos_z",
+      "type": "float_be",
+      "size": 4,
+      "bundle": "position",
+      "offset": "0x8"
     },
     {
       "id": "wind_direction",
       "type": "u16_be",
       "size": 2,
       "formula": "(v + 16384) % 65536 / 65536.0 * 360.0",
-      "addresses": {
-        "GZLE01": "0x803E545A",
-        "default": "0x803E545A"
-      }
+      "bundle": "wind",
+      "offset": "0x0"
+    },
+    {
+      "id": "rotation_y",
+      "type": "u16_be",
+      "size": 2,
+      "formula": "(98304 - v) % 65536 / 65536.0 * 360.0",
+      "bundle": "camera",
+      "offset": "0x0"
     }
   ]
 }

@@ -5,24 +5,25 @@
   "gameIds": [
     "BPEE"
   ],
+  "bundles": {
+    "party": {
+      "base": "0x020244E9"
+    }
+  },
   "dataPoints": [
     {
       "id": "party_count",
       "type": "u8",
       "size": 1,
-      "addresses": {
-        "BPEE": "0x020244E9",
-        "default": "0x020244E9"
-      }
+      "bundle": "party",
+      "offset": "0x0"
     },
     {
       "id": "party_data",
       "type": "bytes",
       "size": 600,
-      "addresses": {
-        "BPEE": "0x020244EC",
-        "default": "0x020244EC"
-      }
+      "bundle": "party",
+      "offset": "0x3"
     }
   ]
 }

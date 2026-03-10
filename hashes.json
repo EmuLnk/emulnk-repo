@@ -1,0 +1,32 @@
+{
+  "65581ef54ca858242db11429f469295f": {
+    "profileId": "lazarus_v2",
+    "label": "Pokémon Lazarus",
+    "version": "v2.0"
+  },
+  "605b89b67018abcea91e693a4dd25be3": {
+    "profileId": "BPE",
+    "label": "Pokémon Emerald",
+    "version": "USA/EUR"
+  },
+  "757ce8cbc2462669393ad71235b4fa95": {
+    "profileId": "GZL",
+    "label": "The Legend of Zelda: The Wind Waker",
+    "version": "USA"
+  },
+  "0004000000126300:CTR-P-BFGE:0000:C8EF7A48": {
+    "profileId": "MH4U",
+    "label": "Monster Hunter 4 Ultimate",
+    "version": "USA"
+  },
+  "258cea3a62ac0d6eb04b5a0fd764d788": {
+    "profileId": "IPKE",
+    "label": "Pokémon HeartGold",
+    "version": "USA"
+  },
+  "6f25e799abe051a2fc4aff7335b50706": {
+    "profileId": "MHFU",
+    "label": "Monster Hunter Freedom Unite",
+    "version": "EUR"
+  }
+}

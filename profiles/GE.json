@@ -5,91 +5,86 @@
   "gameIds": [
     "NGEE"
   ],
+  "bundles": {
+    "mission": {
+      "base": "0x80048364"
+    },
+    "objectives": {
+      "base": "0x80075D58"
+    },
+    "player": {
+      "pointer": "0x8007A0B0"
+    }
+  },
   "dataPoints": [
     {
       "id": "level_id",
       "type": "u32_le",
       "size": 4,
-      "addresses": {
-        "default": "0x80048364"
-      }
+      "bundle": "mission",
+      "offset": "0x0"
     },
     {
       "id": "difficulty",
       "type": "u32_le",
       "size": 4,
-      "addresses": {
-        "default": "0x80048384"
-      }
-    },
-    {
-      "id": "mission_timer",
-      "type": "u32_le",
-      "size": 4,
-      "addresses": {
-        "default": "0x80079A20"
-      }
+      "bundle": "mission",
+      "offset": "0x20"
     },
     {
       "id": "objectives",
       "type": "bytes",
       "size": 40,
-      "addresses": {
-        "default": "0x80075D58"
-      }
+      "bundle": "objectives",
+      "offset": "0x0"
+    },
+    {
+      "id": "mission_timer",
+      "type": "u32_le",
+      "size": 4,
+      "bundle": "objectives",
+      "offset": "0x3CC8"
     },
     {
       "id": "health",
       "type": "float_le",
       "size": 4,
-      "pointer": {
-        "default": "0x8007A0B0"
-      },
-      "offset": "0x00DC"
+      "bundle": "player",
+      "offset": "0xDC"
     },
     {
       "id": "armor",
       "type": "float_le",
       "size": 4,
-      "pointer": {
-        "default": "0x8007A0B0"
-      },
-      "offset": "0x00E0"
+      "bundle": "player",
+      "offset": "0xE0"
     },
     {
       "id": "weapon_r",
       "type": "u32_le",
       "size": 4,
-      "pointer": {
-        "default": "0x8007A0B0"
-      },
-      "offset": "0x0800"
+      "bundle": "player",
+      "offset": "0x800"
     },
     {
       "id": "weapon_l",
       "type": "u32_le",
       "size": 4,
-      "pointer": {
-        "default": "0x8007A0B0"
-      },
-      "offset": "0x0804"
+      "bundle": "player",
+      "offset": "0x804"
     },
     {
       "id": "ammo_mag",
       "type": "u32_le",
       "size": 4,
-      "pointer": {
-        "default": "0x8007A0B0"
-      },
-      "offset": "0x089C"
+      "bundle": "player",
+      "offset": "0x89C"
     },
     {
       "id": "ammo_reserve",
       "type": "bytes",
       "size": 120,
-      "pointer": {
-        "default": "0x8007A0B0"
-      },
+      "bundle": "player",
       "offset": "0x1130"
     }
   ]

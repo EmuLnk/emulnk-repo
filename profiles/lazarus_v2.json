@@ -1,0 +1,13 @@
+{
+  "id": "lazarus_v2",
+  "name": "Pokémon Lazarus v2.0",
+  "platform": "GBA",
+  "extends": "BPE",
+  "gameIds": [],
+  "bundles": {
+    "party": {
+      "base": "0x0201B95D"
+    }
+  },
+  "dataPoints": []
+}

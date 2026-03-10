@@ -3,87 +3,80 @@
   "name": "Monster Hunter Freedom Unite",
   "platform": "PSP",
   "gameIds": ["ULUS10391", "ULES01213"],
-  "dataPoints": [
-    {
-      "id": "player_hp",
-      "type": "u16_le",
-      "size": 2,
-      "addresses": {
-        "ULES01213": "0x090B385C",
-        "default": "0x090B385C"
-      }
+  "bundles": {
+    "player": {
+      "base": "0x090B3640"
     },
+    "monster1": {
+      "base": "0x090C1960"
+    },
+    "economy": {
+      "base": "0x09A03350"
+    }
+  },
+  "dataPoints": [
     {
       "id": "player_x",
       "type": "float_le",
       "size": 4,
-      "addresses": {
-        "ULES01213": "0x090B3640",
-        "default": "0x090B3640"
-      }
+      "bundle": "player",
+      "offset": "0x0"
     },
     {
       "id": "player_y",
       "type": "float_le",
       "size": 4,
-      "addresses": {
-        "ULES01213": "0x090B3644",
-        "default": "0x090B3644"
-      }
+      "bundle": "player",
+      "offset": "0x4"
     },
     {
       "id": "player_z",
       "type": "float_le",
       "size": 4,
-      "addresses": {
-        "ULES01213": "0x090B3648",
-        "default": "0x090B3648"
-      }
+      "bundle": "player",
+      "offset": "0x8"
     },
     {
-      "id": "monster1_type",
-      "type": "u8",
-      "size": 1,
-      "addresses": {
-        "ULES01213": "0x090C1B08",
-        "default": "0x090C1B08"
-      }
-    },
-    {
-      "id": "monster1_hp",
+      "id": "player_hp",
       "type": "u16_le",
       "size": 2,
-      "addresses": {
-        "ULES01213": "0x090C1C04",
-        "default": "0x090C1C04"
-      }
+      "bundle": "player",
+      "offset": "0x21C"
     },
     {
       "id": "monster1_x",
       "type": "float_le",
       "size": 4,
-      "addresses": {
-        "ULES01213": "0x090C1960",
-        "default": "0x090C1960"
-      }
+      "bundle": "monster1",
+      "offset": "0x0"
     },
     {
       "id": "monster1_z",
       "type": "float_le",
       "size": 4,
-      "addresses": {
-        "ULES01213": "0x090C1968",
-        "default": "0x090C1968"
-      }
+      "bundle": "monster1",
+      "offset": "0x8"
+    },
+    {
+      "id": "monster1_type",
+      "type": "u8",
+      "size": 1,
+      "bundle": "monster1",
+      "offset": "0x1A8"
+    },
+    {
+      "id": "monster1_hp",
+      "type": "u16_le",
+      "size": 2,
+      "bundle": "monster1",
+      "offset": "0x2A4"
     },
     {
       "id": "zenny",
       "type": "u32_le",
       "size": 4,
-      "addresses": {
-        "ULES01213": "0x09A03350",
-        "default": "0x09A03350"
-      }
+      "bundle": "economy",
+      "offset": "0x0"
     }
   ]
 }

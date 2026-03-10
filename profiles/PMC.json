@@ -5,54 +5,56 @@
   "gameIds": [
     "PM_CRYSTAL"
   ],
+  "bundles": {
+    "battle": {
+      "base": "0xC62C"
+    },
+    "party": {
+      "base": "0xDCD7"
+    }
+  },
   "dataPoints": [
     {
-      "id": "battle_mode",
-      "type": "u8",
-      "size": 1,
-      "addresses": {
-        "default": "0xD22D"
-      }
-    },
-    {
-      "id": "party_count",
-      "type": "u8",
-      "size": 1,
-      "addresses": {
-        "default": "0xDCD7"
-      }
-    },
-    {
-      "id": "party_data",
+      "id": "player_battle_mon",
       "type": "bytes",
-      "size": 288,
-      "addresses": {
-        "default": "0xDCDF"
-      }
-    },
-    {
-      "id": "party_nicknames",
-      "type": "bytes",
-      "size": 66,
-      "addresses": {
-        "default": "0xDE41"
-      }
+      "size": 32,
+      "bundle": "battle",
+      "offset": "0x0"
     },
     {
       "id": "enemy_mon",
       "type": "bytes",
       "size": 32,
-      "addresses": {
-        "default": "0xD206"
-      }
+      "bundle": "battle",
+      "offset": "0xBDA"
     },
     {
-      "id": "player_battle_mon",
+      "id": "battle_mode",
+      "type": "u8",
+      "size": 1,
+      "bundle": "battle",
+      "offset": "0xC01"
+    },
+    {
+      "id": "party_count",
+      "type": "u8",
+      "size": 1,
+      "bundle": "party",
+      "offset": "0x0"
+    },
+    {
+      "id": "party_data",
       "type": "bytes",
-      "size": 32,
-      "addresses": {
-        "default": "0xC62C"
-      }
+      "size": 288,
+      "bundle": "party",
+      "offset": "0x8"
+    },
+    {
+      "id": "party_nicknames",
+      "type": "bytes",
+      "size": 66,
+      "bundle": "party",
+      "offset": "0x16A"
     }
   ]
 }

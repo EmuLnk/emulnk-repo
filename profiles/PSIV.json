@@ -5,22 +5,25 @@
   "gameIds": [
     "MK-1307"
   ],
+  "bundles": {
+    "party": {
+      "base": "0xF40A"
+    }
+  },
   "dataPoints": [
     {
       "id": "party_slots",
       "type": "bytes",
       "size": 5,
-      "addresses": {
-        "default": "0xF40A"
-      }
+      "bundle": "party",
+      "offset": "0x0"
     },
     {
       "id": "all_chars",
       "type": "bytes",
       "size": 1408,
-      "addresses": {
-        "default": "0xF508"
-      }
+      "bundle": "party",
+      "offset": "0xFE"
     }
   ]
 }

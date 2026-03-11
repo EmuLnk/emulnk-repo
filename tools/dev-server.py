@@ -28,8 +28,9 @@ class DevHandler(http.server.SimpleHTTPRequestHandler):
             return
 
         cwd = os.path.realpath(os.getcwd())
-        target = os.path.realpath(os.path.join(cwd, rel_path))
-        if target != cwd and not target.startswith(cwd + os.sep):
+        dist = os.path.join(cwd, "dist")
+        target = os.path.realpath(os.path.join(dist, rel_path))
+        if target != dist and not target.startswith(dist + os.sep):
             self._json_error(403, "path outside repository")
             return
         if not os.path.isdir(target):
@@ -55,11 +56,11 @@ class DevHandler(http.server.SimpleHTTPRequestHandler):
 
     def _handle_dev_sync(self):
         buf = io.BytesIO()
-        root = os.getcwd()
+        dist = os.path.relpath("dist", os.getcwd())
         with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as zf:
-            for dirpath, _, filenames in os.walk(root):
+            for dirpath, _, filenames in os.walk(dist):
                 # skip hidden dirs (.git, etc.)
-                rel_dir = os.path.relpath(dirpath, root)
+                rel_dir = os.path.relpath(dirpath, dist)
                 if rel_dir != "." and any(part.startswith(".") for part in rel_dir.split(os.sep)):
                     continue
                 for fname in filenames:
@@ -68,7 +69,7 @@ class DevHandler(http.server.SimpleHTTPRequestHandler):
                     full = os.path.join(dirpath, fname)
                     if os.path.islink(full):
                         continue
-                    arcname = "dev/" + os.path.relpath(full, root).replace(os.sep, "/")
+                    arcname = "dev/" + os.path.relpath(full, dist).replace(os.sep, "/")
                     try:
                         zf.write(full, arcname)
                     except OSError:

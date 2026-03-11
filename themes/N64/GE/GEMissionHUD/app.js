@@ -424,7 +424,7 @@ function render() {
 
 // ── EmuLnk Entry Points ──
 
-function updateData(base64Data, isInitial) {
+export function updateData(base64Data, isInitial) {
   try {
     var json = JSON.parse(atob(base64Data));
     var v = json.values || {};
@@ -446,7 +446,7 @@ function updateData(base64Data, isInitial) {
   }
 }
 
-function onGameClosed() {
+export function onGameClosed() {
   document.body.classList.add('offline');
   document.getElementById('status').textContent = 'Game closed';
   currentLevel = -1;

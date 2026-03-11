@@ -16,14 +16,15 @@
 ## Contents
 
 ```
-consoles.json                              # System definitions (id, console, port, packageNames)
-hashes.json                                # ROM hash → profile mapping for exact detection
-index.json                                 # Theme catalog for the in-app gallery (v2)
-profiles/*.json                            # Game profiles with memory data points
-covers/                                    # Game cover images (WebP, named {profileId}.webp)
-icons/                                     # Console icons (WebP, named {console}.webp)
-themes/{console}/{profileId}/{themeId}/    # Theme, overlay, and bundle folders
-scripts/validate.js                        # CI validation script
+static/                                        # These files don't need to be compiled
+    covers/                                    # Game cover images (WebP, named {profileId}.webp)
+    icons/                                     # Console icons (WebP, named {console}.webp)
+    profiles/*.json                            # Game profiles with memory data points
+    consoles.json                              # System definitions (id, console, port, packageNames)
+    hashes.json                                # ROM hash → profile mapping for exact detection
+    index.json                                 # Theme catalog for the in-app gallery (v2)
+themes/{console}/{profileId}/{themeId}/        # Theme, overlay, and bundle folders
+scripts/validate.js                            # CI validation script
 ```
 
 ### Folder Structure
@@ -67,6 +68,15 @@ themes/
     PSIV/
       PSIVComboCodex/      # theme  - combo tracker
 ```
+
+## Compiling emulnk-repo
+
+Requirements:
+
+* [Node LTS 22+](https://nodejs.org/en/download)
+* [pnpm](https://pnpm.io/)
+
+Run `pnpm build`.
 
 ## Documentation
 

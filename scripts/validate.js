@@ -10,9 +10,9 @@ const path = require("path");
 
 const ROOT = path.resolve(__dirname, "..");
 const THEMES_DIR = path.join(ROOT, "themes");
-const INDEX_PATH = path.join(ROOT, "index.json");
-const CONSOLES_PATH = path.join(ROOT, "consoles.json");
-const PROFILES_DIR = path.join(ROOT, "profiles");
+const INDEX_PATH = path.join(ROOT, "static", "index.json");
+const CONSOLES_PATH = path.join(ROOT, "static", "consoles.json");
+const PROFILES_DIR = path.join(ROOT, "static", "profiles");
 
 const ALLOWED_TAGS = new Set([
   "stats",

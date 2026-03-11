@@ -49,6 +49,11 @@
 
     <div id="status">Waiting for data...</div>
 
-    <script src="app.js"></script>
+    <script type="module">
+        import {onGameClosed, updateData} from "./app";
+
+        window.onGameClosed = onGameClosed;
+        window.updateData = updateData;
+    </script>
 </body>
 </html>

@@ -1,0 +1,23 @@
+{
+  "id": "SMS",
+  "name": "Super Mario Sunshine",
+  "platform": "GCN",
+  "gameIds": ["GMSJ01"],
+  "bundles": {
+    "flagManagerInstance": {
+      "base": "0x8040a290"
+    }
+  },
+  "dataPoints": [
+    {
+      "id": "mCardBools",
+      "pointer": {
+        "default": "0x8040a290"
+      },
+      "type": "bytes",
+      "size": 119,
+      "offset": "0x0",
+      "stable": true
+    }
+  ]
+}

@@ -72,6 +72,10 @@
     <div id="gil-bar">Gil: <span class="gil-amount" id="gil-val">0</span></div>
     <div id="status">Waiting for data...</div>
 
-    <script src="app.js"></script>
-</body>
+    <script type="module">
+        import {onGameClosed, updateData} from "./app";
+
+        window.onGameClosed = onGameClosed;
+        window.updateData = updateData;
+    </script></body>
 </html>

@@ -151,7 +151,7 @@ function updateHUD(data) {
   bar.style.display = showHud ? 'flex' : 'none';
   if (!showHud) return;
 
-  // Hearts — raw values are quarter-hearts, divide by 4 for display
+  // Hearts - raw values are quarter-hearts, divide by 4 for display
   var hp = (v.health || 0) / 4;
   var maxHp = (v.max_health || 0) / 4;
   var heartsEl = document.getElementById('hud-hearts');

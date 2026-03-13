@@ -143,8 +143,8 @@ var ABILITY_IMMUNE = {
 function calcEffectiveness(moveId, defType1, defType2, defAbility) {
   if (moveId === 0) return null;
   if (STATUS_MOVES.has(moveId)) return null;
-  if (moveId === 237) return null; // Hidden Power — IVs unavailable
-  if (moveId === 165) return null; // Struggle — typeless in Gen 4
+  if (moveId === 237) return null; // Hidden Power - IVs unavailable
+  if (moveId === 165) return null; // Struggle - typeless in Gen 4
   var moveType = MOVE_TYPES[moveId];
   if (moveType === undefined) return null;
   var mult = 1;

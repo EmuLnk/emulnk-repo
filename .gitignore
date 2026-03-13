@@ -1,0 +1,9 @@
+node_modules/
+themes/**/dist/
+starters/**/dist/
+release/
+.vite/
+.vscode/
+pnpm-debug.log
+.DS_Store
+Thumbs.db

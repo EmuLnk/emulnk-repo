@@ -16,56 +16,51 @@
 ## Contents
 
 ```
-consoles.json                              # System definitions (id, console, port, packageNames)
-hashes.json                                # ROM hash → profile mapping for exact detection
+consoles.json                              # System definitions (id, port, idAddress, idSize)
+hashes.json                                # ROM hash -> profile mapping for exact detection
 index.json                                 # Theme catalog for the in-app gallery (v2)
 profiles/*.json                            # Game profiles with memory data points
 covers/                                    # Game cover images (WebP, named {profileId}.webp)
 icons/                                     # Console icons (WebP, named {console}.webp)
 themes/{console}/{profileId}/{themeId}/    # Theme, overlay, and bundle folders
-scripts/validate.js                        # CI validation script
+examples/                                  # Example themes showing each supported framework
+starters/                                  # Scaffolding templates for pnpm new
+sdk/                                       # @emulink/sdk - typed theme utilities
+scripts/                                   # Build, dev, validate, and packaging tools
 ```
 
-### Folder Structure
+### Themes
 
 ```
 themes/
-  GCN/
-    GZL/
-      GZLNavigator/        # theme  - minimap
-      GZLSeaOverlay/       # overlay - draggable widgets
-  GBC/
-    PMC/
-      PMCCompanion/        # theme  - companion
-      PMCBattleOverlay/    # overlay - type badges + move effectiveness
-  GBA/
-    BPE/
-      BPEPartyHUD/         # theme  - party viewer
-  NDS/
-    IPKE/
-      IPKETypeBadges/      # overlay - type badges
-      IPKEMoveEff/         # overlay - move effectiveness
-  3DS/
-    MH4U/
-      MH4UMonsterIntel/    # overlay - monster HP
-  PSP/
-    MHFU/
-      MHFUHunterHUD/       # theme  - HP bar + radar
-  PS1/
-    FF7/
-      FF7BattleHUD/        # theme  - enemy HP + weaknesses
-  SNES/
-    SM/
-      SMVisor/             # theme  - status HUD
-  NES/
-    M1/
-      M1Automap/           # theme  - auto-map
-  N64/
-    GE/
-      GEMissionHUD/        # theme  - mission HUD
-  Genesis/
-    PSIV/
-      PSIVComboCodex/      # theme  - combo tracker
+  GBA/BPE/BPEPartyHUD/          # theme  - party viewer
+  GBC/PMC/PMCCompanion/         # theme  - companion
+  GBC/PMC/PMCBattleOverlay/     # overlay - type badges + move effectiveness
+  GCN/GZL/GZLNavigator/         # theme  - minimap
+  GCN/GZL/GZLSeaOverlay/        # overlay - draggable widgets
+  NDS/IPKE/IPKETypeBadges/      # overlay - type badges
+  NDS/IPKE/IPKEMoveEff/         # overlay - move effectiveness
+  3DS/MH4U/MH4UMonsterIntel/    # overlay - monster HP
+  PSP/MHFU/MHFUHunterHUD/       # theme  - HP bar + radar
+  PS1/FF7/FF7BattleHUD/         # theme  - enemy HP + weaknesses
+  SNES/SM/SMVisor/              # theme  - status HUD
+  NES/M1/M1Automap/             # theme  - auto-map
+  N64/GE/GEMissionHUD/          # theme  - mission HUD
+  Genesis/PSIV/PSIVComboCodex/  # theme  - combo tracker
+```
+
+### Examples
+
+The examples/ folder contains the same BPEPartyHUD theme implemented in every supported framework:
+
+```
+examples/
+  BPEPartyHUD/              # Vanilla JS (no build step)
+  BPEPartyHUD-TS/           # TypeScript + Vite
+  BPEPartyHUD-Svelte/       # Svelte 5 + Vite
+  BPEPartyHUD-Lit/          # Lit + Vite
+  BPEPartyHUD-Solid/        # SolidJS + Vite
+  BPEPartyHUD-Signals/      # @preact/signals + Vite
 ```
 
 ## Documentation
@@ -83,10 +78,10 @@ themes/
 
 | Repo | Description |
 |------|-------------|
-| [`emulnk`](https://github.com/EmuLnk/emulnk) | Android companion app |
-| **`emulnk-repo`** | **Themes, profiles, and system configs** |
-| [`retroarch-lnk`](https://github.com/EmuLnk/retroarch-lnk) | RetroArch fork with UDP protocol |
-| [`dolphin-lnk`](https://github.com/EmuLnk/dolphin-lnk) | Dolphin fork with UDP protocol |
-| [`ppsspp-lnk`](https://github.com/EmuLnk/ppsspp-lnk) | PPSSPP fork with UDP protocol |
-| [`melonds-lnk`](https://github.com/EmuLnk/melonDS-lnk) | melonDS fork with UDP protocol |
-| [`azahar-lnk`](https://github.com/EmuLnk/azahar-lnk) | Azahar (3DS) fork with UDP protocol |
+| [emulnk](https://github.com/EmuLnk/emulnk) | Android companion app |
+| **emulnk-repo** | **Themes, profiles, and system configs** |
+| [retroarch-lnk](https://github.com/EmuLnk/retroarch-lnk) | RetroArch fork with UDP protocol |
+| [dolphin-lnk](https://github.com/EmuLnk/dolphin-lnk) | Dolphin fork with UDP protocol |
+| [ppsspp-lnk](https://github.com/EmuLnk/ppsspp-lnk) | PPSSPP fork with UDP protocol |
+| [melonds-lnk](https://github.com/EmuLnk/melonDS-lnk) | melonDS fork with UDP protocol |
+| [azahar-lnk](https://github.com/EmuLnk/azahar-lnk) | Azahar (3DS) fork with UDP protocol |

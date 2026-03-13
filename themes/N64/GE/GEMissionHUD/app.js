@@ -252,7 +252,7 @@ function processData(v) {
     }
   }
 
-  // Pointer-based values — delivered as decoded scalars by the app
+  // Pointer-based values - delivered as decoded scalars by the app
   health = (v.health !== undefined && v.health !== null) ? v.health : 0;
   armor = (v.armor !== undefined && v.armor !== null) ? v.armor : 0;
   weaponR = v.weapon_r || 0;
@@ -383,7 +383,7 @@ function renderWeapon() {
         ? ammoReserveArr[ammoType] : 0;
     ammoText = ammoMag + ' / ' + reserve;
   } else if (AMMO_TYPE_FOR_WEAPON[weaponR] !== undefined) {
-    // Throwable / mine — show reserve count only
+    // Throwable / mine - show reserve count only
     var ammoType2 = AMMO_TYPE_FOR_WEAPON[weaponR];
     if (ammoReserveArr && ammoType2 < ammoReserveArr.length) {
       ammoText = 'x' + ammoReserveArr[ammoType2];

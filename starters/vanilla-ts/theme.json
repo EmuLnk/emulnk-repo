@@ -1,0 +1,15 @@
+{
+  "id": "_starter-vanilla-ts",
+  "type": "theme",
+  "targetProfileId": "CHANGEME",
+  "targetConsole": "CHANGEME",
+  "meta": {
+    "name": "Starter Theme (Vanilla TS)",
+    "author": "Your Name",
+    "version": "1.0.0",
+    "description": "A starter template using TypeScript.",
+    "minAppVersion": 1
+  },
+  "hideOverlay": false,
+  "settings": []
+}

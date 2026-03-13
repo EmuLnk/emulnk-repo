@@ -1,0 +1,11 @@
+# Miso reviews everything by default
+* @mis0suppe
+
+# SDK and build tooling - Miso only
+/sdk/                   @mis0suppe
+/scripts/               @mis0suppe
+/package.json           @mis0suppe
+/tsconfig.json          @mis0suppe
+
+# Profiles - Miso only (memory addresses are sensitive)
+/profiles/              @mis0suppe

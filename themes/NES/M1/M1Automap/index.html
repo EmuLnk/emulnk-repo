@@ -207,12 +207,12 @@ function saveVisited() {
     try {
         var arr = [];
         visited.forEach(function(info, key) { arr.push([key, info.area, info.room]); });
-        localStorage.setItem('metroid_visited', JSON.stringify(arr));
-    } catch (e) { /* quota or private mode — silently fail */ }
+        localStorage.setItem('metroid_visited', JSON.stringify(arr)); // emulink-allow: legacy automap persistence, predates storage policy
+    } catch (e) { /* quota or private mode - silently fail */ }
 }
 function loadVisited() {
     try {
-        var raw = localStorage.getItem('metroid_visited');
+        var raw = localStorage.getItem('metroid_visited'); // emulink-allow: legacy automap persistence, predates storage policy
         if (raw) {
             JSON.parse(raw).forEach(function(entry) {
                 if (entry.length === 3) {
@@ -222,7 +222,7 @@ function loadVisited() {
                 }
             });
         }
-    } catch (e) { /* corrupt data — start fresh */ }
+    } catch (e) { /* corrupt data - start fresh */ }
 }
 loadVisited();
 var animFrame = 0;
@@ -551,7 +551,7 @@ function updateData(base64Data, isInitial) {
         }
         if (hp > peakHp) peakHp = hp;
 
-        /* 0 tanks=99, 1 tank=199, etc. — inferred from peak HP seen */
+        /* 0 tanks=99, 1 tank=199, etc. - inferred from peak HP seen */
         maxHp = Math.max(99, (Math.floor(peakHp / 100) + 1) * 100 - 1);
 
         document.getElementById('hp-bar').style.width = pctBar(hp, maxHp) + '%';

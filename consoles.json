@@ -4,90 +4,129 @@
     "name": "GameCube (Dolphin)",
     "packageNames": ["org.emulnk.dolphinlnk"],
     "console": "GCN",
-    "port": 55355
+    "port": 55355,
+    "idAddress": "0x80000000",
+    "idSize": 6,
+    "emulatorId": "dolphin"
   },
   {
     "id": "dolphin_wii",
     "name": "Wii (Dolphin)",
     "packageNames": ["org.emulnk.dolphinlnk"],
     "console": "WII",
-    "port": 55355
+    "port": 55355,
+    "idAddress": "0x80000000",
+    "idSize": 6,
+    "emulatorId": "dolphin"
   },
   {
     "id": "ppsspp",
     "name": "PSP (PPSSPP)",
     "packageNames": ["org.ppsspp.ppsspplnk"],
     "console": "PSP",
-    "port": 55355
+    "port": 55355,
+    "idAddress": "0x00013FF0",
+    "idSize": 9,
+    "emulatorId": "ppsspp"
   },
   {
     "id": "melonds_nds",
     "name": "Nintendo DS (melonDS)",
     "packageNames": ["org.emulnk.melondslnk"],
     "console": "NDS",
-    "port": 55355
+    "port": 55355,
+    "idAddress": "0x00200000",
+    "idSize": 8,
+    "emulatorId": "melonds"
   },
   {
     "id": "retroarch_gb",
     "name": "Game Boy (RetroArch)",
     "packageNames": ["com.retroarch.lnk.aarch64"],
     "console": "GB",
-    "port": 55355
+    "port": 55355,
+    "idAddress": "0x00200000",
+    "idSize": 40,
+    "emulatorId": "retroarch"
   },
   {
     "id": "retroarch_gba",
     "name": "Game Boy Advance (RetroArch)",
     "packageNames": ["com.retroarch.lnk.aarch64"],
     "console": "GBA",
-    "port": 55355
+    "port": 55355,
+    "idAddress": "0x080000AC",
+    "idSize": 4,
+    "emulatorId": "retroarch"
   },
   {
     "id": "retroarch_gbc",
     "name": "Game Boy Color (RetroArch)",
     "packageNames": ["com.retroarch.lnk.aarch64"],
     "console": "GBC",
-    "port": 55355
+    "port": 55355,
+    "idAddress": "0x00200000",
+    "idSize": 40,
+    "emulatorId": "retroarch"
   },
   {
     "id": "retroarch_genesis",
     "name": "Genesis (RetroArch)",
     "packageNames": ["com.retroarch.lnk.aarch64"],
     "console": "Genesis",
-    "port": 55355
+    "port": 55355,
+    "idAddress": "0x00200000",
+    "idSize": 40,
+    "emulatorId": "retroarch"
   },
   {
     "id": "retroarch_n64",
     "name": "Nintendo 64 (RetroArch)",
     "packageNames": ["com.retroarch.lnk.aarch64"],
     "console": "N64",
-    "port": 55355
+    "port": 55355,
+    "idAddress": "0x00200000",
+    "idSize": 40,
+    "emulatorId": "retroarch"
   },
   {
     "id": "retroarch_nes",
     "name": "NES (RetroArch)",
     "packageNames": ["com.retroarch.lnk.aarch64"],
     "console": "NES",
-    "port": 55355
+    "port": 55355,
+    "idAddress": "0x00200000",
+    "idSize": 40,
+    "emulatorId": "retroarch"
   },
   {
     "id": "retroarch_ps1",
     "name": "PlayStation (RetroArch)",
     "packageNames": ["com.retroarch.lnk.aarch64"],
     "console": "PS1",
-    "port": 55355
+    "port": 55355,
+    "idAddress": "0x00200000",
+    "idSize": 40,
+    "emulatorId": "retroarch"
   },
   {
     "id": "retroarch_snes",
     "name": "SNES (RetroArch)",
     "packageNames": ["com.retroarch.lnk.aarch64"],
     "console": "SNES",
-    "port": 55355
+    "port": 55355,
+    "idAddress": "0x00200000",
+    "idSize": 40,
+    "emulatorId": "retroarch"
   },
   {
     "id": "azahar_3ds",
     "name": "3DS (Azahar)",
     "packageNames": ["org.emulnk.azaharlnk"],
     "console": "3DS",
-    "port": 55355
+    "port": 55355,
+    "idAddress": "0x00200000",
+    "idSize": 20,
+    "emulatorId": "azahar"
   }
 ]

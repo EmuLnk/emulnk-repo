@@ -168,7 +168,7 @@ function getSceneEnemies(base64Blob) {
     return types;
 }
 
-// Battle actor blob (104 bytes) — runtime HP/MP only
+// Battle actor blob (104 bytes) - runtime HP/MP only
 function parseEnemy(base64Blob) {
     var dv = decodeBlob(base64Blob);
     var maxHp = dv.getUint32(0x30, true);

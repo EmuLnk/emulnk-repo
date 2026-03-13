@@ -1,0 +1,15 @@
+{
+  "id": "_starter-lit",
+  "type": "theme",
+  "targetProfileId": "CHANGEME",
+  "targetConsole": "CHANGEME",
+  "meta": {
+    "name": "Starter Theme (Lit)",
+    "author": "Your Name",
+    "version": "1.0.0",
+    "description": "A starter template using Lit.",
+    "minAppVersion": 1
+  },
+  "hideOverlay": false,
+  "settings": []
+}

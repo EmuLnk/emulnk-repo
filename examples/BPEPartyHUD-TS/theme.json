@@ -1,0 +1,34 @@
+{
+  "id": "BPEPartyHUD-TS",
+  "type": "theme",
+  "targetProfileId": "BPE",
+  "targetConsole": "GBA",
+  "meta": {
+    "name": "Pokemon Stats (TS)",
+    "author": "EmuLnk Team",
+    "version": "1.0.0",
+    "description": "TypeScript rewrite of BPEPartyHUD. Real-time party viewer for Pokemon Emerald with full type safety.",
+    "minAppVersion": 1
+  },
+  "hideOverlay": false,
+  "settings": [
+    {
+      "id": "show_ivs",
+      "label": "Show IVs",
+      "type": "toggle",
+      "default": "true"
+    },
+    {
+      "id": "show_evs",
+      "label": "Show EVs",
+      "type": "toggle",
+      "default": "true"
+    },
+    {
+      "id": "show_moves",
+      "label": "Show Moves",
+      "type": "toggle",
+      "default": "true"
+    }
+  ]
+}

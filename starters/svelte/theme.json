@@ -1,0 +1,15 @@
+{
+  "id": "_starter-svelte",
+  "type": "theme",
+  "targetProfileId": "CHANGEME",
+  "targetConsole": "CHANGEME",
+  "meta": {
+    "name": "Starter Theme (Svelte)",
+    "author": "Your Name",
+    "version": "1.0.0",
+    "description": "A starter template using Svelte.",
+    "minAppVersion": 1
+  },
+  "hideOverlay": false,
+  "settings": []
+}

@@ -3,6 +3,15 @@ name: Release
 on:
   push:
     branches: [main]
+    paths:
+      - 'themes/**'
+      - 'profiles/**'
+      - 'covers/**'
+      - 'icons/**'
+      - 'sdk/**'
+      - 'consoles.json'
+      - 'hashes.json'
+      - 'index.json'
 
 permissions:
   contents: write

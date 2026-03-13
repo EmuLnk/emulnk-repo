@@ -210,7 +210,7 @@ function getZip(): Buffer {
   return cachedZip!;
 }
 
-// ===== Zip (emulnk-repo/ root prefix so app's stripRoot=true works) =====
+// ===== Zip (flat, no root prefix, matches release zip format) =====
 
 function zipStaging(): Buffer {
   const files: { arcname: string; fullPath: string }[] = [];
@@ -221,7 +221,7 @@ function zipStaging(): Buffer {
       const full = path.join(dir, ent.name);
       const rel = base ? base + "/" + ent.name : ent.name;
       if (ent.isDirectory()) collect(full, rel);
-      else files.push({ arcname: "emulnk-repo/" + rel, fullPath: full });
+      else files.push({ arcname: rel, fullPath: full });
     }
   }
   collect(STAGING_DIR, "");

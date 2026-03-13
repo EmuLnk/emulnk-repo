@@ -3,7 +3,7 @@
 // Reads party state from Genesis Plus GX work RAM and computes
 // which combination attacks are currently available.
 //
-// IMPORTANT — Genesis Plus GX word-swaps its RETRO_MEMORY_SYSTEM_RAM buffer.
+// IMPORTANT - Genesis Plus GX word-swaps its RETRO_MEMORY_SYSTEM_RAM buffer.
 // Within each 16-bit word the two bytes are reversed vs the native 68000
 // big-endian layout. Consequently:
 //   - u8 at an even 68000 offset  → read from the next (odd) buffer offset
@@ -376,7 +376,7 @@ function decodeBlob(base64) {
 }
 
 // Character block: 128 bytes (0x80) per character, 11 characters total.
-// Genesis Plus GX word-swaps the buffer — read u16 as little-endian.
+// Genesis Plus GX word-swaps the buffer - read u16 as little-endian.
 //
 // Offset  Field       Type
 // +0x00   Level       u8

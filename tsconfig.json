@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "experimentalDecorators": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "paths": {
+      "@emulink/sdk": ["./sdk/index.ts"],
+      "@emulink/sdk/*": ["./sdk/*"]
+    },
+    "types": ["vite/client"]
+  },
+  "include": ["sdk/**/*.ts", "themes/**/src/**/*.ts", "themes/**/src/**/*.tsx", "starters/**/src/**/*.ts", "starters/**/src/**/*.tsx"],
+  "exclude": ["node_modules"]
+}

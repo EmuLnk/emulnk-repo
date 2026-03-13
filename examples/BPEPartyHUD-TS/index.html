@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Pokemon Stats (TS)</title>
+    <link rel="stylesheet" href="./src/style.scss">
+</head>
+<body>
+    <div id="header">
+        <span class="title">Pokemon Emerald</span>
+        <span class="party-count" id="party-count-text">0 / 6</span>
+    </div>
+
+    <div id="detail">
+        <div class="empty-state" id="empty-state">Waiting for data...</div>
+        <div id="poke-detail" style="display:none">
+            <div class="poke-name-row">
+                <span class="poke-name" id="d-name">&mdash;</span>
+                <span class="poke-level" id="d-level">Lv.&mdash;</span>
+            </div>
+            <div class="nature-line" id="d-nature">&mdash;</div>
+
+            <div class="hp-section">
+                <div class="hp-label">
+                    <span>HP</span>
+                    <span id="d-hp-text">&mdash; / &mdash;</span>
+                </div>
+                <div class="hp-bar-bg">
+                    <div class="hp-bar-fill" id="d-hp-bar" style="width:0%"></div>
+                </div>
+            </div>
+
+            <div class="stats-grid" id="d-stats"></div>
+
+            <div class="iv-ev-section" id="d-ivs-section">
+                <div class="iv-ev-header">IVs</div>
+                <div class="iv-ev-grid" id="d-ivs"></div>
+            </div>
+
+            <div class="iv-ev-section" id="d-evs-section">
+                <div class="iv-ev-header">EVs</div>
+                <div class="iv-ev-grid" id="d-evs"></div>
+            </div>
+
+            <div class="hp-type-row" id="d-hp-type-row">
+                <span><span class="label">Hidden Power: </span><span class="value" id="d-hp-type">&mdash;</span></span>
+                <span><span class="label">Friendship: </span><span class="value" id="d-friendship">&mdash;</span></span>
+            </div>
+
+            <div class="moves-grid" id="d-moves"></div>
+        </div>
+    </div>
+
+    <div id="party-bar"></div>
+    <div id="status">Waiting for data...</div>
+
+    <script type="module" src="./src/main.ts"></script>
+</body>
+</html>

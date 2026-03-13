@@ -410,7 +410,7 @@ function calcEffectiveness(moveId, attackerDVs, defType1, defType2) {
         if (defType1 !== defType2 && chart[defType2] !== undefined) mult *= chart[defType2];
     }
 
-    if (mult === 1) return null; // neutral — no badge
+    if (mult === 1) return null; // neutral - no badge
     var label;
     if (mult === 0) label = '0x';
     else if (mult === 4) label = '4x';

@@ -1,0 +1,19 @@
+{
+  "id": "BPEPartyHUD-Signals",
+  "type": "theme",
+  "targetProfileId": "BPE",
+  "targetConsole": "GBA",
+  "meta": {
+    "name": "Pokemon Stats (Signals)",
+    "author": "EmuLnk Team",
+    "version": "1.0.0",
+    "description": "Preact Signals conversion of BPEPartyHUD. Real-time party viewer for Pokemon Emerald.",
+    "minAppVersion": 1
+  },
+  "hideOverlay": false,
+  "settings": [
+    { "id": "show_ivs", "label": "Show IVs", "type": "toggle", "default": "true" },
+    { "id": "show_evs", "label": "Show EVs", "type": "toggle", "default": "true" },
+    { "id": "show_moves", "label": "Show Moves", "type": "toggle", "default": "true" }
+  ]
+}

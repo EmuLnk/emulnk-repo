@@ -1,0 +1,29 @@
+name: Validate PR
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Build TS themes
+        run: pnpm build
+
+      - name: Type-check
+        run: pnpm typecheck
+
+      - name: Validate structure, security, frameworks, bundle size
+        run: pnpm validate

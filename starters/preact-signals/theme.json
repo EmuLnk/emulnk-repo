@@ -1,0 +1,15 @@
+{
+  "id": "_starter-preact-signals",
+  "type": "theme",
+  "targetProfileId": "CHANGEME",
+  "targetConsole": "CHANGEME",
+  "meta": {
+    "name": "Starter Theme (Preact Signals)",
+    "author": "Your Name",
+    "version": "1.0.0",
+    "description": "A starter template using Preact Signals.",
+    "minAppVersion": 1
+  },
+  "hideOverlay": false,
+  "settings": []
+}

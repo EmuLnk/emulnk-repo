@@ -41,6 +41,6 @@ jobs:
           name: Latest Release
           body: |
             Auto-generated release from main branch.
-            Contains all themes (vanilla + built TS) ready for EmuLnk consumption.
+            Contains all themes (vanilla + framework-built) ready for EmuLnk consumption.
           files: release/emulnk-repo.zip
           make_latest: true

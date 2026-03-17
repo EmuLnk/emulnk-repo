@@ -1,0 +1,60 @@
+@font-face {
+  font-family: "PokemonGB";
+  src: url("./assets/pokemon-gb.woff2") format("woff2");
+  font-display: swap;
+}
+
+:root {
+  --red: #C83028;
+  --red-light: #E04838;
+  --red-dark: #982020;
+  --red-deep: #B82820;
+  --indicator: #3060A8;
+  --surface: #F8F0E0;
+  --surface-alt: #EDE5D4;
+  --surface-dim: #E8E0D0;
+  --border: #585858;
+  --border-inner: #B8B8B8;
+  --divider: #E8E0D0;
+  --text: #383838;
+  --text-muted: #787878;
+  --hp-green: #48B048;
+  --hp-yellow: #E8C838;
+  --hp-red: #E04038;
+  --stat-boost: #3860A8;
+  --stat-penalty: #C03028;
+  --player-color: #2E7D32;
+  --enemy-color: #C03028;
+  --card-radius: 8px;
+  --card-shadow: inset 0 0 0 1px var(--border-inner);
+  --transition-fast: 150ms;
+  --transition-normal: 250ms;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: var(--red);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+#app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.pixel-font {
+  font-family: "PokemonGB", monospace;
+}

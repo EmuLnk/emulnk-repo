@@ -212,6 +212,23 @@
       ]
     },
     {
+      "profileId": "BPRE",
+      "name": "Pokemon FireRed",
+      "console": "GBA",
+      "themes": [
+        {
+          "id": "EmuDex",
+          "name": "EmuDex",
+          "author": "EmuLnk Team",
+          "version": "1.0.0",
+          "type": "theme",
+          "tags": ["stats", "battle", "party", "types", "moves", "combat"],
+          "description": "Kanto Pokedex companion with party stats, battle damage calculator, and catch analysis.",
+          "minAppVersion": 1
+        }
+      ]
+    },
+    {
       "profileId": "PSIV",
       "name": "Phantasy Star IV",
       "console": "Genesis",

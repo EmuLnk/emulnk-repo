@@ -224,6 +224,7 @@
           "type": "theme",
           "tags": ["stats", "battle", "party", "types", "moves", "combat"],
           "description": "Kanto Pokedex companion with party stats, battle damage calculator, and catch analysis.",
+          "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/GBA/BPRE/EmuDex/preview.png",
           "minAppVersion": 1
         }
       ]

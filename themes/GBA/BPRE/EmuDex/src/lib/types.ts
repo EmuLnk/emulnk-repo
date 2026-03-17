@@ -1,0 +1,210 @@
+export interface Nature {
+  name: string;
+  /** Boosted stat index (0=Atk,1=Def,2=Spd,3=SpA,4=SpD). -1 = neutral */
+  p: number;
+  /** Nerfed stat index. -1 = neutral */
+  m: number;
+}
+
+export interface StatBlock {
+  hp: number;
+  atk: number;
+  def: number;
+  spd: number;
+  spatk: number;
+  spdef: number;
+}
+
+export interface HiddenPower {
+  type: string;
+  power: number;
+}
+
+export interface DecryptedData {
+  speciesId: number;
+  heldItem: number;
+  experience: number;
+  friendship: number;
+  moves: number[];
+  pp: number[];
+  evs: StatBlock;
+  ivs: StatBlock;
+  isEgg: boolean;
+  abilityNum: number;
+}
+
+export interface Pokemon {
+  pv: number;
+  otid: number;
+  speciesName: string;
+  speciesId: number;
+  level: number;
+  hp: number;
+  maxhp: number;
+  atk: number;
+  def: number;
+  speed: number;
+  spatk: number;
+  spdef: number;
+  status: number;
+  nature: Nature;
+  ivs: StatBlock;
+  evs: StatBlock;
+  moves: number[];
+  pp: number[];
+  friendship: number;
+  hiddenPower: HiddenPower;
+  isEgg: boolean;
+  heldItem: number;
+  ability: number;
+}
+
+export interface BattleMon {
+  species: number;
+  speciesName: string;
+  atk: number;
+  def: number;
+  speed: number;
+  spatk: number;
+  spdef: number;
+  moves: number[];
+  ivs: StatBlock;
+  pp: number[];
+  hp: number;
+  level: number;
+  maxhp: number;
+  type1: number;
+  type2: number;
+  status: number;
+  pv: number;
+  ability: number;
+  item: number;
+  statStages: number[];
+  personality: number;
+  friendship: number;
+  status2: number;
+}
+
+export type WeatherType = 'none' | 'rain' | 'sun' | 'sand' | 'hail';
+
+export interface SideState {
+  reflect: number;
+  lightScreen: number;
+  safeguard: number;
+  mist: number;
+  spikes: number;
+}
+
+export interface FieldState {
+  weather: WeatherType;
+  weatherRaw: number;
+  playerSide: SideState;
+  enemySide: SideState;
+}
+
+export interface BattleState {
+  active: boolean;
+  isTrainer: boolean;
+  isDoubles: boolean;
+  player: BattleMon | null;
+  enemy: BattleMon | null;
+  player2: BattleMon | null;
+  enemy2: BattleMon | null;
+  field: FieldState;
+}
+
+export interface DamageResult {
+  minDmg: number;
+  maxDmg: number;
+  minPct: number;
+  maxPct: number;
+  hitsToKO: number;
+  effectiveness: number;
+  isSTAB: boolean;
+  koGuaranteed: boolean;
+  koPossible: boolean;
+  isOHKO: boolean;
+  isFixed: boolean;
+  isStatus: boolean;
+  accuracyPct: number;
+  modifiers: string[];
+}
+
+export interface MapState {
+  mapGroup: number;
+  mapNum: number;
+  mapKey: string;
+  mapName: string;
+}
+
+export interface DexState {
+  owned: Set<number>;
+  seen: Set<number>;
+}
+
+export interface BPREValues {
+  party_count?: number;
+  party_data?: string;
+  battle_flags?: number;
+  battle_mons?: string;
+  battle_outcome?: number;
+  in_battle?: number;
+  battle_weather?: number;
+  side_status_player?: number;
+  side_status_enemy?: number;
+  side_timers_player?: string;
+  side_timers_enemy?: string;
+  battlers_count?: number;
+  save1_ptr?: number;
+  save2_ptr?: number;
+  save1_block?: string;
+  save2_lo_block?: string;
+  save2_hi_block?: string;
+  species_names_rom_0?: string;
+  species_names_rom_1?: string;
+  species_names_rom_2?: string;
+  species_names_rom_3?: string;
+  species_names_rom_4?: string;
+  natdex_table_rom?: string;
+  move_names_rom_0?: string;
+  move_names_rom_1?: string;
+  move_names_rom_2?: string;
+  move_names_rom_3?: string;
+  move_names_rom_4?: string;
+  ability_names_rom?: string;
+  species_info_rom_0?: string;
+  species_info_rom_1?: string;
+  species_info_rom_2?: string;
+  species_info_rom_3?: string;
+  species_info_rom_4?: string;
+  species_info_rom_5?: string;
+  items_rom_0?: string;
+  items_rom_1?: string;
+  items_rom_2?: string;
+  items_rom_3?: string;
+  items_rom_4?: string;
+  items_rom_5?: string;
+  items_rom_6?: string;
+  items_rom_7?: string;
+  items_rom_8?: string;
+  [key: string]: unknown;
+}
+
+export interface BPRESettings {
+  "party-show-ivs": boolean;
+  "party-show-evs": boolean;
+  "party-show-nature": boolean;
+  "party-show-hp-type": boolean;
+  "party-show-item": boolean;
+  "battle-show-damage": boolean;
+  "battle-show-accuracy": boolean;
+  "battle-show-eff-label": boolean;
+  "battle-show-enemy-ivs": boolean;
+  "battle-show-enemy-moves": boolean;
+  "battle-show-field": boolean;
+  "battle-show-turn-order": boolean;
+  "battle-show-weaknesses": boolean;
+  "battle-show-ability": boolean;
+  "battle-show-catch-rate": boolean;
+  "map-show-all": boolean;
+}

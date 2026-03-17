@@ -1,21 +1,16 @@
 <script lang="ts">
-  interface GameData {
-    gameTitle: string;
-    [key: string]: unknown;
-  }
+  import { appState } from "./state.svelte.js";
 
-  let { isConnected = $bindable(false), values = $bindable({} as GameData), settings = $bindable({} as Record<string, string>) } = $props();
-
-  let infoText = $derived(JSON.stringify(values, null, 2));
+  let infoText = $derived(JSON.stringify(appState.values, null, 2));
 </script>
 
-{#if !isConnected}
+{#if !appState.isConnected}
   <div class="offline-banner">
     <p>Emulator disconnected</p>
   </div>
 {:else}
   <div class="content">
-    <h1>{values.gameTitle ?? "Unknown"}</h1>
+    <h1>{appState.values.gameTitle ?? "Unknown"}</h1>
     <pre>{infoText}</pre>
   </div>
 {/if}

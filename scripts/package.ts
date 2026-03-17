@@ -56,6 +56,10 @@ for (const themeJsonRel of allThemes) {
 
     fs.mkdirSync(themeDest, { recursive: true });
     fs.copyFileSync(path.join(themeSrc, "theme.json"), path.join(themeDest, "theme.json"));
+    const previewFile = path.join(themeSrc, "preview.png");
+    if (fs.existsSync(previewFile)) {
+      fs.copyFileSync(previewFile, path.join(themeDest, "preview.png"));
+    }
     cpDir(distDir, themeDest);
   } else {
     // Vanilla theme: copy everything as-is

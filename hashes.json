@@ -53,5 +53,10 @@
     "profileId": "FF7",
     "label": "Final Fantasy VII",
     "version": "USA (Disc 1)"
+  },
+  "e26ee0d44e809351c8ce2d73c7400cdd": {
+    "profileId": "BPRE",
+    "label": "Pokémon FireRed",
+    "version": "USA (v1.0)"
   }
 }

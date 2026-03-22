@@ -2,15 +2,18 @@
 	import OfflineScreen from "./lib/components/OfflineScreen.svelte";
 	import PartyView from "./lib/components/PartyView.svelte";
 	import BattleView from "./lib/components/BattleView.svelte";
+	import SafariBattleView from "./lib/components/SafariBattleView.svelte";
+	import SafariView from "./lib/components/SafariView.svelte";
 	import MapView from "./lib/components/MapView.svelte";
 	import NuzlockeView from "./lib/components/NuzlockeView.svelte";
 	import { appState } from "./lib/state.svelte.js";
 	import { nuzState } from "./lib/nuzlocke.svelte.js";
 	import { setSfxEnabled, setHapticEnabled, onTabSwitch, onBattleStart, onBattleEnd } from "./lib/sfx.js";
 	import { screenWipe } from "./lib/transitions.js";
+	import { MAP_NAMES } from "./lib/map-names.js";
 
 	let debugOpen = $state(false);
-	let viewMode = $state<'party' | 'battle' | 'map' | 'nuz'>('party');
+	let viewMode = $state<'party' | 'battle' | 'safari' | 'catching' | 'map' | 'nuz'>('party');
 
 	// --- SFX settings ---
 	let sfxEnabled = $derived(appState.settings["sfx-enabled"] !== "false");
@@ -19,7 +22,7 @@
 	$effect(() => { setHapticEnabled(hapticEnabled); });
 
 	// --- Directional tab tracking ---
-	const TAB_ORDER = { party: 0, battle: 1, map: 2, nuz: 3 } as const;
+	const TAB_ORDER = { party: 0, battle: 1, safari: 2, catching: 2, map: 3, nuz: 4 } as const;
 	let prevTabIndex = $state(0);
 
 	let direction = $derived<"left" | "right">(
@@ -33,24 +36,33 @@
 		viewMode = tab;
 	}
 
-	// --- Pokédex clamshell wipe for battle entrance ---
+	// --- Derived state ---
+	let safariInZone = $derived(appState.safariState.inZone);
+	let isSafariBattle = $derived(appState.battleState.active && appState.battleState.isSafari);
+
+	// --- Pokédex clamshell wipe ---
 	let wipeState = $state<'idle' | 'closing' | 'opening'>('idle');
-	// Guards the $effect below so the wipe only fires once per battle transition,
-	// not every time viewMode changes while battle is active.
 	let battleWipeShown = $state(false);
-	let wipeTarget = $state<'battle' | 'party'>('battle');
+	let wipeTarget = $state<typeof viewMode>('party');
+	let preBattleTab = $state<typeof viewMode>('party');
 
 	$effect(() => {
 		const active = appState.battleState.active;
+		const isSafari = appState.battleState.isSafari;
 		if (active && !battleWipeShown) {
 			battleWipeShown = true;
-			wipeTarget = 'battle';
+			preBattleTab = viewMode;
+			wipeTarget = isSafari ? 'catching' : 'battle';
 			wipeState = 'closing';
 			onBattleStart();
 		} else if (!active && battleWipeShown) {
 			battleWipeShown = false;
 			if (viewMode === 'battle') {
 				wipeTarget = 'party';
+				wipeState = 'closing';
+				onBattleEnd();
+			} else if (viewMode === 'catching') {
+				wipeTarget = preBattleTab === 'catching' ? 'safari' : preBattleTab;
 				wipeState = 'closing';
 				onBattleEnd();
 			} else {
@@ -68,8 +80,33 @@
 		wipeState = 'idle';
 	}
 
+	// --- Safari Zone entry: one-time switch (not zone-to-zone) ---
+	let prevSafariInZone = $state(false);
+	$effect(() => {
+		if (safariInZone && !prevSafariInZone) {
+			wipeTarget = 'safari';
+			wipeState = 'closing';
+		}
+		prevSafariInZone = safariInZone;
+	});
+
+	// --- DEX map key override (for Safari zone navigation) ---
+	let mapKeyOverride = $state<string | null>(null);
+	function navigateToDex(mapKey: string) {
+		mapKeyOverride = mapKey;
+		switchTab('map');
+	}
+	// Clear override when leaving DEX tab
+	$effect(() => {
+		if (viewMode !== 'map') mapKeyOverride = null;
+	});
+
+	// --- Guard: clean up invalid tabs ---
 	$effect(() => {
 		if (viewMode === 'nuz' && !nuzlockeEnabled) {
+			viewMode = 'party';
+		}
+		if (viewMode === 'safari' && !safariInZone) {
 			viewMode = 'party';
 		}
 	});
@@ -114,8 +151,14 @@
 			<!-- svelte-ignore a11y_no_static_element_interactions, a11y_click_events_have_key_events -->
 			<div class="topbar-tabs">
 				<span class="tab" class:active={viewMode === 'party'} onclick={() => switchTab('party')}>PARTY</span>
-				{#if appState.battleState.active}
+				{#if appState.battleState.active && !appState.battleState.isSafari}
 					<span class="tab" class:active={viewMode === 'battle'} onclick={() => switchTab('battle')}>BATTLE</span>
+				{/if}
+				{#if safariInZone}
+					<span class="tab" class:active={viewMode === 'safari'} onclick={() => switchTab('safari')}>SAFARI</span>
+				{/if}
+				{#if isSafariBattle}
+					<span class="tab" class:active={viewMode === 'catching'} onclick={() => switchTab('catching')}>CATCH</span>
 				{/if}
 				<span class="tab" class:active={viewMode === 'map'} onclick={() => switchTab('map')}>DEX</span>
 				{#if nuzlockeEnabled}
@@ -137,7 +180,25 @@
 		{/if}
 
 		<div class="content">
-			{#if viewMode === 'battle'}
+			{#if viewMode === 'catching'}
+				<div class="view-wrap">
+					<SafariBattleView
+						battle={appState.battleState}
+						safari={appState.safariState}
+					/>
+				</div>
+			{:else if viewMode === 'safari'}
+				<div class="view-wrap">
+					<SafariView
+						safari={appState.safariState}
+						currentMapKey={appState.mapState.mapKey}
+						dexOwned={appState.dexState.owned}
+						dexSeen={appState.dexState.seen}
+						playerGender={appState.mapState.playerGender}
+						onZoneTap={navigateToDex}
+					/>
+				</div>
+			{:else if viewMode === 'battle'}
 				<div class="view-wrap" in:screenWipe={{ direction, duration: 200 }}>
 					<BattleView
 						battle={appState.battleState}
@@ -152,16 +213,18 @@
 						{showAbility}
 						{showCatchRate}
 						dexOwned={appState.dexState.owned}
+						bagBalls={appState.bagBalls}
 					/>
 				</div>
 			{:else if viewMode === 'map'}
 				<div class="view-wrap" in:screenWipe={{ direction, duration: 200 }}>
 					<MapView
-						mapKey={appState.mapState.mapKey}
-						mapName={appState.mapState.mapName}
+						mapKey={mapKeyOverride ?? appState.mapState.mapKey}
+						mapName={mapKeyOverride ? (MAP_NAMES[mapKeyOverride] ?? appState.mapState.mapName) : appState.mapState.mapName}
 						dexOwned={appState.dexState.owned}
 						dexSeen={appState.dexState.seen}
 						showAll={mapShowAll}
+						onBack={mapKeyOverride ? () => { mapKeyOverride = null; onTabSwitch(); } : undefined}
 					/>
 				</div>
 			{:else if viewMode === 'nuz' && nuzlockeEnabled && nuzState.data}
@@ -349,4 +412,5 @@
 	@keyframes close-bottom { from { transform: translateY(100%); }  to { transform: translateY(0); } }
 	@keyframes open-top     { from { transform: translateY(0); }     to { transform: translateY(-100%); } }
 	@keyframes open-bottom  { from { transform: translateY(0); }     to { transform: translateY(100%); } }
+
 </style>

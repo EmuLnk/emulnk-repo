@@ -148,7 +148,7 @@ const EMPTY_SIDE: SideState = { reflect: 0, lightScreen: 0, safeguard: 0, mist: 
 const EMPTY_FIELD: FieldState = { weather: 'none', weatherRaw: 0, playerSide: { ...EMPTY_SIDE }, enemySide: { ...EMPTY_SIDE } };
 
 const INACTIVE: BattleState = {
-  active: false, isTrainer: false, isDoubles: false,
+  active: false, isTrainer: false, isSafari: false, isDoubles: false,
   player: null, enemy: null, player2: null, enemy2: null,
   field: EMPTY_FIELD,
 };
@@ -158,11 +158,20 @@ function parseMons(values: BPREValues): BattleState {
   if (!raw) return INACTIVE;
 
   const dv = decodeBase64ToDataView(raw);
+  const flags = values.battle_flags || 0;
+  const isSafari = (flags & 0x80) !== 0;
+
   const player = parseBattleMon(dv, 0);
   const enemy = parseBattleMon(dv, BATTLE_MON_SIZE);
-  if (!player || !enemy) return INACTIVE;
 
-  const isTrainer = ((values.battle_flags || 0) & 0x08) !== 0;
+  // Safari Zone: player slot is empty (species 0) — only enemy required
+  if (isSafari) {
+    if (!enemy) return INACTIVE;
+  } else {
+    if (!player || !enemy) return INACTIVE;
+  }
+
+  const isTrainer = (flags & 0x08) !== 0;
   const battlersCount = values.battlers_count ?? 2;
   const isDoubles = battlersCount >= 4;
 
@@ -175,7 +184,7 @@ function parseMons(values: BPREValues): BattleState {
 
   const field = parseFieldState(values);
 
-  return { active: true, isTrainer, isDoubles, player, enemy, player2, enemy2, field };
+  return { active: true, isTrainer, isSafari, isDoubles, player, enemy, player2, enemy2, field };
 }
 
 export function parseBattle(values: BPREValues): BattleState {
@@ -204,9 +213,11 @@ export function parseBattle(values: BPREValues): BattleState {
     const player = parseBattleMon(dv, 0);
     const enemy = parseBattleMon(dv, BATTLE_MON_SIZE);
     if (player && enemy && player.hp > 0 && enemy.hp > 0) {
-      const isTrainer = ((values.battle_flags || 0) & 0x08) !== 0;
+      const fbFlags = values.battle_flags || 0;
+      const isTrainer = (fbFlags & 0x08) !== 0;
+      const isSafari = (fbFlags & 0x80) !== 0;
       const field = parseFieldState(values);
-      return { active: true, isTrainer, isDoubles: false, player, enemy, player2: null, enemy2: null, field };
+      return { active: true, isTrainer, isSafari, isDoubles: false, player, enemy, player2: null, enemy2: null, field };
     }
   }
 

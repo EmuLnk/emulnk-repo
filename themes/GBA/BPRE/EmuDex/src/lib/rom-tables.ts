@@ -21,6 +21,7 @@ let natDexTable: number[] | null = null;
 let moveNames: Record<number, string> | null = null;
 let abilityNames: Record<number, string> | null = null;
 let catchRates: Record<number, number> | null = null;
+let safariFleeRates: Record<number, number> | null = null;
 let speciesAbilities: Record<number, [number, number]> | null = null;
 let itemNames: Record<number, string> | null = null;
 
@@ -41,7 +42,8 @@ const ABILITY_ENTRY = 13;
 // SpeciesInfo: 411 entries split into 6 chunks of 69/69/69/69/69/66 (28 bytes each)
 const SPECIES_INFO_CHUNKS = [69, 69, 69, 69, 69, 66] as const;
 const SPECIES_INFO_ENTRY = 28;
-const CATCH_RATE_OFFSET = 8; // u8 at offset +8 within each 28-byte struct
+const CATCH_RATE_OFFSET = 8;        // u8 at offset +8 within each 28-byte struct
+const FLEE_RATE_OFFSET = 0x18;      // u8 at offset +0x18 (safariZoneFleeRate)
 
 // Items: 375 entries split into 9 chunks of 45×8 + 15 (44 bytes each, name in first 14)
 const ITEM_CHUNKS = [45, 45, 45, 45, 45, 45, 45, 45, 15] as const;
@@ -127,11 +129,12 @@ export function initRomTables(values: BPREValues): void {
     if (Object.keys(abilityNames).length === 0) abilityNames = null;
   }
 
-  // --- Catch rates + abilities from gSpeciesInfo (Phase 2) ---
+  // --- Catch rates + flee rates + abilities from gSpeciesInfo (Phase 2) ---
   {
     let idx = 0;
     let hasAny = false;
     const rates: Record<number, number> = {};
+    const flees: Record<number, number> = {};
     const abilities: Record<number, [number, number]> = {};
     for (let c = 0; c < SPECIES_INFO_CHUNKS.length; c++) {
       const b64 = values[`species_info_rom_${c}`] as string | undefined;
@@ -144,6 +147,9 @@ export function initRomTables(values: BPREValues): void {
           if (off + CATCH_RATE_OFFSET < bytes.length) {
             rates[idx] = bytes[off + CATCH_RATE_OFFSET];
           }
+          if (off + FLEE_RATE_OFFSET < bytes.length) {
+            flees[idx] = bytes[off + FLEE_RATE_OFFSET];
+          }
           if (off + 0x17 < bytes.length) {
             abilities[idx] = [bytes[off + 0x16], bytes[off + 0x17]];
           }
@@ -154,6 +160,7 @@ export function initRomTables(values: BPREValues): void {
       }
     }
     catchRates = hasAny && Object.keys(rates).length > 0 ? rates : null;
+    safariFleeRates = hasAny && Object.keys(flees).length > 0 ? flees : null;
     speciesAbilities = hasAny && Object.keys(abilities).length > 0 ? abilities : null;
   }
 
@@ -235,6 +242,11 @@ export function getSpeciesAbilityId(internalId: number, abilityNum: number): num
 /** Get catch rate by internal species ID. No fallback — returns 0 if not loaded. */
 export function getCatchRate(internalId: number): number {
   return catchRates?.[internalId] ?? 0;
+}
+
+/** Get Safari Zone flee rate by internal species ID. Returns 0 if not loaded. */
+export function getFleeRate(internalId: number): number {
+  return safariFleeRates?.[internalId] ?? 0;
 }
 
 /** Get item name by item ID. No fallback — returns "???" if not loaded. */

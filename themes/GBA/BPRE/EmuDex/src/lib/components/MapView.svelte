@@ -10,9 +10,10 @@
 		dexOwned: Set<number>;
 		dexSeen: Set<number>;
 		showAll: boolean;
+		onBack?: (() => void) | undefined;
 	}
 
-	let { mapKey, mapName, dexOwned, dexSeen, showAll }: Props = $props();
+	let { mapKey, mapName, dexOwned, dexSeen, showAll, onBack }: Props = $props();
 
 	let encounters = $derived(ROUTE_ENCOUNTERS[mapKey] ?? []);
 
@@ -81,10 +82,19 @@
 
 <div class="dex-view">
 	<header class="dex-header">
-		<svg class="header-icon" viewBox="0 0 12 12" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-			<path d="M6 1C6 1 3 4 3 7a3 3 0 0 0 6 0c0-3-3-6-3-6z" />
-			<circle cx="6" cy="7" r="1" fill="currentColor" stroke="none" />
-		</svg>
+		{#if onBack}
+			<!-- svelte-ignore a11y_no_static_element_interactions, a11y_click_events_have_key_events -->
+			<span class="back-btn" onclick={onBack}>
+				<svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M8 1L3 6l5 5" />
+				</svg>
+			</span>
+		{:else}
+			<svg class="header-icon" viewBox="0 0 12 12" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+				<path d="M6 1C6 1 3 4 3 7a3 3 0 0 0 6 0c0-3-3-6-3-6z" />
+				<circle cx="6" cy="7" r="1" fill="currentColor" stroke="none" />
+			</svg>
+		{/if}
 		<span class="header-title">{mapName}</span>
 		{#if allSpecies.size > 0}
 			<span class="header-count">{routeCaughtCount}/{allSpecies.size}</span>
@@ -198,6 +208,19 @@
 	.header-icon {
 		flex-shrink: 0;
 		color: #F8F0E0;
+	}
+
+	.back-btn {
+		flex-shrink: 0;
+		color: #F8F0E0;
+		cursor: pointer;
+		padding: 4px;
+		-webkit-tap-highlight-color: transparent;
+		transition: transform 0.1s ease;
+	}
+
+	.back-btn:active {
+		transform: scale(0.85);
 	}
 
 	.header-title {

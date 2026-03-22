@@ -105,12 +105,30 @@ export interface FieldState {
 export interface BattleState {
   active: boolean;
   isTrainer: boolean;
+  isSafari: boolean;
   isDoubles: boolean;
   player: BattleMon | null;
   enemy: BattleMon | null;
   player2: BattleMon | null;
   enemy2: BattleMon | null;
   field: FieldState;
+}
+
+export interface SafariState {
+  ballsLeft: number;
+  stepsLeft: number;
+  catchFactor: number;
+  escapeFactor: number;
+  rockCounter: number;
+  baitCounter: number;
+  inZone: boolean;
+}
+
+export interface SafariRecommendation {
+  action: 'ball' | 'bait' | 'rock' | 'watch';
+  catchProb: number;
+  fleeProb: number;
+  overallProb: number;
 }
 
 export interface DamageResult {
@@ -135,11 +153,17 @@ export interface MapState {
   mapNum: number;
   mapKey: string;
   mapName: string;
+  playerGender: number; // 0 = male, 1 = female
 }
 
 export interface DexState {
   owned: Set<number>;
   seen: Set<number>;
+}
+
+export interface BagBall {
+  itemId: number;
+  quantity: number;
 }
 
 export interface BPREValues {
@@ -155,6 +179,9 @@ export interface BPREValues {
   side_timers_player?: string;
   side_timers_enemy?: string;
   battlers_count?: number;
+  safari_balls?: number;
+  safari_steps?: number;
+  safari_battle_state?: string;
   save1_ptr?: number;
   save2_ptr?: number;
   save1_block?: string;

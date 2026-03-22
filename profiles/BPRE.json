@@ -25,6 +25,12 @@
     "ptrs": {
       "base": "0x03005008"
     },
+    "safari": {
+      "base": "0x02039994"
+    },
+    "safari_battle": {
+      "pointer": "0x02023FE8"
+    },
     "save1_region": {
       "base": "0x02025200"
     },
@@ -153,9 +159,30 @@
       "offset": "0x4"
     },
     {
+      "id": "safari_balls",
+      "type": "u8",
+      "size": 1,
+      "bundle": "safari",
+      "offset": "0x0"
+    },
+    {
+      "id": "safari_steps",
+      "type": "u16_le",
+      "size": 2,
+      "bundle": "safari",
+      "offset": "0x2"
+    },
+    {
+      "id": "safari_battle_state",
+      "type": "bytes",
+      "size": 4,
+      "bundle": "safari_battle",
+      "offset": "0x79"
+    },
+    {
       "id": "save1_block",
       "type": "bytes",
-      "size": 1024,
+      "size": 2048,
       "bundle": "save1_region",
       "offset": "0x0"
     },

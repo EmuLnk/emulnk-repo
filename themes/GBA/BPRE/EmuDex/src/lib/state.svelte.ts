@@ -1,4 +1,4 @@
-import type { Pokemon, BattleState, MapState, DexState } from "./types.js";
+import type { Pokemon, BattleState, MapState, DexState, BagBall, SafariState } from "./types.js";
 
 export const appState = $state({
   isConnected: false,
@@ -23,10 +23,21 @@ export const appState = $state({
     mapNum: 0,
     mapKey: "0:0",
     mapName: "Unknown",
+    playerGender: 0,
   } as MapState,
   dexState: {
     owned: new Set<number>(),
     seen: new Set<number>(),
   } as DexState,
+  bagBalls: [] as BagBall[],
+  safariState: {
+    ballsLeft: 0,
+    stepsLeft: 0,
+    catchFactor: 0,
+    escapeFactor: 0,
+    rockCounter: 0,
+    baitCounter: 0,
+    inZone: false,
+  } as SafariState,
   settings: {} as Record<string, string>,
 });

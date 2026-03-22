@@ -2,7 +2,7 @@ import { registerTheme, decodeBase64 } from "@emulink/sdk";
 import { mount } from "svelte";
 import App from "./App.svelte";
 import "./style.scss";
-import type { BPREValues, BattleState, Pokemon } from "./lib/types.js";
+import type { BPREValues, BattleState, Pokemon, BagBall } from "./lib/types.js";
 import { processParty } from "./lib/parser.js";
 import { parseBattle } from "./lib/battle-parser.js";
 import { appState } from "./lib/state.svelte.js";
@@ -25,10 +25,12 @@ function decodeDexFlags(bytes: Uint8Array, offset: number, size: number): Set<nu
   return set;
 }
 
-// EWRAM region bases — must match profile bundle addresses
 const SAVE1_REGION = 0x02025200;
+const BAG_POKEBALLS_OFFSET = 0x0430;
+const BAG_POKEBALLS_COUNT = 13;
 const SAVE2_LO_REGION = 0x02024500;
 const SAVE2_HI_REGION = 0x02025400;
+const SAFARI_MAP_KEYS = new Set(["1:63", "1:64", "1:65", "1:66"]);
 
 registerTheme<BPREValues>({
   onUpdate({ isConnected, values, settings }) {
@@ -40,7 +42,6 @@ registerTheme<BPREValues>({
 
       if (!isConnected) return;
 
-      // Initialize ROM tables once (species names, NatDex, moves, abilities, items, catch rates)
       initRomTables(values);
 
       const result = processParty(values, currentParty, partyCount);
@@ -61,15 +62,32 @@ registerTheme<BPREValues>({
           const mapNum = block[off + 0x05];
           const mapKey = `${mapGroup}:${mapNum}`;
           appState.mapState = {
+            ...appState.mapState,
             mapGroup,
             mapNum,
             mapKey,
             mapName: MAP_NAMES[mapKey] ?? "Unknown",
           };
         }
+
+        // Parse Poké Balls bag pocket (13 slots × 4 bytes at SaveBlock1+0x0430)
+        const ballsStart = off + BAG_POKEBALLS_OFFSET;
+        const ballsEnd = ballsStart + BAG_POKEBALLS_COUNT * 4;
+        if (ballsEnd <= block.length) {
+          const dv = new DataView(block.buffer, block.byteOffset, block.byteLength);
+          const balls: BagBall[] = [];
+          for (let i = 0; i < BAG_POKEBALLS_COUNT; i++) {
+            const slotOff = ballsStart + i * 4;
+            const itemId = dv.getUint16(slotOff, true);
+            const quantity = dv.getUint16(slotOff + 2, true);
+            if (itemId > 0 && quantity > 0) {
+              balls.push({ itemId, quantity });
+            }
+          }
+          appState.bagBalls = balls;
+        }
       }
 
-      // Manual pointer dereference for save2 (dex data)
       const save2Ptr = values.save2_ptr ?? 0;
       let save2Block: Uint8Array | null = null;
       let save2Base = 0;
@@ -85,8 +103,31 @@ registerTheme<BPREValues>({
         if (off + 0x90 <= save2Block.length) {
           appState.dexState.owned = decodeDexFlags(save2Block, off + 0x28, 52);
           appState.dexState.seen = decodeDexFlags(save2Block, off + 0x5C, 52);
+          appState.mapState.playerGender = save2Block[off + 0x08]; // 0=male, 1=female
         }
       }
+      // Safari Zone state
+      const inZone = SAFARI_MAP_KEYS.has(appState.mapState.mapKey);
+      let catchFactor = 0, escapeFactor = 0, rockCounter = 0, baitCounter = 0;
+      if (battle.isSafari && values.safari_battle_state) {
+        const sb = decodeBase64(values.safari_battle_state);
+        if (sb.length >= 4) {
+          rockCounter = sb[0];   // +0x79
+          baitCounter = sb[1];   // +0x7A
+          escapeFactor = sb[2];  // +0x7B
+          catchFactor = sb[3];   // +0x7C
+        }
+      }
+      appState.safariState = {
+        ballsLeft: values.safari_balls ?? 0,
+        stepsLeft: values.safari_steps ?? 0,
+        catchFactor,
+        escapeFactor,
+        rockCounter,
+        baitCounter,
+        inZone,
+      };
+
       // Nuzlocke tracking
       const nuzEnabled = settings["nuzlocke-mode"] === "true";
       loadNuzlockeData(settings["nuzlocke-data"]);
@@ -114,7 +155,7 @@ registerTheme<BPREValues>({
     currentParty = [null, null, null, null, null, null];
     appState.party = [...currentParty];
     appState.battleState = {
-      active: false, isTrainer: false, isDoubles: false,
+      active: false, isTrainer: false, isSafari: false, isDoubles: false,
       player: null, enemy: null, player2: null, enemy2: null,
       field: {
         weather: 'none', weatherRaw: 0,
@@ -122,7 +163,12 @@ registerTheme<BPREValues>({
         enemySide: { reflect: 0, lightScreen: 0, safeguard: 0, mist: 0, spikes: 0 },
       },
     };
-    appState.mapState = { mapGroup: 0, mapNum: 0, mapKey: "0:0", mapName: "Unknown" };
+    appState.mapState = { mapGroup: 0, mapNum: 0, mapKey: "0:0", mapName: "Unknown", playerGender: 0 };
     appState.dexState = { owned: new Set(), seen: new Set() };
+    appState.bagBalls = [];
+    appState.safariState = {
+      ballsLeft: 0, stepsLeft: 0,
+      catchFactor: 0, escapeFactor: 0, rockCounter: 0, baitCounter: 0, inZone: false,
+    };
   },
 });

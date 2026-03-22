@@ -1,10 +1,9 @@
 import { getCatchRate } from "./rom-tables.js";
+import type { BagBall } from "./types.js";
 
-// Type indices matching type-chart.ts
 const TYPE_BUG = 6;
 const TYPE_WATER = 10;
 
-// Status condition bitmasks (matching StatusBadge.svelte)
 function getStatusMultiplier(status: number): number {
   if (status === 0) return 1;
   if ((status & 0x7) > 0) return 2;     // Sleep
@@ -18,16 +17,38 @@ function getStatusMultiplier(status: number): number {
 
 export interface BallResult {
   name: string;
+  itemId: number;
   multiplier: number;
   probability: number;
-  /** Contextual note (e.g. "Water/Bug type") */
+  /** Contextual note (e.g. "Water/Bug") */
   note: string;
 }
 
-/**
- * Gen 3 catch probability formula.
- * Returns probability 0-1 (1 = guaranteed).
- */
+interface BallContext {
+  isWaterOrBug: boolean;
+  level: number;
+  alreadyCaught: boolean;
+}
+
+interface BallDef {
+  name: string;
+  getMultiplier: (ctx: BallContext) => number;
+  getNote: (ctx: BallContext) => string;
+}
+
+const BALL_DEFS: Record<number, BallDef> = {
+  2:  { name: "Ultra",   getMultiplier: () => 2,   getNote: () => "" },
+  3:  { name: "Great",   getMultiplier: () => 1.5, getNote: () => "" },
+  4:  { name: "Poké",    getMultiplier: () => 1,   getNote: () => "" },
+  6:  { name: "Net",     getMultiplier: (c) => c.isWaterOrBug ? 3 : 1, getNote: (c) => c.isWaterOrBug ? "Water/Bug" : "" },
+  7:  { name: "Dive",    getMultiplier: () => 1,   getNote: () => "" },
+  8:  { name: "Nest",    getMultiplier: (c) => c.level < 40 ? Math.max((40 - c.level) / 10, 1) : 1, getNote: (c) => c.level < 40 ? `Lv.${c.level}` : "" },
+  9:  { name: "Repeat",  getMultiplier: (c) => c.alreadyCaught ? 3 : 1, getNote: (c) => c.alreadyCaught ? "Caught" : "" },
+  10: { name: "Timer",   getMultiplier: () => 1,   getNote: () => "" },
+  11: { name: "Luxury",  getMultiplier: () => 1,   getNote: () => "" },
+  12: { name: "Premier", getMultiplier: () => 1,   getNote: () => "" },
+};
+
 function catchProbability(
   maxHp: number,
   currentHp: number,
@@ -37,17 +58,13 @@ function catchProbability(
 ): number {
   if (maxHp === 0) return 0;
 
-  // Modified catch rate (X)
   const numerator = (3 * maxHp - 2 * currentHp) * catchRate * ballMultiplier;
   let x = Math.floor(numerator / (3 * maxHp));
   x = Math.floor(x * statusMultiplier);
   if (x < 1) x = 1;
   if (x >= 255) return 1;
 
-  // Shake check threshold (Y)
   const y = Math.floor(1048560 / Math.sqrt(Math.sqrt(16711680 / x)));
-
-  // Four independent shake checks
   const p = y / 65536;
   return Math.pow(p, 4);
 }
@@ -61,38 +78,29 @@ export function calculateCatchRates(
   type1: number,
   type2: number,
   alreadyCaught: boolean,
+  bagBalls: BagBall[],
 ): BallResult[] {
   const baseCatchRate = getCatchRate(species) || 45;
   const statusMult = getStatusMultiplier(status);
   const isWaterOrBug = type1 === TYPE_WATER || type2 === TYPE_WATER || type1 === TYPE_BUG || type2 === TYPE_BUG;
+  const ctx: BallContext = { isWaterOrBug, level, alreadyCaught };
 
   const calc = (mult: number) => catchProbability(maxHp, currentHp, baseCatchRate, mult, statusMult);
 
-  const results: BallResult[] = [
-    { name: "Poké", multiplier: 1, probability: calc(1), note: "" },
-    { name: "Great", multiplier: 1.5, probability: calc(1.5), note: "" },
-    { name: "Ultra", multiplier: 2, probability: calc(2), note: "" },
-  ];
-
-  // Net Ball: 3x for Water or Bug types
-  if (isWaterOrBug) {
-    results.push({ name: "Net", multiplier: 3, probability: calc(3), note: "Water/Bug" });
+  const results: BallResult[] = [];
+  for (const { itemId } of bagBalls) {
+    const def = BALL_DEFS[itemId];
+    if (!def) continue;
+    const mult = def.getMultiplier(ctx);
+    results.push({
+      name: def.name,
+      itemId,
+      multiplier: mult,
+      probability: calc(mult),
+      note: def.getNote(ctx),
+    });
   }
 
-  // Nest Ball: (40 - level) / 10, minimum 1x — only useful below level 30
-  if (level < 30) {
-    const nestMult = (40 - level) / 10;
-    results.push({ name: "Nest", multiplier: nestMult, probability: calc(nestMult), note: `Lv.${level}` });
-  }
-
-  // Repeat Ball: 3x if already caught
-  if (alreadyCaught) {
-    results.push({ name: "Repeat", multiplier: 3, probability: calc(3), note: "Caught" });
-  }
-
-  // Sort by probability descending (best ball first), but keep Poké/Great/Ultra at top
-  const core = results.slice(0, 3);
-  const special = results.slice(3).sort((a, b) => b.probability - a.probability);
-
-  return [...core, ...special];
+  results.sort((a, b) => b.probability - a.probability);
+  return results;
 }

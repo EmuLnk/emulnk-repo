@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { BattleState, BattleMon, DamageResult } from "../types.js";
+	import type { BattleState, BattleMon, DamageResult, BagBall } from "../types.js";
 	import InfoStrip from "./InfoStrip.svelte";
 	import EnemyCard from "./EnemyCard.svelte";
 	import BattleMoveRow from "./BattleMoveRow.svelte";
@@ -25,6 +25,7 @@
 		showAbility,
 		showCatchRate = false,
 		dexOwned,
+		bagBalls = [],
 	}: {
 		battle: BattleState;
 		showDamage: boolean;
@@ -38,6 +39,7 @@
 		showAbility: boolean;
 		showCatchRate?: boolean;
 		dexOwned?: Set<number>;
+		bagBalls?: BagBall[];
 	} = $props();
 
 	// Doubles: focused enemy index (0 or 1)
@@ -179,7 +181,7 @@
 			</div>
 		{/if}
 
-		<!-- Catch Rate (wild encounters only) -->
+		<!-- Catch Rate (wild/safari encounters only) -->
 		{#if showCatchRate && !battle.isTrainer && battle.enemy}
 			<div class="catch-section">
 				<CatchCalc
@@ -191,6 +193,7 @@
 					type1={battle.enemy.type1}
 					type2={battle.enemy.type2}
 					alreadyCaught={dexOwned?.has(battle.enemy.species) ?? false}
+					{bagBalls}
 				/>
 			</div>
 		{/if}

@@ -1,0 +1,393 @@
+{
+  "id": "BPGE",
+  "name": "Pokemon LeafGreen",
+  "platform": "GBA",
+  "gameIds": [
+    "BPGE"
+  ],
+  "credits": [
+    {
+      "name": "pret/pokefirered",
+      "url": "https://github.com/pret/pokefirered",
+      "reason": "Memory addresses, offsets, and struct layouts used for game data decoding"
+    }
+  ],
+  "bundles": {
+    "party": {
+      "base": "0x02024029"
+    },
+    "battle": {
+      "base": "0x02022B4C"
+    },
+    "main": {
+      "base": "0x03003529"
+    },
+    "ptrs": {
+      "base": "0x03005008"
+    },
+    "safari": {
+      "base": "0x02039994"
+    },
+    "safari_battle": {
+      "pointer": "0x02023FE8"
+    },
+    "save1_region": {
+      "base": "0x02025200"
+    },
+    "save2_lo": {
+      "base": "0x02024500"
+    },
+    "save2_hi": {
+      "base": "0x02025400"
+    },
+    "rom_species_names": {
+      "base": "0x08245EBC"
+    },
+    "rom_natdex_table": {
+      "base": "0x08251FC8"
+    },
+    "rom_move_names": {
+      "base": "0x08247070"
+    },
+    "rom_ability_names": {
+      "base": "0x0824FC1C"
+    },
+    "rom_species_info": {
+      "base": "0x08254760"
+    },
+    "rom_items": {
+      "base": "0x083DAE64"
+    }
+  },
+  "dataPoints": [
+    {
+      "id": "party_count",
+      "type": "u8",
+      "size": 1,
+      "bundle": "party",
+      "offset": "0x0"
+    },
+    {
+      "id": "party_data",
+      "type": "bytes",
+      "size": 600,
+      "bundle": "party",
+      "offset": "0x25B"
+    },
+    {
+      "id": "battle_flags",
+      "type": "u32_le",
+      "size": 4,
+      "bundle": "battle",
+      "offset": "0x0"
+    },
+    {
+      "id": "battle_mons",
+      "type": "bytes",
+      "size": 352,
+      "bundle": "battle",
+      "offset": "0x1098"
+    },
+    {
+      "id": "battlers_count",
+      "type": "u8",
+      "size": 1,
+      "bundle": "battle",
+      "offset": "0x1080"
+    },
+    {
+      "id": "side_status_player",
+      "type": "u16_le",
+      "size": 2,
+      "bundle": "battle",
+      "offset": "0x1292"
+    },
+    {
+      "id": "side_status_enemy",
+      "type": "u16_le",
+      "size": 2,
+      "bundle": "battle",
+      "offset": "0x1294"
+    },
+    {
+      "id": "side_timers_player",
+      "type": "bytes",
+      "size": 12,
+      "bundle": "battle",
+      "offset": "0x1298"
+    },
+    {
+      "id": "side_timers_enemy",
+      "type": "bytes",
+      "size": 12,
+      "bundle": "battle",
+      "offset": "0x12A4"
+    },
+    {
+      "id": "battle_weather",
+      "type": "u16_le",
+      "size": 2,
+      "bundle": "battle",
+      "offset": "0x13D0"
+    },
+    {
+      "id": "battle_outcome",
+      "type": "u8",
+      "size": 1,
+      "bundle": "battle",
+      "offset": "0x133E"
+    },
+    {
+      "id": "in_battle",
+      "type": "u8",
+      "size": 1,
+      "bundle": "main",
+      "offset": "0x0"
+    },
+    {
+      "id": "save1_ptr",
+      "type": "u32_le",
+      "size": 4,
+      "bundle": "ptrs",
+      "offset": "0x0"
+    },
+    {
+      "id": "save2_ptr",
+      "type": "u32_le",
+      "size": 4,
+      "bundle": "ptrs",
+      "offset": "0x4"
+    },
+    {
+      "id": "safari_balls",
+      "type": "u8",
+      "size": 1,
+      "bundle": "safari",
+      "offset": "0x0"
+    },
+    {
+      "id": "safari_steps",
+      "type": "u16_le",
+      "size": 2,
+      "bundle": "safari",
+      "offset": "0x2"
+    },
+    {
+      "id": "safari_battle_state",
+      "type": "bytes",
+      "size": 4,
+      "bundle": "safari_battle",
+      "offset": "0x79"
+    },
+    {
+      "id": "save1_block",
+      "type": "bytes",
+      "size": 2048,
+      "bundle": "save1_region",
+      "offset": "0x0"
+    },
+    {
+      "id": "save2_lo_block",
+      "type": "bytes",
+      "size": 512,
+      "bundle": "save2_lo",
+      "offset": "0x0"
+    },
+    {
+      "id": "save2_hi_block",
+      "type": "bytes",
+      "size": 512,
+      "bundle": "save2_hi",
+      "offset": "0x0"
+    },
+    {
+      "id": "species_names_rom_0",
+      "type": "bytes",
+      "size": 902,
+      "bundle": "rom_species_names",
+      "offset": "0x0"
+    },
+    {
+      "id": "species_names_rom_1",
+      "type": "bytes",
+      "size": 902,
+      "bundle": "rom_species_names",
+      "offset": "0x386"
+    },
+    {
+      "id": "species_names_rom_2",
+      "type": "bytes",
+      "size": 902,
+      "bundle": "rom_species_names",
+      "offset": "0x70C"
+    },
+    {
+      "id": "species_names_rom_3",
+      "type": "bytes",
+      "size": 902,
+      "bundle": "rom_species_names",
+      "offset": "0xA92"
+    },
+    {
+      "id": "species_names_rom_4",
+      "type": "bytes",
+      "size": 913,
+      "bundle": "rom_species_names",
+      "offset": "0xE18"
+    },
+    {
+      "id": "natdex_table_rom",
+      "type": "bytes",
+      "size": 822,
+      "bundle": "rom_natdex_table",
+      "offset": "0x0"
+    },
+    {
+      "id": "move_names_rom_0",
+      "type": "bytes",
+      "size": 923,
+      "bundle": "rom_move_names",
+      "offset": "0x0"
+    },
+    {
+      "id": "move_names_rom_1",
+      "type": "bytes",
+      "size": 923,
+      "bundle": "rom_move_names",
+      "offset": "0x39B"
+    },
+    {
+      "id": "move_names_rom_2",
+      "type": "bytes",
+      "size": 923,
+      "bundle": "rom_move_names",
+      "offset": "0x736"
+    },
+    {
+      "id": "move_names_rom_3",
+      "type": "bytes",
+      "size": 923,
+      "bundle": "rom_move_names",
+      "offset": "0xAD1"
+    },
+    {
+      "id": "move_names_rom_4",
+      "type": "bytes",
+      "size": 923,
+      "bundle": "rom_move_names",
+      "offset": "0xE6C"
+    },
+    {
+      "id": "ability_names_rom",
+      "type": "bytes",
+      "size": 1014,
+      "bundle": "rom_ability_names",
+      "offset": "0x0"
+    },
+    {
+      "id": "species_info_rom_0",
+      "type": "bytes",
+      "size": 1932,
+      "bundle": "rom_species_info",
+      "offset": "0x0"
+    },
+    {
+      "id": "species_info_rom_1",
+      "type": "bytes",
+      "size": 1932,
+      "bundle": "rom_species_info",
+      "offset": "0x78C"
+    },
+    {
+      "id": "species_info_rom_2",
+      "type": "bytes",
+      "size": 1932,
+      "bundle": "rom_species_info",
+      "offset": "0xF18"
+    },
+    {
+      "id": "species_info_rom_3",
+      "type": "bytes",
+      "size": 1932,
+      "bundle": "rom_species_info",
+      "offset": "0x16A4"
+    },
+    {
+      "id": "species_info_rom_4",
+      "type": "bytes",
+      "size": 1932,
+      "bundle": "rom_species_info",
+      "offset": "0x1E30"
+    },
+    {
+      "id": "species_info_rom_5",
+      "type": "bytes",
+      "size": 1848,
+      "bundle": "rom_species_info",
+      "offset": "0x25BC"
+    },
+    {
+      "id": "items_rom_0",
+      "type": "bytes",
+      "size": 1980,
+      "bundle": "rom_items",
+      "offset": "0x0"
+    },
+    {
+      "id": "items_rom_1",
+      "type": "bytes",
+      "size": 1980,
+      "bundle": "rom_items",
+      "offset": "0x7BC"
+    },
+    {
+      "id": "items_rom_2",
+      "type": "bytes",
+      "size": 1980,
+      "bundle": "rom_items",
+      "offset": "0xF78"
+    },
+    {
+      "id": "items_rom_3",
+      "type": "bytes",
+      "size": 1980,
+      "bundle": "rom_items",
+      "offset": "0x1734"
+    },
+    {
+      "id": "items_rom_4",
+      "type": "bytes",
+      "size": 1980,
+      "bundle": "rom_items",
+      "offset": "0x1EF0"
+    },
+    {
+      "id": "items_rom_5",
+      "type": "bytes",
+      "size": 1980,
+      "bundle": "rom_items",
+      "offset": "0x26AC"
+    },
+    {
+      "id": "items_rom_6",
+      "type": "bytes",
+      "size": 1980,
+      "bundle": "rom_items",
+      "offset": "0x2E68"
+    },
+    {
+      "id": "items_rom_7",
+      "type": "bytes",
+      "size": 1980,
+      "bundle": "rom_items",
+      "offset": "0x3624"
+    },
+    {
+      "id": "items_rom_8",
+      "type": "bytes",
+      "size": 660,
+      "bundle": "rom_items",
+      "offset": "0x3DE0"
+    }
+  ]
+}

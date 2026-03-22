@@ -58,5 +58,10 @@
     "profileId": "BPRE",
     "label": "Pokémon FireRed",
     "version": "USA (v1.0)"
+  },
+  "612ca9473451fa42b51d1711031ed5f6": {
+    "profileId": "BPGE",
+    "label": "Pokémon LeafGreen",
+    "version": "USA (v1.0)"
   }
 }

@@ -220,11 +220,28 @@
           "id": "EmuDex",
           "name": "EmuDex",
           "author": "EmuLnk Team",
-          "version": "1.0.0",
+          "version": "1.1.0",
           "type": "theme",
           "tags": ["stats", "battle", "party", "types", "moves", "combat"],
           "description": "Kanto Pokedex companion with party stats, battle damage calculator, and catch analysis.",
           "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/GBA/BPRE/EmuDex/preview.png",
+          "minAppVersion": 1
+        }
+      ]
+    },
+    {
+      "profileId": "BPGE",
+      "name": "Pokemon LeafGreen",
+      "console": "GBA",
+      "themes": [
+        {
+          "id": "EmuDex",
+          "name": "EmuDex",
+          "author": "EmuLnk Team",
+          "version": "1.1.0",
+          "type": "theme",
+          "tags": ["stats", "battle", "party", "types", "moves", "combat"],
+          "description": "Kanto Pokedex companion with party stats, battle damage calculator, and catch analysis.",
           "minAppVersion": 1
         }
       ]

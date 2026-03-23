@@ -6,7 +6,7 @@
 	<div class="frame">
 		<div class="indicator"></div>
 		<p class="title">Waiting for signal...</p>
-		<p class="subtitle">Connect to FireRed via EmuLnk</p>
+		<p class="subtitle">Connect to LeafGreen via EmuLnk</p>
 	</div>
 </div>
 
@@ -58,7 +58,7 @@
 	.subtitle {
 		font-family: sans-serif;
 		font-size: 10px;
-		color: #E8C8C0;
+		color: #C0E8D0;
 		margin: 0;
 		margin-top: 12px;
 	}

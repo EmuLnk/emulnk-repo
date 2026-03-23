@@ -6,7 +6,7 @@
   "meta": {
     "name": "EmuDex",
     "author": "EmuLnk Team",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "description": "Kanto Pokedex companion with party stats, battle damage calculator, catch rate analysis, and Nuzlocke tracker.",
     "minAppVersion": 1
   },

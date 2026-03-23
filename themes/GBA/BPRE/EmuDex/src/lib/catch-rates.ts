@@ -383,8 +383,8 @@ export const BASE_CATCH_RATES: readonly number[] = [
   3,    // #379 Registeel
   3,    // #380 Latias
   3,    // #381 Latios
-  3,    // #382 Kyogre
-  3,    // #383 Groudon
+  5,    // #382 Kyogre
+  5,    // #383 Groudon
   3,    // #384 Rayquaza
   3,    // #385 Jirachi
   3,    // #386 Deoxys

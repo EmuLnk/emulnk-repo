@@ -263,6 +263,23 @@
           "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/Genesis/PSIV/PSIVComboCodex/preview.png"
         }
       ]
+    },
+    {
+      "profileId": "SOTN",
+      "name": "Castlevania: Symphony of the Night",
+      "console": "PS1",
+      "themes": [
+        {
+          "id": "Grimoire",
+          "name": "Grimoire",
+          "author": "EmuLnk Team",
+          "version": "0.1.0",
+          "type": "theme",
+          "tags": ["stats", "combat", "minimap", "tracker"],
+          "description": "Gothic companion with live minimap, enemy HP bars, familiar interactions, and alchemy crafting.",
+          "minAppVersion": 1
+        }
+      ]
     }
   ]
 }

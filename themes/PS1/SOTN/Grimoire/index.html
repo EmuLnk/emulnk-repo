@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Grimoire</title>
+</head>
+<body>
+  <div id="app">
+    <div style="color:#c9a94e;padding:20px;font-family:sans-serif;">
+      <p>Grimoire loading...</p>
+      <p id="err" style="color:#e04040;font-size:11px;white-space:pre-wrap;"></p>
+    </div>
+  </div>
+  <script>
+    window.onerror = function(msg, src, line, col, err) {
+      var el = document.getElementById("err");
+      if (el) el.textContent = "ERROR: " + msg + "\n" + (src || "") + ":" + line + ":" + col + "\n" + (err && err.stack ? err.stack : "");
+    };
+  </script>
+  <script type="module" src="./src/main.ts"></script>
+</body>
+</html>

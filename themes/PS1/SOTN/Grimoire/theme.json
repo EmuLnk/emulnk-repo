@@ -1,0 +1,22 @@
+{
+  "id": "Grimoire",
+  "type": "theme",
+  "targetProfileId": "SOTN",
+  "targetConsole": "PS1",
+  "meta": {
+    "name": "Grimoire",
+    "author": "EmuLnk Team",
+    "version": "1.0.0",
+    "description": "Gothic companion with live minimap, enemy HP bars, familiar interactions, and alchemy crafting.",
+    "minAppVersion": 1,
+    "credits": "Game data sourced from sotn-decomp (https://github.com/Xeeynamo/sotn-decomp)"
+  },
+  "hideOverlay": false,
+  "settings": [
+    { "id": "sfx-enabled", "label": "Sound Effects", "type": "toggle", "default": "true" },
+    { "id": "haptic-enabled", "label": "Haptic Feedback", "type": "toggle", "default": "true" },
+    { "id": "show-enemy-weaknesses", "label": "Enemy Weaknesses", "type": "toggle", "default": "true" },
+    { "id": "show-full-map", "label": "Reveal Full Map", "type": "toggle", "default": "false" },
+    { "id": "auto-center-map", "label": "Auto-Center Map", "type": "toggle", "default": "true" }
+  ]
+}

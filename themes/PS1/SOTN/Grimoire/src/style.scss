@@ -1,0 +1,174 @@
+:root {
+  // Deep background tones
+  --bg-deep: #080510;
+  --bg-panel: #12101e;
+  --bg-surface: #1e1a2c;
+
+  // Accents
+  --accent-crimson: #8b1a1a;
+  --accent-crimson-light: #b42828;
+  --accent-gold: #c9a94e;
+  --accent-gold-dim: #7a6c34;
+  --accent-purple: #6b3fa0;
+
+  // Text, parchment tones
+  --text-primary: #d8ceb8;
+  --text-secondary: #8b7eb0;
+  --text-accent: #c9a94e;
+  --text-dim: #524868;
+
+  // Bars
+  --hp-color: #8b1a1a;
+  --hp-low: #4a0808;
+  --mp-color: #3040a0;
+  --hearts-color: #c9a94e;
+  --exp-color: #6b3fa0;
+
+  // Double border system
+  --border-ornate: #3a2d58;
+  --border-gold: #7a6c34;
+  --border-inner: rgba(255, 255, 255, 0.03);
+
+  // Sizing
+  --card-radius: 3px;
+  --panel-padding: 12px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 13px;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  -webkit-font-smoothing: none;
+  -webkit-text-size-adjust: 100%;
+  -webkit-user-select: none;
+  user-select: none;
+  image-rendering: pixelated;
+}
+
+#app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+// Gothic heading with gold underline ornament
+.gothic-heading {
+  color: var(--text-accent);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+
+  &::after {
+    content: "";
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--accent-gold-dim), transparent);
+    margin-top: 3px;
+  }
+}
+
+// Gothic card with ornate double border, carved look
+.gothic-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-ornate);
+  border-radius: var(--card-radius);
+  box-shadow:
+    inset 0 1px 0 var(--border-inner),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.3),
+    0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+// HP/MP/EXP bar base
+.bar-track {
+  height: 5px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 2px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+// Low HP pulse
+@keyframes hp-pulse {
+  0%, 100% {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 4px rgba(139, 26, 26, 0.4);
+  }
+  50% {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 12px rgba(180, 40, 40, 0.8);
+  }
+}
+
+// Atmospheric fog overlay, dark and ominous
+.fog-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.06;
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    #4a2880 25%,
+    transparent 45%,
+    #6b1a1a 70%,
+    transparent 100%
+  );
+  background-size: 400% 400%;
+  animation: fog-drift 25s ease-in-out infinite;
+}
+
+// Noise grain texture overlay
+.fog-overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+}
+
+@keyframes fog-drift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+// Connection indicator pulse
+@keyframes candle-flicker {
+  0%, 100% {
+    opacity: 1;
+  }
+  30% {
+    opacity: 0.55;
+  }
+  60% {
+    opacity: 0.9;
+  }
+  80% {
+    opacity: 0.65;
+  }
+}

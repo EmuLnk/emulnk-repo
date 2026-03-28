@@ -1,0 +1,80 @@
+{
+  "id": "SOTN",
+  "name": "Castlevania: Symphony of the Night",
+  "platform": "PS1",
+  "gameIds": ["SLUS-00067"],
+  "bundles": {
+    "player_stats": {
+      "base": "0x00097BA0"
+    },
+    "relics_inv": {
+      "base": "0x00097964"
+    },
+    "position": {
+      "base": "0x000973F0"
+    },
+    "room": {
+      "base": "0x0003C760"
+    },
+    "entities": {
+      "base": "0x000762D8"
+    },
+    "tilemap": {
+      "base": "0x000730B0"
+    },
+    "stage": {
+      "base": "0x000974A0"
+    }
+  },
+  "dataPoints": [
+    {
+      "id": "player_stats_block",
+      "type": "bytes",
+      "size": 224,
+      "bundle": "player_stats",
+      "offset": "0x0"
+    },
+    {
+      "id": "relics_spells_inv",
+      "type": "bytes",
+      "size": 297,
+      "bundle": "relics_inv",
+      "offset": "0x0"
+    },
+    {
+      "id": "player_pos",
+      "type": "bytes",
+      "size": 8,
+      "bundle": "position",
+      "offset": "0x0"
+    },
+    {
+      "id": "room_id",
+      "type": "u32_le",
+      "size": 4,
+      "bundle": "room",
+      "offset": "0x0"
+    },
+    {
+      "id": "entity_stage_data",
+      "type": "bytes",
+      "size": 3008,
+      "bundle": "entities",
+      "offset": "0x0"
+    },
+    {
+      "id": "tilemap_room_pos",
+      "type": "bytes",
+      "size": 16,
+      "bundle": "tilemap",
+      "offset": "0x0"
+    },
+    {
+      "id": "stage_id",
+      "type": "u32_le",
+      "size": 4,
+      "bundle": "stage",
+      "offset": "0x0"
+    }
+  ]
+}

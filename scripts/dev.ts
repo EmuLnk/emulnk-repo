@@ -168,15 +168,19 @@ async function syncWidgetsToStaging(logChanges: boolean): Promise<boolean> {
   return changed;
 }
 
-async function populateStaging(): Promise<void> {
+async function populateStaging(filterName?: string | null): Promise<void> {
   if (fs.existsSync(STAGING_DIR)) fs.rmSync(STAGING_DIR, { recursive: true });
   fs.mkdirSync(STAGING_DIR, { recursive: true });
 
   copyConfigs();
 
+  const themesToProcess = filterName
+    ? themes.filter((t) => t.name === filterName)
+    : themes;
+
   let built = 0;
   let failed = 0;
-  for (const theme of themes) {
+  for (const theme of themesToProcess) {
     if (theme.isTS) {
       const ok = await buildTheme(theme);
       if (ok) {
@@ -194,7 +198,7 @@ async function populateStaging(): Promise<void> {
   await syncWidgetsToStaging(false);
 
   rebuildZipCache();
-  log(`Staging ready (${built} themes${failed > 0 ? `, ${failed} failed` : ""})`);
+  log(`Staging ready (${built} themes${failed > 0 ? `, ${failed} failed` : ""}${filterName ? ` [${filterName}]` : ""})`);
 }
 
 // ===== Zip cache (pre-built so __dev_sync responds instantly) =====
@@ -353,14 +357,16 @@ async function watchCycle(): Promise<void> {
   watcherRunning = true;
   let changed = false;
   try {
-    // SDK changes → rebuild all TS themes
+    // SDK changes → rebuild TS themes (filtered if --theme is set)
     const sdkDir = path.join(ROOT, "sdk");
     const newSdkMt = fs.existsSync(sdkDir) ? sourceDirMtime(sdkDir) : 0;
     if (newSdkMt > sdkMtime) {
       sdkMtime = newSdkMt;
-      log("SDK changed, rebuilding all TS themes...");
-      for (const theme of themes) {
-        if (!theme.isTS) continue;
+      const sdkThemes = themeFilter
+        ? themes.filter((t) => t.isTS && t.name === themeFilter)
+        : themes.filter((t) => t.isTS);
+      log(`SDK changed, rebuilding ${themeFilter || "all TS themes"}...`);
+      for (const theme of sdkThemes) {
         const start = Date.now();
         const ok = await buildTheme(theme);
         if (ok) {
@@ -400,8 +406,11 @@ async function watchCycle(): Promise<void> {
       }
     }
 
-    // Individual themes
-    for (const theme of themes) {
+    // Individual themes (filtered if --theme is set)
+    const watchThemes = themeFilter
+      ? themes.filter((t) => t.name === themeFilter)
+      : themes;
+    for (const theme of watchThemes) {
       const dir = theme.isTS ? path.join(theme.absDir, "src") : theme.absDir;
       const current = sourceDirMtime(dir);
       const prev = sourceMtimes.get(theme.relDir) || 0;
@@ -459,6 +468,26 @@ const MIME: Record<string, string> = {
 
 // ===== Request handler (shared by both modes) =====
 
+/**
+ * Strip composite theme prefix from a staging-relative path.
+ * The app's WebView requests use composite names (e.g. themes/PS1/SOTN/SOTN_Grimoire/...)
+ * but staging uses the original repo structure (themes/PS1/SOTN/Grimoire/...).
+ * Pattern: themes/{console}/{profileId}/{profileId}_{themeId}/... → themes/{console}/{profileId}/{themeId}/...
+ */
+function stripCompositePrefix(relPath: string): string | null {
+  const parts = relPath.split("/");
+  // Match: themes/{console}/{profileId}/{profileId_themeId}/...
+  if (parts.length >= 4 && parts[0] === "themes") {
+    const profileId = parts[2];
+    const folder = parts[3];
+    if (folder.startsWith(profileId + "_")) {
+      parts[3] = folder.slice(profileId.length + 1);
+      return parts.join("/");
+    }
+  }
+  return null;
+}
+
 function handleRequest(req: http.IncomingMessage, res: http.ServerResponse): boolean {
   const url = new URL(req.url!, `http://${req.headers.host}`);
 
@@ -471,12 +500,22 @@ function handleRequest(req: http.IncomingMessage, res: http.ServerResponse): boo
       log(`GET /__dev_reload → 400 (missing path)`);
       return true;
     }
-    const target = path.resolve(STAGING_DIR, relPath);
+    let target = path.resolve(STAGING_DIR, relPath);
     if (!target.startsWith(STAGING_DIR + path.sep) && target !== STAGING_DIR) {
       res.writeHead(403, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
       res.end(JSON.stringify({ error: "path outside staging" }));
       log(`GET /__dev_reload → 403`);
       return true;
+    }
+    // Fallback: try stripping composite prefix (SOTN_Grimoire → Grimoire)
+    if (!fs.existsSync(target) || !fs.statSync(target).isDirectory()) {
+      const alt = stripCompositePrefix(relPath);
+      if (alt) {
+        const altTarget = path.resolve(STAGING_DIR, alt);
+        if (altTarget.startsWith(STAGING_DIR + path.sep) && fs.existsSync(altTarget) && fs.statSync(altTarget).isDirectory()) {
+          target = altTarget;
+        }
+      }
     }
     if (!fs.existsSync(target) || !fs.statSync(target).isDirectory()) {
       res.writeHead(404, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
@@ -513,9 +552,19 @@ function handleRequest(req: http.IncomingMessage, res: http.ServerResponse): boo
 
   // ── Static file serving from staging ──
   const urlPath = decodeURIComponent(url.pathname);
-  const filePath = path.resolve(STAGING_DIR, urlPath.slice(1));
+  let filePath = path.resolve(STAGING_DIR, urlPath.slice(1));
   if (!filePath.startsWith(STAGING_DIR + path.sep) && filePath !== STAGING_DIR) {
     return false; // path traversal, reject
+  }
+  // Fallback: try stripping composite prefix (SOTN_Grimoire → Grimoire)
+  if (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) {
+    const alt = stripCompositePrefix(urlPath.slice(1));
+    if (alt) {
+      const altPath = path.resolve(STAGING_DIR, alt);
+      if (altPath.startsWith(STAGING_DIR + path.sep) && fs.existsSync(altPath) && fs.statSync(altPath).isFile()) {
+        filePath = altPath;
+      }
+    }
   }
   if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
     const data = fs.readFileSync(filePath);
@@ -535,8 +584,8 @@ function handleRequest(req: http.IncomingMessage, res: http.ServerResponse): boo
 
 // ===== Main =====
 
-console.log("Building all themes...");
-await populateStaging();
+console.log(themeFilter ? `Building theme: ${themeFilter}...` : "Building all themes...");
+await populateStaging(themeFilter);
 
 initWatcher();
 setInterval(() => watchCycle().catch((err) => log(`Watcher error: ${err}`)), 2000);

@@ -63,5 +63,15 @@
     "profileId": "BPGE",
     "label": "Pokémon LeafGreen",
     "version": "USA (v1.0)"
+  },
+  "SLUS-00067": {
+    "profileId": "SOTN",
+    "label": "Castlevania: Symphony of the Night",
+    "version": "USA"
+  },
+  "acbb3a2e4a8f865f363dc06df147afa2": {
+    "profileId": "SOTN",
+    "label": "Castlevania: Symphony of the Night",
+    "version": "USA"
   }
 }

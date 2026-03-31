@@ -1,0 +1,44 @@
+{
+  "id": "EmuDex",
+  "type": "theme",
+  "targetProfileId": "BPE",
+  "targetConsole": "GBA",
+  "meta": {
+    "name": "EmuDex",
+    "author": "EmuLnk Team",
+    "version": "1.0.0",
+    "description": "Hoenn Pokedex companion with party stats, battle damage calculator, catch rate analysis, and Nuzlocke tracker.",
+    "minAppVersion": 1
+  },
+  "credits": [
+    {
+      "name": "pret/pokeemerald",
+      "url": "https://github.com/pret/pokeemerald",
+      "reason": "Pokemon sprites, item icons, encounter data, map names, and SFX definitions"
+    }
+  ],
+  "hideOverlay": false,
+  "tags": ["stats", "battle", "party", "types", "moves", "combat"],
+  "settings": [
+    { "id": "party-show-ivs", "label": "Show IVs", "type": "toggle", "default": "false", "category": "Party" },
+    { "id": "party-show-evs", "label": "Show EVs", "type": "toggle", "default": "false", "category": "Party" },
+    { "id": "party-show-nature", "label": "Show Nature", "type": "toggle", "default": "true", "category": "Party" },
+    { "id": "party-show-hp-type", "label": "Show Hidden Power", "type": "toggle", "default": "false", "category": "Party" },
+    { "id": "party-show-item", "label": "Show Held Item", "type": "toggle", "default": "true", "category": "Party" },
+    { "id": "battle-show-damage", "label": "Damage Ranges", "type": "toggle", "default": "true", "category": "Battle" },
+    { "id": "battle-show-accuracy", "label": "Move Accuracy", "type": "toggle", "default": "false", "category": "Battle" },
+    { "id": "battle-show-eff-label", "label": "Effectiveness Labels", "type": "toggle", "default": "true", "category": "Battle" },
+    { "id": "battle-show-enemy-ivs", "label": "Enemy IVs/Nature", "type": "toggle", "default": "false", "category": "Battle" },
+    { "id": "battle-show-enemy-moves", "label": "Enemy Moves", "type": "toggle", "default": "true", "category": "Battle" },
+    { "id": "battle-show-field", "label": "Field Conditions", "type": "toggle", "default": "true", "category": "Battle" },
+    { "id": "battle-show-turn-order", "label": "Turn Order", "type": "toggle", "default": "true", "category": "Battle" },
+    { "id": "battle-show-weaknesses", "label": "Weaknesses", "type": "toggle", "default": "true", "category": "Battle" },
+    { "id": "battle-show-ability", "label": "Abilities", "type": "toggle", "default": "true", "category": "Battle" },
+    { "id": "battle-show-catch-rate", "label": "Catch Rate", "type": "toggle", "default": "true", "category": "Battle" },
+    { "id": "map-show-all", "label": "Reveal All Pokemon", "type": "toggle", "default": "false", "category": "Map" },
+    { "id": "nuzlocke-mode", "label": "Nuzlocke Mode", "type": "toggle", "default": "false", "category": "Nuzlocke" },
+    { "id": "nuzlocke-data", "type": "string", "default": "", "hidden": true, "category": "Nuzlocke" },
+    { "id": "sfx-enabled", "label": "Sound Effects", "type": "toggle", "default": "true" },
+    { "id": "haptic-enabled", "label": "Haptic Feedback", "type": "toggle", "default": "true" }
+  ]
+}

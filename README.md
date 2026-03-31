@@ -33,7 +33,7 @@ scripts/                                   # Build, dev, validate, and packaging
 
 ```
 themes/
-  GBA/BPE/BPEPartyHUD/          # theme  - party viewer
+  GBA/BPE/EmuDex/               # theme  - Hoenn Pokedex companion
   GBC/PMC/PMCCompanion/         # theme  - companion
   GBC/PMC/PMCBattleOverlay/     # overlay - type badges + move effectiveness
   GCN/GZL/GZLNavigator/         # theme  - minimap

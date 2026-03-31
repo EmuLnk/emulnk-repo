@@ -20,7 +20,7 @@ const PORT = portIdx !== -1 ? parseInt(process.argv[portIdx + 1], 10) || DEFAULT
 
 interface ThemeInfo {
   name: string;
-  relDir: string; // e.g. "themes/GBA/BPE/BPEPartyHUD-TS"
+  relDir: string; // e.g. "themes/GBA/BPE/EmuDex"
   absDir: string;
   isTS: boolean;
   entry?: string;

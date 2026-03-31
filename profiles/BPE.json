@@ -5,14 +5,79 @@
   "gameIds": [
     "BPEE"
   ],
+  "credits": [
+    {
+      "name": "pret/pokeemerald",
+      "url": "https://github.com/pret/pokeemerald",
+      "reason": "Memory addresses, offsets, and struct layouts used for game data decoding"
+    }
+  ],
   "bundles": {
     "party": {
       "base": "0x020244E9"
+    },
+    "battle": {
+      "base": "0x02022FEC"
+    },
+    "main": {
+      "base": "0x030026F9"
+    },
+    "ptrs": {
+      "base": "0x03005D8C"
+    },
+    "save1_region": {
+      "base": "0x02025A00"
+    },
+    "save2_lo": {
+      "base": "0x02024A54"
+    },
+    "save2_hi": {
+      "base": "0x02025954"
+    },
+    "rom_species_names": {
+      "base": "0x083185C8"
+    },
+    "rom_natdex_table": {
+      "base": "0x0831DC80"
+    },
+    "rom_move_names": {
+      "base": "0x0831977C"
+    },
+    "rom_ability_names": {
+      "base": "0x0831B6DB"
+    },
+    "rom_species_info": {
+      "base": "0x083203CC"
+    },
+    "rom_items": {
+      "base": "0x085839A0"
+    },
+    "save1_feebas": {
+      "base": "0x02028800"
+    },
+    "player_pos": {
+      "base": "0x02037350"
+    },
+    "player_avatar": {
+      "base": "0x02037590"
+    },
+    "rom_evolutions": {
+      "base": "0x0832531C"
+    },
+    "save1_hi": {
+      "base": "0x02026200"
+    },
+    "safari": {
+      "base": "0x0203A04C"
+    },
+    "safari_battle": {
+      "pointer": "0x0202449C"
     }
   },
   "dataPoints": [
     {
       "id": "party_count",
+      "description": "Number of Pokemon in the player's party (0-6)",
       "type": "u8",
       "size": 1,
       "bundle": "party",
@@ -20,10 +85,391 @@
     },
     {
       "id": "party_data",
+      "description": "Raw party data, 6 slots of 100 bytes each",
       "type": "bytes",
       "size": 600,
       "bundle": "party",
       "offset": "0x3"
-    }
+    },
+    {
+      "id": "battle_flags",
+      "description": "Bitfield indicating active battle state and type",
+      "type": "u32_le",
+      "size": 4,
+      "bundle": "battle",
+      "offset": "0x0"
+    },
+    {
+      "id": "battle_mons",
+      "description": "Battle-active Pokemon data for all battlers (4 x 88 bytes)",
+      "type": "bytes",
+      "size": 352,
+      "bundle": "battle",
+      "offset": "0x1098"
+    },
+    {
+      "id": "battlers_count",
+      "description": "Number of active battlers in current battle (2 or 4)",
+      "type": "u8",
+      "size": 1,
+      "bundle": "battle",
+      "offset": "0x1080"
+    },
+    {
+      "id": "side_status_player",
+      "description": "Player side status flags (Reflect, Light Screen, etc.)",
+      "type": "u16_le",
+      "size": 2,
+      "bundle": "battle",
+      "offset": "0x12A2"
+    },
+    {
+      "id": "side_status_enemy",
+      "description": "Enemy side status flags (Reflect, Light Screen, etc.)",
+      "type": "u16_le",
+      "size": 2,
+      "bundle": "battle",
+      "offset": "0x12A4"
+    },
+    {
+      "id": "side_timers_player",
+      "description": "Player side effect timers (Reflect, Safeguard, etc.)",
+      "type": "bytes",
+      "size": 12,
+      "bundle": "battle",
+      "offset": "0x12A8"
+    },
+    {
+      "id": "side_timers_enemy",
+      "description": "Enemy side effect timers (Reflect, Safeguard, etc.)",
+      "type": "bytes",
+      "size": 12,
+      "bundle": "battle",
+      "offset": "0x12B4"
+    },
+    {
+      "id": "battle_weather",
+      "description": "Current battle weather flags (rain, sun, sand, hail)",
+      "type": "u16_le",
+      "size": 2,
+      "bundle": "battle",
+      "offset": "0x13E0"
+    },
+    {
+      "id": "battle_outcome",
+      "description": "Result of the battle (win, lose, flee, caught, etc.)",
+      "type": "u8",
+      "size": 1,
+      "bundle": "battle",
+      "offset": "0x134E"
+    },
+    {
+      "id": "in_battle",
+      "description": "Whether the player is currently in a battle",
+      "type": "u8",
+      "size": 1,
+      "bundle": "main",
+      "offset": "0x0"
+    },
+    {
+      "id": "save1_ptr",
+      "description": "Pointer to SaveBlock1 (trainer, items, flags, etc.)",
+      "type": "u32_le",
+      "size": 4,
+      "bundle": "ptrs",
+      "offset": "0x0"
+    },
+    {
+      "id": "save2_ptr",
+      "description": "Pointer to SaveBlock2 (player profile, options, Pokedex)",
+      "type": "u32_le",
+      "size": 4,
+      "bundle": "ptrs",
+      "offset": "0x4"
+    },
+    {
+      "id": "save1_block",
+      "description": "SaveBlock1 region: trainer data, items, event flags (2 KB)",
+      "type": "bytes",
+      "size": 2048,
+      "bundle": "save1_region",
+      "offset": "0x0"
+    },
+    {
+      "id": "save1_hi_block",
+      "description": "SaveBlock1 high region: Pokeblock case, decoration data (512 B)",
+      "type": "bytes",
+      "size": 512,
+      "bundle": "save1_hi",
+      "offset": "0x0"
+    },
+    {
+      "id": "save2_lo_block",
+      "description": "SaveBlock2 lower region: player profile and options (512 B)",
+      "type": "bytes",
+      "size": 512,
+      "bundle": "save2_lo",
+      "offset": "0x0"
+    },
+    {
+      "id": "save2_hi_block",
+      "description": "SaveBlock2 upper region: Pokedex and play time (512 B)",
+      "type": "bytes",
+      "size": 512,
+      "bundle": "save2_hi",
+      "offset": "0x0"
+    },
+    {
+      "id": "species_names_rom_0",
+      "description": "ROM species name table segment 0 (902 B)",
+      "type": "bytes",
+      "size": 902,
+      "bundle": "rom_species_names",
+      "offset": "0x0"
+    },
+    {
+      "id": "species_names_rom_1",
+      "description": "ROM species name table segment 1 (902 B)",
+      "type": "bytes",
+      "size": 902,
+      "bundle": "rom_species_names",
+      "offset": "0x386"
+    },
+    {
+      "id": "species_names_rom_2",
+      "description": "ROM species name table segment 2 (902 B)",
+      "type": "bytes",
+      "size": 902,
+      "bundle": "rom_species_names",
+      "offset": "0x70C"
+    },
+    {
+      "id": "species_names_rom_3",
+      "description": "ROM species name table segment 3 (902 B)",
+      "type": "bytes",
+      "size": 902,
+      "bundle": "rom_species_names",
+      "offset": "0xA92"
+    },
+    {
+      "id": "species_names_rom_4",
+      "description": "ROM species name table segment 4 (913 B, final chunk)",
+      "type": "bytes",
+      "size": 913,
+      "bundle": "rom_species_names",
+      "offset": "0xE18"
+    },
+    {
+      "id": "natdex_table_rom",
+      "description": "ROM national Pokedex order lookup table (822 B)",
+      "type": "bytes",
+      "size": 822,
+      "bundle": "rom_natdex_table",
+      "offset": "0x0"
+    },
+    {
+      "id": "move_names_rom_0",
+      "description": "ROM move name table segment 0 (923 B)",
+      "type": "bytes",
+      "size": 923,
+      "bundle": "rom_move_names",
+      "offset": "0x0"
+    },
+    {
+      "id": "move_names_rom_1",
+      "description": "ROM move name table segment 1 (923 B)",
+      "type": "bytes",
+      "size": 923,
+      "bundle": "rom_move_names",
+      "offset": "0x39B"
+    },
+    {
+      "id": "move_names_rom_2",
+      "description": "ROM move name table segment 2 (923 B)",
+      "type": "bytes",
+      "size": 923,
+      "bundle": "rom_move_names",
+      "offset": "0x736"
+    },
+    {
+      "id": "move_names_rom_3",
+      "description": "ROM move name table segment 3 (923 B)",
+      "type": "bytes",
+      "size": 923,
+      "bundle": "rom_move_names",
+      "offset": "0xAD1"
+    },
+    {
+      "id": "move_names_rom_4",
+      "description": "ROM move name table segment 4 (923 B, final chunk)",
+      "type": "bytes",
+      "size": 923,
+      "bundle": "rom_move_names",
+      "offset": "0xE6C"
+    },
+    {
+      "id": "ability_names_rom",
+      "description": "ROM ability name table, all abilities (1014 B)",
+      "type": "bytes",
+      "size": 1014,
+      "bundle": "rom_ability_names",
+      "offset": "0x0"
+    },
+    {
+      "id": "species_info_rom_0",
+      "description": "ROM base stats table segment 0 (1932 B)",
+      "type": "bytes",
+      "size": 1932,
+      "bundle": "rom_species_info",
+      "offset": "0x0"
+    },
+    {
+      "id": "species_info_rom_1",
+      "description": "ROM base stats table segment 1 (1932 B)",
+      "type": "bytes",
+      "size": 1932,
+      "bundle": "rom_species_info",
+      "offset": "0x78C"
+    },
+    {
+      "id": "species_info_rom_2",
+      "description": "ROM base stats table segment 2 (1932 B)",
+      "type": "bytes",
+      "size": 1932,
+      "bundle": "rom_species_info",
+      "offset": "0xF18"
+    },
+    {
+      "id": "species_info_rom_3",
+      "description": "ROM base stats table segment 3 (1932 B)",
+      "type": "bytes",
+      "size": 1932,
+      "bundle": "rom_species_info",
+      "offset": "0x16A4"
+    },
+    {
+      "id": "species_info_rom_4",
+      "description": "ROM base stats table segment 4 (1932 B)",
+      "type": "bytes",
+      "size": 1932,
+      "bundle": "rom_species_info",
+      "offset": "0x1E30"
+    },
+    {
+      "id": "species_info_rom_5",
+      "description": "ROM base stats table segment 5 (1848 B, final chunk)",
+      "type": "bytes",
+      "size": 1848,
+      "bundle": "rom_species_info",
+      "offset": "0x25BC"
+    },
+    {
+      "id": "items_rom_0",
+      "description": "ROM item data table segment 0 (1980 B)",
+      "type": "bytes",
+      "size": 1980,
+      "bundle": "rom_items",
+      "offset": "0x0"
+    },
+    {
+      "id": "items_rom_1",
+      "description": "ROM item data table segment 1 (1980 B)",
+      "type": "bytes",
+      "size": 1980,
+      "bundle": "rom_items",
+      "offset": "0x7BC"
+    },
+    {
+      "id": "items_rom_2",
+      "description": "ROM item data table segment 2 (1980 B)",
+      "type": "bytes",
+      "size": 1980,
+      "bundle": "rom_items",
+      "offset": "0xF78"
+    },
+    {
+      "id": "items_rom_3",
+      "description": "ROM item data table segment 3 (1980 B)",
+      "type": "bytes",
+      "size": 1980,
+      "bundle": "rom_items",
+      "offset": "0x1734"
+    },
+    {
+      "id": "items_rom_4",
+      "description": "ROM item data table segment 4 (1980 B)",
+      "type": "bytes",
+      "size": 1980,
+      "bundle": "rom_items",
+      "offset": "0x1EF0"
+    },
+    {
+      "id": "items_rom_5",
+      "description": "ROM item data table segment 5 (1980 B)",
+      "type": "bytes",
+      "size": 1980,
+      "bundle": "rom_items",
+      "offset": "0x26AC"
+    },
+    {
+      "id": "items_rom_6",
+      "description": "ROM item data table segment 6 (1980 B)",
+      "type": "bytes",
+      "size": 1980,
+      "bundle": "rom_items",
+      "offset": "0x2E68"
+    },
+    {
+      "id": "items_rom_7",
+      "description": "ROM item data table segment 7 (1980 B)",
+      "type": "bytes",
+      "size": 1980,
+      "bundle": "rom_items",
+      "offset": "0x3624"
+    },
+    {
+      "id": "items_rom_8",
+      "description": "ROM item data table segment 8 (660 B, final chunk)",
+      "type": "bytes",
+      "size": 660,
+      "bundle": "rom_items",
+      "offset": "0x3DE0"
+    },
+    {
+      "id": "feebas_block",
+      "description": "SaveBlock1 region covering dewfordTrends for Feebas seed (256 B)",
+      "type": "bytes",
+      "size": 256,
+      "bundle": "save1_feebas",
+      "offset": "0x0"
+    },
+    {
+      "id": "player_objects",
+      "description": "gObjectEvents: 16 ObjectEvents (0x24 bytes each) for real-time entity positions",
+      "type": "bytes",
+      "size": 576,
+      "bundle": "player_pos",
+      "offset": "0x0"
+    },
+    {
+      "id": "player_avatar_id",
+      "description": "gPlayerAvatar.objectEventId: index into gObjectEvents for the player",
+      "type": "u8",
+      "size": 1,
+      "bundle": "player_avatar",
+      "offset": "0x5"
+    },
+    { "id": "evo_rom_0", "type": "bytes", "size": 2040, "bundle": "rom_evolutions", "offset": "0x0" },
+    { "id": "evo_rom_1", "type": "bytes", "size": 2040, "bundle": "rom_evolutions", "offset": "0x7F8" },
+    { "id": "evo_rom_2", "type": "bytes", "size": 2040, "bundle": "rom_evolutions", "offset": "0xFF0" },
+    { "id": "evo_rom_3", "type": "bytes", "size": 2040, "bundle": "rom_evolutions", "offset": "0x17E8" },
+    { "id": "evo_rom_4", "type": "bytes", "size": 2040, "bundle": "rom_evolutions", "offset": "0x1FE0" },
+    { "id": "evo_rom_5", "type": "bytes", "size": 2040, "bundle": "rom_evolutions", "offset": "0x27D8" },
+    { "id": "evo_rom_6", "type": "bytes", "size": 2040, "bundle": "rom_evolutions", "offset": "0x2FD0" },
+    { "id": "evo_rom_7", "type": "bytes", "size": 2040, "bundle": "rom_evolutions", "offset": "0x37C8" },
+    { "id": "evo_rom_8", "type": "bytes", "size": 120, "bundle": "rom_evolutions", "offset": "0x3FC0" },
+    { "id": "safari_balls", "description": "Remaining Safari Balls (0-30)", "type": "u8", "size": 1, "bundle": "safari", "offset": "0x0" },
+    { "id": "safari_steps", "description": "Steps remaining in Safari Zone (0-500)", "type": "u16_le", "size": 2, "bundle": "safari", "offset": "0x2" },
+    { "id": "safari_battle_state", "description": "Safari battle state (goNearCounter, pkblThrowCounter, escapeFactor, catchFactor)", "type": "bytes", "size": 4, "bundle": "safari_battle", "offset": "0x79" }
   ]
 }

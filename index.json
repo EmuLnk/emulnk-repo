@@ -64,15 +64,14 @@
       "console": "GBA",
       "themes": [
         {
-          "id": "BPEPartyHUD",
-          "name": "Party HUD",
+          "id": "EmuDex",
+          "name": "EmuDex",
           "author": "EmuLnk Team",
           "version": "1.0.0",
           "type": "theme",
-          "tags": ["stats", "party"],
-          "description": "Party viewer with IVs, EVs, natures, stats, moves, friendship, and Hidden Power.",
-          "minAppVersion": 1,
-          "previewUrl": "https://raw.githubusercontent.com/EmuLnk/emulnk-repo/main/themes/GBA/BPE/BPEPartyHUD/preview.png"
+          "tags": ["stats", "battle", "party", "types", "moves", "combat"],
+          "description": "Hoenn Pokedex companion with party stats, battle damage calculator, and catch analysis.",
+          "minAppVersion": 1
         }
       ]
     },

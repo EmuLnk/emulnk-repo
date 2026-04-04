@@ -11,14 +11,32 @@
     "package": "tsx scripts/package.ts",
     "clean": "tsx scripts/clean.ts",
     "new": "tsx scripts/new.ts",
-    "ci": "pnpm build && pnpm typecheck && pnpm validate"
+    "serve": "tsx scripts/dev.ts",
+    "mock:init": "tsx scripts/mock-init.ts",
+    "validate:profiles": "tsx scripts/validate-profiles.ts",
+    "typegen": "tsx scripts/typegen.ts",
+    "profile:info": "tsx scripts/profile-info.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "index:gen": "tsx scripts/sync-index.ts",
+    "tags": "node -e \"const {ALLOWED_TAGS}=require('./scripts/validate.cjs');console.log([...ALLOWED_TAGS].join(', '))\"",
+    "ci": "pnpm build && pnpm typecheck && pnpm validate && pnpm validate:profiles && pnpm typegen && pnpm test && pnpm index:gen --check"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
       "esbuild",
       "@parcel/watcher",
-      "sharp"
+      "sharp",
+      "simple-git-hooks"
     ]
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm lint-staged"
+  },
+  "lint-staged": {
+    "themes/**/src/**/*.{ts,tsx,svelte}": ["pnpm typecheck"],
+    "themes/**/theme.json": ["pnpm validate"],
+    "profiles/*.json": ["pnpm validate:profiles"]
   },
   "devDependencies": {
     "@preact/signals-core": "^1.14.0",
@@ -33,6 +51,9 @@
     "tsx": "^4.19.0",
     "typescript": "^5.7.0",
     "vite": "^6.2.0",
-    "vite-plugin-solid": "^2.11.0"
+    "vite-plugin-solid": "^2.11.0",
+    "vitest": "^3.0.0",
+    "simple-git-hooks": "^2.11.0",
+    "lint-staged": "^15.5.0"
   }
 }

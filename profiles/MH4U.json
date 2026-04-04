@@ -11,6 +11,7 @@
   "dataPoints": [
     {
       "id": "monster1_id",
+      "description": "First large monster's species ID",
       "type": "u8",
       "size": 1,
       "bundle": "monster1",
@@ -18,6 +19,7 @@
     },
     {
       "id": "monster1_hp",
+      "description": "First large monster's current HP",
       "type": "u32_le",
       "size": 4,
       "bundle": "monster1",
@@ -25,6 +27,7 @@
     },
     {
       "id": "monster1_max_hp",
+      "description": "First large monster's maximum HP",
       "type": "u32_le",
       "size": 4,
       "bundle": "monster1",
@@ -32,6 +35,7 @@
     },
     {
       "id": "monster1_rage",
+      "description": "First large monster's rage/enrage timer value",
       "type": "float_le",
       "size": 4,
       "bundle": "monster1",

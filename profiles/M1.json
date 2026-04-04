@@ -17,6 +17,7 @@
   "dataPoints": [
     {
       "id": "main_routine",
+      "description": "Main game loop routine index",
       "type": "u8",
       "size": 1,
       "bundle": "state",
@@ -24,6 +25,7 @@
     },
     {
       "id": "scroll_dir",
+      "description": "Current screen scroll direction",
       "type": "u8",
       "size": 1,
       "bundle": "state",
@@ -31,6 +33,7 @@
     },
     {
       "id": "map_pos_y",
+      "description": "Samus's Y position on the area map grid",
       "type": "u8",
       "size": 1,
       "bundle": "state",
@@ -38,6 +41,7 @@
     },
     {
       "id": "map_pos_x",
+      "description": "Samus's X position on the area map grid",
       "type": "u8",
       "size": 1,
       "bundle": "state",
@@ -45,6 +49,7 @@
     },
     {
       "id": "room_number",
+      "description": "Current room index within the area",
       "type": "u8",
       "size": 1,
       "bundle": "state",
@@ -52,6 +57,7 @@
     },
     {
       "id": "in_area",
+      "description": "Current area (Brinstar, Norfair, Kraid, Ridley, Tourian)",
       "type": "u8",
       "size": 1,
       "bundle": "state",
@@ -59,6 +65,7 @@
     },
     {
       "id": "mb_status",
+      "description": "Mother Brain encounter status",
       "type": "u8",
       "size": 1,
       "bundle": "state",
@@ -66,6 +73,7 @@
     },
     {
       "id": "mb_hits",
+      "description": "Number of hits dealt to Mother Brain",
       "type": "u8",
       "size": 1,
       "bundle": "state",
@@ -73,6 +81,7 @@
     },
     {
       "id": "health",
+      "description": "Samus's current HP (2 bytes, BCD-encoded)",
       "type": "bytes",
       "size": 2,
       "bundle": "player",
@@ -80,6 +89,7 @@
     },
     {
       "id": "missile_toggle",
+      "description": "Whether missiles are selected (0=beam, 1=missiles)",
       "type": "u8",
       "size": 1,
       "bundle": "player",
@@ -87,6 +97,7 @@
     },
     {
       "id": "energy_tanks",
+      "description": "Number of Energy Tanks collected",
       "type": "u8",
       "size": 1,
       "bundle": "sram",
@@ -94,6 +105,7 @@
     },
     {
       "id": "equipment",
+      "description": "Bitmask of collected equipment (bombs, beams, suit)",
       "type": "u8",
       "size": 1,
       "bundle": "sram",
@@ -101,6 +113,7 @@
     },
     {
       "id": "missiles_cur",
+      "description": "Current missile ammo count",
       "type": "u8",
       "size": 1,
       "bundle": "sram",
@@ -108,6 +121,7 @@
     },
     {
       "id": "missiles_max",
+      "description": "Maximum missile capacity",
       "type": "u8",
       "size": 1,
       "bundle": "sram",
@@ -115,6 +129,7 @@
     },
     {
       "id": "kraid_status",
+      "description": "Kraid boss defeat flag",
       "type": "u8",
       "size": 1,
       "bundle": "sram",
@@ -122,6 +137,7 @@
     },
     {
       "id": "ridley_status",
+      "description": "Ridley boss defeat flag",
       "type": "u8",
       "size": 1,
       "bundle": "sram",
@@ -129,6 +145,7 @@
     },
     {
       "id": "game_age",
+      "description": "Total play time counter (3 bytes)",
       "type": "bytes",
       "size": 3,
       "bundle": "sram",

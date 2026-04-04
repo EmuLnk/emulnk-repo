@@ -11,5 +11,12 @@
     "minAppVersion": 1
   },
   "hideOverlay": false,
-  "settings": []
+  "settings": [
+    {
+      "id": "show-details",
+      "label": "Show Details",
+      "type": "toggle",
+      "default": "true"
+    }
+  ]
 }

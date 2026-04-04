@@ -39,6 +39,7 @@
   "dataPoints": [
     {
       "id": "max_health",
+      "description": "Link's maximum heart containers (in quarter-hearts)",
       "type": "u16_be",
       "size": 2,
       "bundle": "player",
@@ -46,6 +47,7 @@
     },
     {
       "id": "health",
+      "description": "Link's current HP (in quarter-hearts)",
       "type": "u16_be",
       "size": 2,
       "bundle": "player",
@@ -53,6 +55,7 @@
     },
     {
       "id": "rupees",
+      "description": "Current rupee count",
       "type": "u16_be",
       "size": 2,
       "bundle": "player",
@@ -60,6 +63,7 @@
     },
     {
       "id": "magic_max",
+      "description": "Maximum magic meter capacity",
       "type": "u8",
       "size": 1,
       "bundle": "player",
@@ -67,6 +71,7 @@
     },
     {
       "id": "magic_current",
+      "description": "Current magic meter value",
       "type": "u8",
       "size": 1,
       "bundle": "player",
@@ -74,6 +79,7 @@
     },
     {
       "id": "arrows",
+      "description": "Current arrow ammo count",
       "type": "u8",
       "size": 1,
       "bundle": "player",
@@ -81,6 +87,7 @@
     },
     {
       "id": "bombs",
+      "description": "Current bomb ammo count",
       "type": "u8",
       "size": 1,
       "bundle": "player",
@@ -88,6 +95,7 @@
     },
     {
       "id": "stage_id_raw",
+      "description": "Raw stage/area identifier for the current map",
       "type": "u32_be",
       "size": 4,
       "bundle": "stage",
@@ -95,6 +103,7 @@
     },
     {
       "id": "pos_x",
+      "description": "Link's world X position",
       "type": "float_be",
       "size": 4,
       "bundle": "position",
@@ -102,6 +111,7 @@
     },
     {
       "id": "pos_y",
+      "description": "Link's world Y (vertical) position",
       "type": "float_be",
       "size": 4,
       "bundle": "position",
@@ -109,6 +119,7 @@
     },
     {
       "id": "pos_z",
+      "description": "Link's world Z position",
       "type": "float_be",
       "size": 4,
       "bundle": "position",
@@ -116,6 +127,7 @@
     },
     {
       "id": "wind_direction",
+      "description": "Current wind direction in degrees (converted from u16)",
       "type": "u16_be",
       "size": 2,
       "formula": "(v + 16384) % 65536 / 65536.0 * 360.0",
@@ -124,6 +136,7 @@
     },
     {
       "id": "rotation_y",
+      "description": "Camera Y-axis rotation in degrees (converted from u16)",
       "type": "u16_be",
       "size": 2,
       "formula": "(98304 - v) % 65536 / 65536.0 * 360.0",

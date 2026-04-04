@@ -3,13 +3,13 @@ import { mount } from "svelte";
 import App from "./App.svelte";
 import "./style.scss";
 import type { BPEValues, BattleState, Pokemon, BagBall, PokeblockReaction } from "./lib/types.js";
-import { processParty } from "./lib/parser.js";
-import { parseBattle } from "./lib/battle-parser.js";
 import { appState } from "./lib/state.svelte.js";
 import { MAP_NAMES } from "./lib/map-names.js";
 import { loadNuzlockeData, processNuzlockeFrame, snapshotOwnedDex } from "./lib/nuzlocke.svelte.js";
-import { initRomTables } from "./lib/rom-tables.js";
+import { setRomTables } from "./lib/rom-tables.js";
 import { analyzePokeblocksForNature } from "./lib/safari-solver.js";
+import { romTablesTransform, partyTransform, battleTransform } from "@emulink/sdk/transforms/gen3";
+import type { Gen3RomTables, Gen3Pokemon, Gen3BattleState } from "@emulink/sdk/transforms/gen3";
 
 let prevBattleActiveForNuz = false;
 
@@ -34,6 +34,7 @@ const SAVE2_HI_REGION = 0x02025954;
 const SAFARI_MAP_KEYS = new Set(["26:0", "26:1", "26:2", "26:3", "26:12", "26:13"]);
 
 registerTheme<BPEValues>({
+  transforms: [romTablesTransform, partyTransform, battleTransform],
   onUpdate({ isConnected, values, settings }) {
     try {
       appState.isConnected = isConnected;
@@ -41,15 +42,23 @@ registerTheme<BPEValues>({
 
       if (!isConnected) return;
 
-      initRomTables(values);
+      setRomTables(values.rom_tables as Gen3RomTables | undefined);
 
-      const result = processParty(values, currentParty, partyCount);
-      currentParty = result.party;
-      partyCount = result.count;
-      appState.party = [...currentParty];
+      // Party from transform (with anti-flicker: keep previous if count drops to 0)
+      const transformParty = values.party as (Gen3Pokemon | null)[] | undefined;
+      const newCount = Math.max(0, Math.min((values.party_count as number) || 0, 6));
+      if (transformParty && (newCount > 0 || partyCount === 0)) {
+        currentParty = transformParty;
+        partyCount = newCount;
+      }
+      appState.party = [...currentParty] as (Pokemon | null)[];
 
-      const battle: BattleState = parseBattle(values);
-      appState.battleState = battle;
+      const battle = (values.battle as Gen3BattleState | undefined) ?? {
+        active: false, isTrainer: false, isSafari: false, isDoubles: false,
+        player: null, enemy: null, player2: null, enemy2: null,
+        field: { weather: 'none', weatherRaw: 0, playerSide: { reflect: 0, lightScreen: 0, safeguard: 0, mist: 0, spikes: 0 }, enemySide: { reflect: 0, lightScreen: 0, safeguard: 0, mist: 0, spikes: 0 } },
+      };
+      appState.battleState = battle as BattleState;
 
       // Manual pointer dereference for save1 (map data)
       const save1Ptr = values.save1_ptr ?? 0;

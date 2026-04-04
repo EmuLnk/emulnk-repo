@@ -15,6 +15,9 @@ const themeIdx = process.argv.indexOf("--theme");
 const themeFilter = themeIdx !== -1 ? process.argv[themeIdx + 1] || null : null;
 const portIdx = process.argv.indexOf("--port");
 const PORT = portIdx !== -1 ? parseInt(process.argv[portIdx + 1], 10) || DEFAULT_PORT : DEFAULT_PORT;
+const mockMode = process.argv.includes("--mock");
+const debugMode = process.argv.includes("--debug");
+const playgroundMode = process.argv.includes("--playground");
 
 // ===== Theme discovery (themes/ only, matches package.ts) =====
 
@@ -82,6 +85,7 @@ async function buildTheme(theme: ThemeInfo): Promise<boolean> {
     base: "./",
     plugins: getPlugins(theme.framework),
     build: {
+      sourcemap: "inline",
       outDir: "dist",
       emptyOutDir: true,
       rollupOptions: {
@@ -90,6 +94,12 @@ async function buildTheme(theme: ThemeInfo): Promise<boolean> {
           entryFileNames: "assets/app.js",
           chunkFileNames: "assets/[name].js",
           assetFileNames: "assets/[name][extname]",
+          sourcemapPathTransform: (relPath: string) => {
+            const cleaned = relPath.replace(/^(\.\.\/)+/, "");
+            const nm = cleaned.indexOf("node_modules/");
+            if (nm !== -1) return cleaned.slice(nm);
+            return cleaned;
+          },
         },
       },
     },
@@ -474,6 +484,70 @@ const MIME: Record<string, string> = {
  * but staging uses the original repo structure (themes/PS1/SOTN/Grimoire/...).
  * Pattern: themes/{console}/{profileId}/{profileId}_{themeId}/... → themes/{console}/{profileId}/{themeId}/...
  */
+function loadPlaygroundProfile(themeDir: string): { profile: unknown; themeSettings: unknown[]; mockScenarios: unknown[] } {
+  const result: { profile: unknown; themeSettings: unknown[]; mockScenarios: unknown[] } = {
+    profile: { id: "unknown", dataPoints: [] },
+    themeSettings: [],
+    mockScenarios: [],
+  };
+  const themeJsonPath = path.join(themeDir, "theme.json");
+  if (fs.existsSync(themeJsonPath)) {
+    const themeJson = JSON.parse(fs.readFileSync(themeJsonPath, "utf8"));
+    result.themeSettings = themeJson.settings || [];
+    const profileId = themeJson.targetProfileId;
+    if (profileId && profileId !== "CHANGEME") {
+      const profilePath = path.join(ROOT, "profiles", `${profileId}.json`);
+      if (fs.existsSync(profilePath)) {
+        const profile = JSON.parse(fs.readFileSync(profilePath, "utf8"));
+        result.profile = { id: profile.id, dataPoints: profile.dataPoints || [] };
+      }
+      const mockPath = path.join(ROOT, "profiles", `${profileId}.mock.json`);
+      if (fs.existsSync(mockPath)) {
+        result.mockScenarios = JSON.parse(fs.readFileSync(mockPath, "utf8"));
+      }
+    }
+  }
+  return result;
+}
+
+function buildMockScript(scenarios: unknown[]): string {
+  const json = JSON.stringify(scenarios);
+  return `(function() {
+  const scenarios = ${json};
+  let idx = 0;
+  let live = true;
+  const bar = document.createElement('div');
+  bar.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:99999;background:#111;color:#eee;font:12px monospace;padding:4px 8px;display:flex;gap:8px;align-items:center;';
+  const sel = document.createElement('select');
+  sel.style.cssText = 'background:#222;color:#eee;border:1px solid #444;padding:2px 4px;';
+  scenarios.forEach((s, i) => {
+    const opt = document.createElement('option');
+    opt.value = String(i);
+    opt.textContent = s.label || 'Scenario ' + i;
+    sel.appendChild(opt);
+  });
+  const liveLabel = document.createElement('label');
+  liveLabel.style.cssText = 'display:flex;align-items:center;gap:4px;cursor:pointer;';
+  const liveChk = document.createElement('input');
+  liveChk.type = 'checkbox';
+  liveChk.checked = true;
+  liveLabel.appendChild(liveChk);
+  liveLabel.appendChild(document.createTextNode('Live'));
+  bar.appendChild(document.createTextNode('[mock] '));
+  bar.appendChild(sel);
+  bar.appendChild(liveLabel);
+  document.body.appendChild(bar);
+  function fire() {
+    const s = scenarios[idx];
+    if (typeof window.updateData === 'function') window.updateData(btoa(JSON.stringify(s)));
+  }
+  sel.addEventListener('change', () => { idx = parseInt(sel.value); fire(); });
+  liveChk.addEventListener('change', () => { live = liveChk.checked; });
+  setInterval(() => { if (live) fire(); }, 1000);
+  setTimeout(fire, 200);
+})();`;
+}
+
 function stripCompositePrefix(relPath: string): string | null {
   const parts = relPath.split("/");
   // Match: themes/{console}/{profileId}/{profileId_themeId}/...
@@ -588,7 +662,29 @@ console.log(themeFilter ? `Building theme: ${themeFilter}...` : "Building all th
 await populateStaging(themeFilter);
 
 initWatcher();
-setInterval(() => watchCycle().catch((err) => log(`Watcher error: ${err}`)), 2000);
+let watcherStarted = false;
+try {
+  // @ts-ignore no type declarations for @parcel/watcher (native dep)
+  const { subscribe } = await import("@parcel/watcher");
+  let pending = false;
+  await subscribe(ROOT, (err: Error | null) => {
+    if (err) { log(`Watcher error: ${err}`); return; }
+    if (pending) return;
+    pending = true;
+    setTimeout(() => {
+      pending = false;
+      watchCycle().catch((err) => log(`Watcher error: ${err}`));
+    }, 100);
+  }, { ignore: ["node_modules", ".git", "release", "dist", "_staging"] });
+  log("File watcher: native events");
+  watcherStarted = true;
+} catch {
+  // @parcel/watcher unavailable
+}
+if (!watcherStarted) {
+  setInterval(() => watchCycle().catch((err) => log(`Watcher error: ${err}`)), 500);
+  log("File watcher: polling (500ms)");
+}
 
 // Network detection
 const isWSL =
@@ -612,6 +708,9 @@ function printStartup(port: number, hmrTheme?: string) {
   if (hmrTheme) {
     console.log(`  HMR:     ${hmrTheme}`);
   }
+  if (playgroundMode) {
+    console.log(`  Playground: http://localhost:${port}/__playground`);
+  }
 }
 
 if (themeFilter) {
@@ -619,7 +718,10 @@ if (themeFilter) {
 
   // Search both themes/ and starters/ for --theme target (matches old behavior)
   const allTsMarkers = await glob("{themes,starters}/**/vite.theme.json", { cwd: ROOT });
-  const tsMatch = allTsMarkers.find((m) => path.basename(path.dirname(m)) === themeFilter);
+  const tsMatch = allTsMarkers.find((m) => {
+    const dir = path.dirname(m).replace(/\\/g, "/");
+    return path.basename(dir) === themeFilter || dir.endsWith("/" + themeFilter);
+  });
 
   let viteThemeDir: string;
   let viteEntry: string;
@@ -632,7 +734,10 @@ if (themeFilter) {
     vitePlugins = getPlugins(config.framework);
   } else {
     const allThemeJsons = await glob("{themes,starters}/**/theme.json", { cwd: ROOT });
-    const vanillaMatch = allThemeJsons.find((m) => path.basename(path.dirname(m)) === themeFilter);
+    const vanillaMatch = allThemeJsons.find((m) => {
+      const dir = path.dirname(m).replace(/\\/g, "/");
+      return path.basename(dir) === themeFilter || dir.endsWith("/" + themeFilter);
+    });
     if (!vanillaMatch) {
       console.error(`Theme "${themeFilter}" not found in themes/ or starters/.`);
       process.exit(1);
@@ -641,14 +746,94 @@ if (themeFilter) {
     viteEntry = "index.html";
   }
 
-  // Inject staging middleware as a Vite plugin
+  // Load mock scenarios if --mock
+  let mockScenarios: unknown[] | null = null;
+  if (mockMode) {
+    const themeJsonPath = path.join(viteThemeDir, "theme.json");
+    if (fs.existsSync(themeJsonPath)) {
+      const targetProfileId = JSON.parse(fs.readFileSync(themeJsonPath, "utf8")).targetProfileId as string;
+      const mockPath = path.join(ROOT, "profiles", `${targetProfileId}.mock.json`);
+      if (fs.existsSync(mockPath)) {
+        mockScenarios = JSON.parse(fs.readFileSync(mockPath, "utf8"));
+      } else {
+        log(`--mock: no mock file for '${targetProfileId}', run: pnpm mock:init --profile ${targetProfileId}`);
+      }
+    }
+  }
+
+  // Inject staging middleware + mock support as a Vite plugin
   vitePlugins.push({
     name: "emulink-dev",
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
+        if (req.method === "POST" && req.url === "/__dev_inject") {
+          let body = "";
+          req.on("data", (chunk) => (body += chunk));
+          req.on("end", () => {
+            try {
+              JSON.parse(body);
+              const encoded = Buffer.from(body).toString("base64");
+              server.ws.send({ type: "custom", event: "emulink:inject", data: encoded });
+              res.writeHead(200, { "Content-Type": "application/json" });
+              res.end('{"ok":true}');
+            } catch {
+              res.writeHead(400, { "Content-Type": "application/json" });
+              res.end('{"error":"invalid JSON"}');
+            }
+          });
+          return;
+        }
+        if (playgroundMode && req.url === "/__playground") {
+          const html = fs.readFileSync(path.join(ROOT, "scripts", "playground.html"), "utf8");
+          res.writeHead(200, { "Content-Type": "text/html" });
+          res.end(html);
+          return;
+        }
+        if (playgroundMode && req.url === "/__playground_config") {
+          const profileData = loadPlaygroundProfile(viteThemeDir);
+          res.writeHead(200, { "Content-Type": "application/json" });
+          res.end(JSON.stringify(profileData));
+          return;
+        }
         if (handleRequest(req as http.IncomingMessage, res as http.ServerResponse)) return;
         next();
       });
+    },
+    transformIndexHtml() {
+      const tags: { tag: string; attrs?: Record<string, string>; children: string; injectTo: "body" }[] = [];
+      tags.push({
+        tag: "script",
+        attrs: { type: "module" },
+        children: `if (import.meta.hot) {
+  import.meta.hot.on('emulink:inject', (data) => {
+    if (typeof window.updateData === 'function') window.updateData(data);
+  });
+}`,
+        injectTo: "body",
+      });
+      if (mockScenarios && !playgroundMode) {
+        tags.push({ tag: "script", children: buildMockScript(mockScenarios), injectTo: "body" });
+      }
+      if (playgroundMode) {
+        tags.push({
+          tag: "script",
+          children: `window.addEventListener("message", function(e) {
+  if (e.data && e.data.type === "emulink:playground" && typeof window.updateData === "function") {
+    window.updateData(btoa(JSON.stringify(e.data.payload)));
+  }
+});`,
+          injectTo: "body",
+        });
+      }
+      if (debugMode) {
+        tags.push({
+          tag: "script",
+          attrs: { type: "module" },
+          children: `import { initDevtools } from '/@fs/${ROOT.replace(/\\/g, "/")}/sdk/devtools.ts'; initDevtools(${mockMode ? 32 : 0});`,
+          injectTo: "body",
+        });
+      }
+      return tags;
     },
   } as Plugin);
 

@@ -19,6 +19,7 @@
   "dataPoints": [
     {
       "id": "level_id",
+      "description": "Current mission/level index",
       "type": "u32_le",
       "size": 4,
       "bundle": "mission",
@@ -26,6 +27,7 @@
     },
     {
       "id": "difficulty",
+      "description": "Mission difficulty (0=Agent, 1=Secret, 2=00 Agent)",
       "type": "u32_le",
       "size": 4,
       "bundle": "mission",
@@ -33,6 +35,7 @@
     },
     {
       "id": "objectives",
+      "description": "Completion status of all mission objectives (40 bytes)",
       "type": "bytes",
       "size": 40,
       "bundle": "objectives",
@@ -40,6 +43,7 @@
     },
     {
       "id": "mission_timer",
+      "description": "Elapsed mission time in ticks",
       "type": "u32_le",
       "size": 4,
       "bundle": "objectives",
@@ -47,6 +51,7 @@
     },
     {
       "id": "health",
+      "description": "Bond's current health (float, 1.0 = full)",
       "type": "float_le",
       "size": 4,
       "bundle": "player",
@@ -54,6 +59,7 @@
     },
     {
       "id": "armor",
+      "description": "Body armor remaining (float, 1.0 = full)",
       "type": "float_le",
       "size": 4,
       "bundle": "player",
@@ -61,6 +67,7 @@
     },
     {
       "id": "weapon_r",
+      "description": "Right-hand weapon ID",
       "type": "u32_le",
       "size": 4,
       "bundle": "player",
@@ -68,6 +75,7 @@
     },
     {
       "id": "weapon_l",
+      "description": "Left-hand weapon ID (dual-wield)",
       "type": "u32_le",
       "size": 4,
       "bundle": "player",
@@ -75,6 +83,7 @@
     },
     {
       "id": "ammo_mag",
+      "description": "Ammo remaining in current magazine",
       "type": "u32_le",
       "size": 4,
       "bundle": "player",
@@ -82,6 +91,7 @@
     },
     {
       "id": "ammo_reserve",
+      "description": "Reserve ammo counts for all weapon types (120 bytes)",
       "type": "bytes",
       "size": 120,
       "bundle": "player",

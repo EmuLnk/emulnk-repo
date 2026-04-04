@@ -120,7 +120,7 @@ function cpDir(src: string, dest: string): void {
     const d = path.join(dest, entry.name);
     if (entry.isDirectory()) {
       cpDir(s, d);
-    } else {
+    } else if (!entry.name.endsWith(".map")) {
       fs.copyFileSync(s, d);
     }
   }

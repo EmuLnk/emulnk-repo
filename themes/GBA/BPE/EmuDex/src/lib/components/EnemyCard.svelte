@@ -7,9 +7,9 @@
 	import BattleMoveRow from "./BattleMoveRow.svelte";
 	import { getSpeciesNameByNatDex } from "../rom-tables.js";
 	import { getWeaknesses } from "../type-chart.js";
-	import { getNatureFromPV } from "../battle-parser.js";
+	import { calcNature } from "@emulink/sdk/parsers/pokemon-gen3";
 	import { getAbilityName, getItemName } from "../rom-tables.js";
-	import { NATURE_STAT_NAMES } from "../data.js";
+	import { NATURE_STAT_NAMES } from "@emulink/sdk/parsers/pokemon-gen3";
 	import iconsUrl from "../../assets/icons.webp";
 	import itemsUrl from "../../assets/items.webp";
 	import { slide } from "svelte/transition";
@@ -52,7 +52,7 @@
 	let iconCol = $derived((enemy.species - 1) % 20);
 	let iconRow = $derived(Math.floor((enemy.species - 1) / 20));
 	let weaknesses = $derived(getWeaknesses(enemy.type1, enemy.type2));
-	let nature = $derived(getNatureFromPV(enemy.pv));
+	let nature = $derived(calcNature(enemy.pv));
 	let abilityName = $derived(getAbilityName(enemy.ability));
 	let itemName = $derived(enemy.item ? getItemName(enemy.item) : 'None');
 	let isFainted = $derived(enemy.hp === 0 && enemy.maxhp > 0);

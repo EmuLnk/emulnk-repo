@@ -20,6 +20,7 @@
   "dataPoints": [
     {
       "id": "character_save_data",
+      "description": "Save data for all 9 playable characters (1188 B)",
       "type": "bytes",
       "size": 1188,
       "bundle": "save",
@@ -27,6 +28,7 @@
     },
     {
       "id": "party_formation",
+      "description": "Active party member IDs for slots 1-3 (0xFF = empty)",
       "type": "bytes",
       "size": 3,
       "bundle": "save",
@@ -34,6 +36,7 @@
     },
     {
       "id": "gil",
+      "description": "Current gil (money) held by the party",
       "type": "u32_le",
       "size": 4,
       "bundle": "save",
@@ -41,6 +44,7 @@
     },
     {
       "id": "current_module",
+      "description": "Active game module (field, battle, world map, etc.)",
       "type": "u8",
       "size": 1,
       "bundle": "save",
@@ -48,6 +52,7 @@
     },
     {
       "id": "slot1_hp",
+      "description": "Current HP for battle slot 1",
       "type": "u16_le",
       "size": 2,
       "bundle": "battle_slots",
@@ -55,6 +60,7 @@
     },
     {
       "id": "slot1_mp",
+      "description": "Current MP for battle slot 1",
       "type": "u16_le",
       "size": 2,
       "bundle": "battle_slots",
@@ -62,6 +68,7 @@
     },
     {
       "id": "slot2_hp",
+      "description": "Current HP for battle slot 2",
       "type": "u16_le",
       "size": 2,
       "bundle": "battle_slots",
@@ -69,6 +76,7 @@
     },
     {
       "id": "slot2_mp",
+      "description": "Current MP for battle slot 2",
       "type": "u16_le",
       "size": 2,
       "bundle": "battle_slots",
@@ -76,6 +84,7 @@
     },
     {
       "id": "slot3_hp",
+      "description": "Current HP for battle slot 3",
       "type": "u16_le",
       "size": 2,
       "bundle": "battle_slots",
@@ -83,6 +92,7 @@
     },
     {
       "id": "slot3_mp",
+      "description": "Current MP for battle slot 3",
       "type": "u16_le",
       "size": 2,
       "bundle": "battle_slots",
@@ -90,6 +100,7 @@
     },
     {
       "id": "scene_enemy_data",
+      "description": "Battle scene data: enemy formations and AI scripts (552 B)",
       "type": "bytes",
       "size": 552,
       "bundle": "scene",
@@ -97,6 +108,7 @@
     },
     {
       "id": "enemy1_data",
+      "description": "Enemy battle data for slot 1 (HP, stats, status, etc.)",
       "type": "bytes",
       "size": 104,
       "bundle": "enemies",
@@ -104,6 +116,7 @@
     },
     {
       "id": "enemy2_data",
+      "description": "Enemy battle data for slot 2 (HP, stats, status, etc.)",
       "type": "bytes",
       "size": 104,
       "bundle": "enemies",
@@ -111,6 +124,7 @@
     },
     {
       "id": "enemy3_data",
+      "description": "Enemy battle data for slot 3 (HP, stats, status, etc.)",
       "type": "bytes",
       "size": 104,
       "bundle": "enemies",
@@ -118,6 +132,7 @@
     },
     {
       "id": "enemy4_data",
+      "description": "Enemy battle data for slot 4 (HP, stats, status, etc.)",
       "type": "bytes",
       "size": 104,
       "bundle": "enemies",
@@ -125,6 +140,7 @@
     },
     {
       "id": "enemy5_data",
+      "description": "Enemy battle data for slot 5 (HP, stats, status, etc.)",
       "type": "bytes",
       "size": 104,
       "bundle": "enemies",
@@ -132,6 +148,7 @@
     },
     {
       "id": "enemy6_data",
+      "description": "Enemy battle data for slot 6 (HP, stats, status, etc.)",
       "type": "bytes",
       "size": 104,
       "bundle": "enemies",

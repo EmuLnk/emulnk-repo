@@ -1,18 +1,35 @@
-import { registerTheme } from "@emulink/sdk";
+// Develop without hardware: pnpm dev --theme <name> --mock
+import { registerTheme, onDataChange, onConnect, onDisconnect, bool } from "@emulink/sdk";
 
 interface GameData {
-  gameTitle: string;
+  party_count: number;
   [key: string]: unknown;
 }
 
 const statusEl = document.getElementById("status")!;
 const contentEl = document.getElementById("content")!;
-const titleEl = document.getElementById("game-title")!;
-const infoEl = document.getElementById("game-info")!;
+const countEl = document.getElementById("party-count")!;
+const detailsEl = document.getElementById("details")!;
+const batteryEl = document.getElementById("battery")!;
 const offlineEl = document.getElementById("offline-banner")!;
 
+onConnect(() => {
+  offlineEl.style.display = "none";
+  contentEl.style.display = "block";
+  statusEl.textContent = "";
+});
+
+onDisconnect(() => {
+  contentEl.style.display = "none";
+  offlineEl.style.display = "block";
+});
+
+onDataChange("party_count", (_key, val) => {
+  countEl.textContent = `Party: ${val}`;
+});
+
 registerTheme<GameData>({
-  onUpdate({ isConnected, values, settings }) {
+  onUpdate({ isConnected, values, settings, system, confidence }) {
     if (!isConnected) {
       contentEl.style.display = "none";
       offlineEl.style.display = "block";
@@ -22,10 +39,17 @@ registerTheme<GameData>({
 
     offlineEl.style.display = "none";
     contentEl.style.display = "block";
-    statusEl.textContent = "";
+    statusEl.textContent = confidence === "FALLBACK" ? "Fallback mode" : "";
 
-    titleEl.textContent = values.gameTitle ?? "Unknown";
-    infoEl.textContent = JSON.stringify(values, null, 2);
+    countEl.textContent = `Party: ${values.party_count ?? 0}`;
+    batteryEl.textContent = `Battery: ${system.battery.level}%`;
+
+    if (bool(settings, "show-details")) {
+      detailsEl.style.display = "block";
+      detailsEl.textContent = JSON.stringify(values, null, 2);
+    } else {
+      detailsEl.style.display = "none";
+    }
   },
   onGameClosed() {
     contentEl.style.display = "none";

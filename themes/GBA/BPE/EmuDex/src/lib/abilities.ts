@@ -108,60 +108,60 @@ interface AbilityCalcEffect {
 }
 
 export const CALC_ABILITIES: Record<number, AbilityCalcEffect | AbilityCalcEffect[]> = {
-  // Huge Power — doubles physical Attack
+  // Huge Power:doubles physical Attack
   37: { type: 'atkMod', multiplier: 2, physicalOnly: true },
 
-  // Pure Power — doubles physical Attack
+  // Pure Power:doubles physical Attack
   74: { type: 'atkMod', multiplier: 2, physicalOnly: true },
 
-  // Hustle — 1.5x physical Attack but 0.8x accuracy
+  // Hustle:1.5x physical Attack but 0.8x accuracy
   55: [
     { type: 'atkMod', multiplier: 1.5, physicalOnly: true },
     { type: 'accuracyMod', multiplier: 0.8 },
   ],
 
-  // Guts — 1.5x Attack when statused, negates burn penalty
+  // Guts:1.5x Attack when statused, negates burn penalty
   62: { type: 'atkMod', multiplier: 1.5, requireStatus: true, negateBurn: true },
 
-  // Thick Fat — halves Fire and Ice damage taken
+  // Thick Fat:halves Fire and Ice damage taken
   47: { type: 'typeMod', affectedTypes: [9, 14], modMultiplier: 0.5 },
 
-  // Flash Fire — immune to Fire
+  // Flash Fire:immune to Fire
   18: { type: 'immunity', immuneType: 9 },
 
-  // Levitate — immune to Ground
+  // Levitate:immune to Ground
   26: { type: 'immunity', immuneType: 4 },
 
-  // Water Absorb — immune to Water
+  // Water Absorb:immune to Water
   11: { type: 'immunity', immuneType: 10 },
 
-  // Volt Absorb — immune to Electric
+  // Volt Absorb:immune to Electric
   10: { type: 'immunity', immuneType: 12 },
 
-  // Wonder Guard — only super-effective moves hit (special handling in calc)
+  // Wonder Guard:only super-effective moves hit (special handling in calc)
   25: { type: 'immunity' },
 
-  // Overgrow — 1.5x Grass moves at low HP
+  // Overgrow:1.5x Grass moves at low HP
   65: { type: 'pinch', pinchType: 11, pinchMultiplier: 1.5 },
 
-  // Blaze — 1.5x Fire moves at low HP
+  // Blaze:1.5x Fire moves at low HP
   66: { type: 'pinch', pinchType: 9, pinchMultiplier: 1.5 },
 
-  // Torrent — 1.5x Water moves at low HP
+  // Torrent:1.5x Water moves at low HP
   67: { type: 'pinch', pinchType: 10, pinchMultiplier: 1.5 },
 
-  // Swarm — 1.5x Bug moves at low HP
+  // Swarm:1.5x Bug moves at low HP
   68: { type: 'pinch', pinchType: 6, pinchMultiplier: 1.5 },
 
-  // Swift Swim — 2x Speed in rain
+  // Swift Swim:2x Speed in rain
   33: { type: 'speed', multiplier: 2, weatherCondition: 'rain' },
 
-  // Chlorophyll — 2x Speed in sun
+  // Chlorophyll:2x Speed in sun
   34: { type: 'speed', multiplier: 2, weatherCondition: 'sun' },
 
-  // Marvel Scale — 1.5x Defense when statused
+  // Marvel Scale:1.5x Defense when statused
   63: { type: 'defMod', multiplier: 1.5, requireStatus: true },
 
-  // Rock Head — prevents recoil damage
+  // Rock Head:prevents recoil damage
   69: { type: 'noRecoil' },
 };

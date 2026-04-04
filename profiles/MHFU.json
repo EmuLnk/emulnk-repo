@@ -17,6 +17,7 @@
   "dataPoints": [
     {
       "id": "player_x",
+      "description": "Hunter's world X position",
       "type": "float_le",
       "size": 4,
       "bundle": "player",
@@ -24,6 +25,7 @@
     },
     {
       "id": "player_y",
+      "description": "Hunter's world Y (vertical) position",
       "type": "float_le",
       "size": 4,
       "bundle": "player",
@@ -31,6 +33,7 @@
     },
     {
       "id": "player_z",
+      "description": "Hunter's world Z position",
       "type": "float_le",
       "size": 4,
       "bundle": "player",
@@ -38,6 +41,7 @@
     },
     {
       "id": "player_hp",
+      "description": "Hunter's current health points",
       "type": "u16_le",
       "size": 2,
       "bundle": "player",
@@ -45,6 +49,7 @@
     },
     {
       "id": "monster1_x",
+      "description": "First large monster's world X position",
       "type": "float_le",
       "size": 4,
       "bundle": "monster1",
@@ -52,6 +57,7 @@
     },
     {
       "id": "monster1_z",
+      "description": "First large monster's world Z position",
       "type": "float_le",
       "size": 4,
       "bundle": "monster1",
@@ -59,6 +65,7 @@
     },
     {
       "id": "monster1_type",
+      "description": "First large monster's species type ID",
       "type": "u8",
       "size": 1,
       "bundle": "monster1",
@@ -66,6 +73,7 @@
     },
     {
       "id": "monster1_hp",
+      "description": "First large monster's current HP",
       "type": "u16_le",
       "size": 2,
       "bundle": "monster1",
@@ -73,6 +81,7 @@
     },
     {
       "id": "zenny",
+      "description": "Player's current Zenny (currency) balance",
       "type": "u32_le",
       "size": 4,
       "bundle": "economy",

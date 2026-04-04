@@ -16,6 +16,7 @@
   "dataPoints": [
     {
       "id": "player_battle_mon",
+      "description": "Active player Pokemon in-battle data struct (32 bytes)",
       "type": "bytes",
       "size": 32,
       "bundle": "battle",
@@ -23,6 +24,7 @@
     },
     {
       "id": "enemy_mon",
+      "description": "Active enemy Pokemon in-battle data struct (32 bytes)",
       "type": "bytes",
       "size": 32,
       "bundle": "battle",
@@ -30,6 +32,7 @@
     },
     {
       "id": "battle_mode",
+      "description": "Battle type (wild, trainer, etc.)",
       "type": "u8",
       "size": 1,
       "bundle": "battle",
@@ -37,6 +40,7 @@
     },
     {
       "id": "party_count",
+      "description": "Number of Pokemon in the player's party (0-6)",
       "type": "u8",
       "size": 1,
       "bundle": "party",
@@ -44,6 +48,7 @@
     },
     {
       "id": "party_data",
+      "description": "Full party Pokemon data, 6 slots x 48 bytes (288 bytes)",
       "type": "bytes",
       "size": 288,
       "bundle": "party",
@@ -51,6 +56,7 @@
     },
     {
       "id": "party_nicknames",
+      "description": "Nicknames for all 6 party Pokemon (66 bytes)",
       "type": "bytes",
       "size": 66,
       "bundle": "party",

@@ -368,7 +368,7 @@ function calcAccuracy(
   // Weather effects on specific moves
   if (field.weather === 'rain') {
     if (moveType === 12 && (MOVE_DATA[87]?.[0] === 'Thunder')) {
-      // Thunder is 100% in rain — handled by move ID check below
+      // Thunder is 100% in rain, handled by move ID check below
     }
   }
   // Thunder (87) in rain = 100%, in sun = 50%

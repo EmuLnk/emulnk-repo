@@ -13,6 +13,7 @@
   "dataPoints": [
     {
       "id": "party_slots",
+      "description": "Active party member IDs, up to 5 slots (5 bytes)",
       "type": "bytes",
       "size": 5,
       "bundle": "party",
@@ -20,6 +21,7 @@
     },
     {
       "id": "all_chars",
+      "description": "Stats for all playable characters (1408 bytes)",
       "type": "bytes",
       "size": 1408,
       "bundle": "party",

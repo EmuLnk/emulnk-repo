@@ -20,6 +20,7 @@
   "dataPoints": [
     {
       "id": "room_ptr",
+      "description": "Pointer to current room data in bank $8F",
       "type": "u16_le",
       "size": 2,
       "bundle": "map",
@@ -27,6 +28,7 @@
     },
     {
       "id": "area_id",
+      "description": "Current area index (Crateria, Brinstar, etc.)",
       "type": "u16_le",
       "size": 2,
       "bundle": "map",
@@ -34,6 +36,7 @@
     },
     {
       "id": "game_state",
+      "description": "Main game state machine value",
       "type": "u16_le",
       "size": 2,
       "bundle": "state",
@@ -41,6 +44,7 @@
     },
     {
       "id": "enemy_hp",
+      "description": "Current enemy/boss HP",
       "type": "u16_le",
       "size": 2,
       "bundle": "state",
@@ -48,6 +52,7 @@
     },
     {
       "id": "items_collected",
+      "description": "Bitmask of collected items (Morph Ball, Varia, etc.)",
       "type": "u16_le",
       "size": 2,
       "bundle": "player",
@@ -55,6 +60,7 @@
     },
     {
       "id": "beams_collected",
+      "description": "Bitmask of collected beams (Charge, Ice, Wave, etc.)",
       "type": "u16_le",
       "size": 2,
       "bundle": "player",
@@ -62,6 +68,7 @@
     },
     {
       "id": "energy",
+      "description": "Samus's current energy (HP)",
       "type": "u16_le",
       "size": 2,
       "bundle": "player",
@@ -69,6 +76,7 @@
     },
     {
       "id": "max_energy",
+      "description": "Samus's maximum energy capacity",
       "type": "u16_le",
       "size": 2,
       "bundle": "player",
@@ -76,6 +84,7 @@
     },
     {
       "id": "missiles",
+      "description": "Current missile ammo count",
       "type": "u16_le",
       "size": 2,
       "bundle": "player",
@@ -83,6 +92,7 @@
     },
     {
       "id": "max_missiles",
+      "description": "Maximum missile capacity",
       "type": "u16_le",
       "size": 2,
       "bundle": "player",
@@ -90,6 +100,7 @@
     },
     {
       "id": "supers",
+      "description": "Current Super Missile ammo count",
       "type": "u16_le",
       "size": 2,
       "bundle": "player",
@@ -97,6 +108,7 @@
     },
     {
       "id": "max_supers",
+      "description": "Maximum Super Missile capacity",
       "type": "u16_le",
       "size": 2,
       "bundle": "player",
@@ -104,6 +116,7 @@
     },
     {
       "id": "power_bombs",
+      "description": "Current Power Bomb ammo count",
       "type": "u16_le",
       "size": 2,
       "bundle": "player",
@@ -111,6 +124,7 @@
     },
     {
       "id": "max_power_bombs",
+      "description": "Maximum Power Bomb capacity",
       "type": "u16_le",
       "size": 2,
       "bundle": "player",
@@ -118,6 +132,7 @@
     },
     {
       "id": "max_reserve",
+      "description": "Maximum Reserve Tank energy capacity",
       "type": "u16_le",
       "size": 2,
       "bundle": "player",
@@ -125,6 +140,7 @@
     },
     {
       "id": "reserve_energy",
+      "description": "Current Reserve Tank energy stored",
       "type": "u16_le",
       "size": 2,
       "bundle": "player",
@@ -132,6 +148,7 @@
     },
     {
       "id": "timer_seconds",
+      "description": "In-game timer seconds component",
       "type": "u16_le",
       "size": 2,
       "bundle": "player",
@@ -139,6 +156,7 @@
     },
     {
       "id": "timer_minutes",
+      "description": "In-game timer minutes component",
       "type": "u16_le",
       "size": 2,
       "bundle": "player",
@@ -146,6 +164,7 @@
     },
     {
       "id": "timer_hours",
+      "description": "In-game timer hours component",
       "type": "u16_le",
       "size": 2,
       "bundle": "player",
@@ -153,6 +172,7 @@
     },
     {
       "id": "event_flags",
+      "description": "Game event progress flags (3 bytes)",
       "type": "bytes",
       "size": 3,
       "bundle": "flags",
@@ -160,6 +180,7 @@
     },
     {
       "id": "boss_flags",
+      "description": "Boss defeat status flags (5 bytes)",
       "type": "bytes",
       "size": 5,
       "bundle": "flags",
@@ -167,6 +188,7 @@
     },
     {
       "id": "item_pickups",
+      "description": "Per-room item collection bitfield (64 bytes)",
       "type": "bytes",
       "size": 64,
       "bundle": "flags",

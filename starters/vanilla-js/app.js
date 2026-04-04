@@ -1,30 +1,29 @@
-// Vanilla JS starter - no build step, no SDK import.
+// Vanilla JS starter — no build step, no SDK import.
 // EmuLnk calls window.updateData(base64String) on every frame.
+// Develop without hardware: pnpm dev --theme <name> --mock
 
 var statusEl = document.getElementById("status");
 var contentEl = document.getElementById("content");
-var titleEl = document.getElementById("game-title");
-var infoEl = document.getElementById("game-info");
+var countEl = document.getElementById("party-count");
+var detailsEl = document.getElementById("details");
+var batteryEl = document.getElementById("battery");
 var offlineEl = document.getElementById("offline-banner");
 
-var isConnected = false;
-
 window.updateData = function (b64) {
-  var json, data;
+  var data;
   try {
-    json = atob(b64);
-    data = JSON.parse(json);
+    data = JSON.parse(atob(b64));
   } catch (e) {
     return;
   }
 
-  // data.isConnected - whether the emulator is running
-  // data.values      - your memory-read values
-  // data.settings    - user-configured theme settings
+  // data.isConnected  — whether the emulator is running
+  // data.values       — memory-read values (defined by your profile)
+  // data.settings     — user-configured theme settings (always strings)
+  // data.system       — device info: battery, thermal, display, safe area
+  // data.confidence   — "MATCHED" | "FALLBACK" | null
 
-  isConnected = data.isConnected;
-
-  if (!isConnected) {
+  if (!data.isConnected) {
     contentEl.style.display = "none";
     offlineEl.style.display = "block";
     statusEl.textContent = "";
@@ -33,9 +32,22 @@ window.updateData = function (b64) {
 
   offlineEl.style.display = "none";
   contentEl.style.display = "block";
-  statusEl.textContent = "";
+  statusEl.textContent = data.confidence === "FALLBACK" ? "Fallback mode" : "";
 
-  // Render your values - replace these with real fields
-  titleEl.textContent = data.values.gameTitle || "Unknown";
-  infoEl.textContent = JSON.stringify(data.values, null, 2);
+  countEl.textContent = "Party: " + (data.values.party_count || 0);
+  batteryEl.textContent = "Battery: " + data.system.battery.level + "%";
+
+  // Settings are always strings — compare with "true", not true
+  if (data.settings["show-details"] === "true") {
+    detailsEl.style.display = "block";
+    detailsEl.textContent = JSON.stringify(data.values, null, 2);
+  } else {
+    detailsEl.style.display = "none";
+  }
+};
+
+window.onGameClosed = function () {
+  contentEl.style.display = "none";
+  offlineEl.style.display = "none";
+  statusEl.textContent = "Waiting for data...";
 };

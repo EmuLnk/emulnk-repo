@@ -12,56 +12,91 @@
       "reason": "Memory addresses, offsets, and struct layouts used for game data decoding"
     }
   ],
+  "transforms": [
+    {
+      "id": "rom_tables",
+      "inputs": [
+        "species_names_rom_0", "species_names_rom_1",
+        "natdex_table_rom",
+        "move_names_rom_0", "move_names_rom_1",
+        "ability_names_rom",
+        "species_info_rom_0", "species_info_rom_1", "species_info_rom_2",
+        "items_rom_0", "items_rom_1", "items_rom_2", "items_rom_3", "items_rom_4"
+      ]
+    },
+    { "id": "party", "inputs": ["party_data", "party_count"], "after": ["rom_tables"] },
+    {
+      "id": "battle",
+      "inputs": ["battle_mons", "battle_flags", "in_battle", "battle_outcome", "battlers_count", "battle_weather", "side_status_player", "side_status_enemy", "side_timers_player", "side_timers_enemy"],
+      "after": ["rom_tables"]
+    }
+  ],
   "bundles": {
     "party": {
-      "base": "0x02024029"
+      "base": "0x02024029",
+      "pollRate": "low"
     },
     "battle": {
-      "base": "0x02022B4C"
+      "base": "0x02022B4C",
+      "pollRate": "medium"
     },
     "main": {
-      "base": "0x03003529"
+      "base": "0x03003529",
+      "pollRate": "medium"
     },
     "ptrs": {
-      "base": "0x03005008"
+      "base": "0x03005008",
+      "pollRate": "low"
     },
     "safari": {
-      "base": "0x02039994"
+      "base": "0x02039994",
+      "pollRate": "medium"
     },
     "safari_battle": {
-      "pointer": "0x02023FE8"
+      "pointer": "0x02023FE8",
+      "pollRate": "medium"
     },
     "save1_region": {
-      "base": "0x02025200"
+      "base": "0x02025200",
+      "pollRate": "low"
     },
     "save2_lo": {
-      "base": "0x02024500"
+      "base": "0x02024500",
+      "pollRate": "low"
     },
     "save2_hi": {
-      "base": "0x02025400"
+      "base": "0x02025400",
+      "pollRate": "low"
     },
     "rom_species_names": {
-      "base": "0x08245EBC"
+      "base": "0x08245EBC",
+      "pollRate": "low"
     },
     "rom_natdex_table": {
-      "base": "0x08251FC8"
+      "base": "0x08251FC8",
+      "pollRate": "low"
     },
     "rom_move_names": {
-      "base": "0x08247070"
+      "base": "0x08247070",
+      "pollRate": "low"
     },
     "rom_ability_names": {
-      "base": "0x0824FC1C"
+      "base": "0x0824FC1C",
+      "pollRate": "low"
     },
     "rom_species_info": {
-      "base": "0x08254760"
+      "base": "0x08254760",
+      "pollRate": "low"
     },
     "rom_items": {
-      "base": "0x083DAE64"
+      "base": "0x083DAE64",
+      "pollRate": "low"
     }
   },
   "dataPoints": [
     {
       "id": "party_count",
+      "description": "Number of Pokemon in the player's party (0-6)",
       "type": "u8",
       "size": 1,
       "bundle": "party",
@@ -69,6 +104,7 @@
     },
     {
       "id": "party_data",
+      "description": "Raw party data, 6 slots of 100 bytes each",
       "type": "bytes",
       "size": 600,
       "bundle": "party",
@@ -76,6 +112,7 @@
     },
     {
       "id": "battle_flags",
+      "description": "Bitfield indicating active battle state and type",
       "type": "u32_le",
       "size": 4,
       "bundle": "battle",
@@ -83,6 +120,7 @@
     },
     {
       "id": "battle_mons",
+      "description": "Battle-active Pokemon data for all battlers (4 x 88 bytes)",
       "type": "bytes",
       "size": 352,
       "bundle": "battle",
@@ -90,6 +128,7 @@
     },
     {
       "id": "battlers_count",
+      "description": "Number of active battlers in current battle (2 or 4)",
       "type": "u8",
       "size": 1,
       "bundle": "battle",
@@ -97,6 +136,7 @@
     },
     {
       "id": "side_status_player",
+      "description": "Player side status flags (Reflect, Light Screen, etc.)",
       "type": "u16_le",
       "size": 2,
       "bundle": "battle",
@@ -104,6 +144,7 @@
     },
     {
       "id": "side_status_enemy",
+      "description": "Enemy side status flags (Reflect, Light Screen, etc.)",
       "type": "u16_le",
       "size": 2,
       "bundle": "battle",
@@ -111,6 +152,7 @@
     },
     {
       "id": "side_timers_player",
+      "description": "Player side effect timers (Reflect, Safeguard, etc.)",
       "type": "bytes",
       "size": 12,
       "bundle": "battle",
@@ -118,6 +160,7 @@
     },
     {
       "id": "side_timers_enemy",
+      "description": "Enemy side effect timers (Reflect, Safeguard, etc.)",
       "type": "bytes",
       "size": 12,
       "bundle": "battle",
@@ -125,6 +168,7 @@
     },
     {
       "id": "battle_weather",
+      "description": "Current battle weather flags (rain, sun, sand, hail)",
       "type": "u16_le",
       "size": 2,
       "bundle": "battle",
@@ -132,6 +176,7 @@
     },
     {
       "id": "battle_outcome",
+      "description": "Result of the battle (win, lose, flee, caught, etc.)",
       "type": "u8",
       "size": 1,
       "bundle": "battle",
@@ -139,6 +184,7 @@
     },
     {
       "id": "in_battle",
+      "description": "Whether the player is currently in a battle",
       "type": "u8",
       "size": 1,
       "bundle": "main",
@@ -146,6 +192,7 @@
     },
     {
       "id": "save1_ptr",
+      "description": "Pointer to SaveBlock1 (trainer, items, flags, etc.)",
       "type": "u32_le",
       "size": 4,
       "bundle": "ptrs",
@@ -153,6 +200,7 @@
     },
     {
       "id": "save2_ptr",
+      "description": "Pointer to SaveBlock2 (player profile, options, Pokedex)",
       "type": "u32_le",
       "size": 4,
       "bundle": "ptrs",
@@ -160,6 +208,7 @@
     },
     {
       "id": "safari_balls",
+      "description": "Remaining Safari Balls in current Safari Zone visit",
       "type": "u8",
       "size": 1,
       "bundle": "safari",
@@ -167,6 +216,7 @@
     },
     {
       "id": "safari_steps",
+      "description": "Steps remaining before Safari Zone time runs out",
       "type": "u16_le",
       "size": 2,
       "bundle": "safari",
@@ -174,6 +224,7 @@
     },
     {
       "id": "safari_battle_state",
+      "description": "Safari encounter state (watching, eating, angry, etc.)",
       "type": "bytes",
       "size": 4,
       "bundle": "safari_battle",
@@ -181,6 +232,7 @@
     },
     {
       "id": "save1_block",
+      "description": "SaveBlock1 region: trainer data, items, event flags (2 KB)",
       "type": "bytes",
       "size": 2048,
       "bundle": "save1_region",
@@ -188,6 +240,7 @@
     },
     {
       "id": "save2_lo_block",
+      "description": "SaveBlock2 lower region: player profile and options (512 B)",
       "type": "bytes",
       "size": 512,
       "bundle": "save2_lo",
@@ -195,6 +248,7 @@
     },
     {
       "id": "save2_hi_block",
+      "description": "SaveBlock2 upper region: Pokedex and play time (512 B)",
       "type": "bytes",
       "size": 512,
       "bundle": "save2_hi",
@@ -202,41 +256,23 @@
     },
     {
       "id": "species_names_rom_0",
+      "description": "ROM species name table chunk 0 (372 entries, 11 B each)",
       "type": "bytes",
-      "size": 902,
+      "size": 4092,
       "bundle": "rom_species_names",
       "offset": "0x0"
     },
     {
       "id": "species_names_rom_1",
+      "description": "ROM species name table chunk 1 (39 entries, 11 B each, final)",
       "type": "bytes",
-      "size": 902,
+      "size": 429,
       "bundle": "rom_species_names",
-      "offset": "0x386"
-    },
-    {
-      "id": "species_names_rom_2",
-      "type": "bytes",
-      "size": 902,
-      "bundle": "rom_species_names",
-      "offset": "0x70C"
-    },
-    {
-      "id": "species_names_rom_3",
-      "type": "bytes",
-      "size": 902,
-      "bundle": "rom_species_names",
-      "offset": "0xA92"
-    },
-    {
-      "id": "species_names_rom_4",
-      "type": "bytes",
-      "size": 913,
-      "bundle": "rom_species_names",
-      "offset": "0xE18"
+      "offset": "0x0FFC"
     },
     {
       "id": "natdex_table_rom",
+      "description": "ROM national Pokedex order lookup table (822 B)",
       "type": "bytes",
       "size": 822,
       "bundle": "rom_natdex_table",
@@ -244,41 +280,23 @@
     },
     {
       "id": "move_names_rom_0",
+      "description": "ROM move name table chunk 0 (315 entries, 13 B each)",
       "type": "bytes",
-      "size": 923,
+      "size": 4095,
       "bundle": "rom_move_names",
       "offset": "0x0"
     },
     {
       "id": "move_names_rom_1",
+      "description": "ROM move name table chunk 1 (40 entries, 13 B each, final)",
       "type": "bytes",
-      "size": 923,
+      "size": 520,
       "bundle": "rom_move_names",
-      "offset": "0x39B"
-    },
-    {
-      "id": "move_names_rom_2",
-      "type": "bytes",
-      "size": 923,
-      "bundle": "rom_move_names",
-      "offset": "0x736"
-    },
-    {
-      "id": "move_names_rom_3",
-      "type": "bytes",
-      "size": 923,
-      "bundle": "rom_move_names",
-      "offset": "0xAD1"
-    },
-    {
-      "id": "move_names_rom_4",
-      "type": "bytes",
-      "size": 923,
-      "bundle": "rom_move_names",
-      "offset": "0xE6C"
+      "offset": "0x0FFF"
     },
     {
       "id": "ability_names_rom",
+      "description": "ROM ability name table, all abilities (1014 B)",
       "type": "bytes",
       "size": 1014,
       "bundle": "rom_ability_names",
@@ -286,108 +304,67 @@
     },
     {
       "id": "species_info_rom_0",
+      "description": "ROM base stats table chunk 0 (146 entries, 28 B each)",
       "type": "bytes",
-      "size": 1932,
+      "size": 4088,
       "bundle": "rom_species_info",
       "offset": "0x0"
     },
     {
       "id": "species_info_rom_1",
+      "description": "ROM base stats table chunk 1 (146 entries, 28 B each)",
       "type": "bytes",
-      "size": 1932,
+      "size": 4088,
       "bundle": "rom_species_info",
-      "offset": "0x78C"
+      "offset": "0x0FF8"
     },
     {
       "id": "species_info_rom_2",
+      "description": "ROM base stats table chunk 2 (119 entries, 28 B each, final)",
       "type": "bytes",
-      "size": 1932,
+      "size": 3332,
       "bundle": "rom_species_info",
-      "offset": "0xF18"
-    },
-    {
-      "id": "species_info_rom_3",
-      "type": "bytes",
-      "size": 1932,
-      "bundle": "rom_species_info",
-      "offset": "0x16A4"
-    },
-    {
-      "id": "species_info_rom_4",
-      "type": "bytes",
-      "size": 1932,
-      "bundle": "rom_species_info",
-      "offset": "0x1E30"
-    },
-    {
-      "id": "species_info_rom_5",
-      "type": "bytes",
-      "size": 1848,
-      "bundle": "rom_species_info",
-      "offset": "0x25BC"
+      "offset": "0x1FF0"
     },
     {
       "id": "items_rom_0",
+      "description": "ROM item data table chunk 0 (93 entries, 44 B each)",
       "type": "bytes",
-      "size": 1980,
+      "size": 4092,
       "bundle": "rom_items",
       "offset": "0x0"
     },
     {
       "id": "items_rom_1",
+      "description": "ROM item data table chunk 1 (93 entries, 44 B each)",
       "type": "bytes",
-      "size": 1980,
+      "size": 4092,
       "bundle": "rom_items",
-      "offset": "0x7BC"
+      "offset": "0x0FFC"
     },
     {
       "id": "items_rom_2",
+      "description": "ROM item data table chunk 2 (93 entries, 44 B each)",
       "type": "bytes",
-      "size": 1980,
+      "size": 4092,
       "bundle": "rom_items",
-      "offset": "0xF78"
+      "offset": "0x1FF8"
     },
     {
       "id": "items_rom_3",
+      "description": "ROM item data table chunk 3 (93 entries, 44 B each)",
       "type": "bytes",
-      "size": 1980,
+      "size": 4092,
       "bundle": "rom_items",
-      "offset": "0x1734"
+      "offset": "0x2FF4"
     },
     {
       "id": "items_rom_4",
+      "description": "ROM item data table chunk 4 (3 entries, 44 B each, final)",
       "type": "bytes",
-      "size": 1980,
+      "size": 132,
       "bundle": "rom_items",
-      "offset": "0x1EF0"
-    },
-    {
-      "id": "items_rom_5",
-      "type": "bytes",
-      "size": 1980,
-      "bundle": "rom_items",
-      "offset": "0x26AC"
-    },
-    {
-      "id": "items_rom_6",
-      "type": "bytes",
-      "size": 1980,
-      "bundle": "rom_items",
-      "offset": "0x2E68"
-    },
-    {
-      "id": "items_rom_7",
-      "type": "bytes",
-      "size": 1980,
-      "bundle": "rom_items",
-      "offset": "0x3624"
-    },
-    {
-      "id": "items_rom_8",
-      "type": "bytes",
-      "size": 660,
-      "bundle": "rom_items",
-      "offset": "0x3DE0"
+      "offset": "0x3FF0"
     }
   ]
 }

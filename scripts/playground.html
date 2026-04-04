@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EmuLnk Playground</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font: 13px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace; background: #1a1a2e; color: #e0e0e0; height: 100vh; overflow: hidden; }
+  .layout { display: grid; grid-template-columns: 320px 1fr; height: 100vh; }
+  .panel { padding: 12px; overflow-y: auto; background: #16213e; border-right: 1px solid #0f3460; }
+  .panel h2 { font-size: 14px; color: #e94560; margin-bottom: 8px; }
+  .panel h3 { font-size: 12px; color: #999; margin: 12px 0 6px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #0f3460; padding-bottom: 4px; }
+  .panel label { display: flex; align-items: center; gap: 6px; margin: 4px 0; font-size: 12px; }
+  .panel input[type="range"] { flex: 1; accent-color: #e94560; }
+  .panel input[type="number"] { width: 70px; background: #0a0a23; color: #e0e0e0; border: 1px solid #333; padding: 2px 4px; font: inherit; }
+  .panel input[type="text"] { flex: 1; background: #0a0a23; color: #e0e0e0; border: 1px solid #333; padding: 2px 4px; font: inherit; }
+  .panel input[type="checkbox"] { accent-color: #e94560; }
+  .panel select { background: #0a0a23; color: #e0e0e0; border: 1px solid #333; padding: 2px 4px; font: inherit; width: 100%; }
+  .panel textarea { width: 100%; height: 60px; background: #0a0a23; color: #e0e0e0; border: 1px solid #333; padding: 4px; font: 11px monospace; resize: vertical; }
+  .val { color: #e94560; font-weight: bold; min-width: 40px; text-align: right; }
+  iframe { width: 100%; height: 100%; border: none; background: #000; }
+  .group { margin-bottom: 4px; }
+</style>
+</head>
+<body>
+<div class="layout">
+  <div class="panel" id="controls">
+    <h2>EmuLnk Playground</h2>
+    <div id="scenario-section"></div>
+    <h3>Connection</h3>
+    <label><input type="checkbox" id="connected-toggle" checked /> Connected</label>
+    <h3>Data Points</h3>
+    <div id="data-controls"></div>
+    <h3>Settings</h3>
+    <div id="setting-controls"></div>
+    <h3>System</h3>
+    <label>Battery <input type="range" id="battery-slider" min="0" max="100" value="85" /> <span class="val" id="battery-val">85</span></label>
+    <label>Confidence
+      <select id="confidence-select">
+        <option value="MATCHED">MATCHED</option>
+        <option value="FALLBACK">FALLBACK</option>
+        <option value="">null</option>
+      </select>
+    </label>
+  </div>
+  <iframe id="theme-frame" src="/"></iframe>
+</div>
+<script>
+(function() {
+  var frame = document.getElementById("theme-frame");
+  var connToggle = document.getElementById("connected-toggle");
+  var batterySlider = document.getElementById("battery-slider");
+  var batteryVal = document.getElementById("battery-val");
+  var confidenceSelect = document.getElementById("confidence-select");
+  var dataControls = document.getElementById("data-controls");
+  var settingControls = document.getElementById("setting-controls");
+  var scenarioSection = document.getElementById("scenario-section");
+
+  var config = null;
+  var currentValues = {};
+  var currentSettings = {};
+
+  fetch("/__playground_config")
+    .then(function(r) { return r.json(); })
+    .then(function(cfg) { config = cfg; buildControls(); })
+    .catch(function() {});
+
+  function clearChildren(el) {
+    while (el.firstChild) el.removeChild(el.firstChild);
+  }
+
+  function buildControls() {
+    if (!config) return;
+
+    // Scenarios
+    if (config.mockScenarios && config.mockScenarios.length > 0) {
+      var h = document.createElement("h3");
+      h.textContent = "Scenarios";
+      scenarioSection.appendChild(h);
+      var sel = document.createElement("select");
+      sel.style.marginBottom = "8px";
+      var blank = document.createElement("option");
+      blank.value = "";
+      blank.textContent = "(custom)";
+      sel.appendChild(blank);
+      config.mockScenarios.forEach(function(s, i) {
+        var opt = document.createElement("option");
+        opt.value = String(i);
+        opt.textContent = s.label || "Scenario " + i;
+        sel.appendChild(opt);
+      });
+      sel.addEventListener("change", function() {
+        if (sel.value === "") return;
+        var s = config.mockScenarios[parseInt(sel.value)];
+        connToggle.checked = !!s.isConnected;
+        Object.assign(currentValues, s.values || {});
+        Object.assign(currentSettings, s.settings || {});
+        rebuildDataInputs();
+        rebuildSettingInputs();
+        send();
+      });
+      scenarioSection.appendChild(sel);
+    }
+
+    // Data points
+    if (config.profile && config.profile.dataPoints) {
+      config.profile.dataPoints.forEach(function(dp) {
+        currentValues[dp.id] = dp.type === "bytes" ? "" : 0;
+      });
+    }
+
+    // Settings
+    if (config.themeSettings) {
+      config.themeSettings.forEach(function(s) {
+        currentSettings[s.id] = s.default || "";
+      });
+    }
+
+    rebuildDataInputs();
+    rebuildSettingInputs();
+    setTimeout(send, 300);
+  }
+
+  function rebuildDataInputs() {
+    clearChildren(dataControls);
+    if (!config || !config.profile) return;
+    config.profile.dataPoints.forEach(function(dp) {
+      if (dp.type === "bytes") return;
+      var div = document.createElement("div");
+      div.className = "group";
+      {
+        var max = dp.type === "u8" ? 255 : dp.type.startsWith("u16") ? 65535 : 4294967295;
+        var isFloat = dp.type.startsWith("float");
+        var lbl2 = document.createElement("label");
+        lbl2.textContent = dp.id + " ";
+        if (!isFloat && max <= 65535) {
+          var range = document.createElement("input");
+          range.type = "range";
+          range.min = "0";
+          range.max = String(max);
+          range.value = String(currentValues[dp.id] || 0);
+          var valSpan = document.createElement("span");
+          valSpan.className = "val";
+          valSpan.textContent = range.value;
+          range.addEventListener("input", function() { currentValues[dp.id] = parseInt(range.value); valSpan.textContent = range.value; send(); });
+          lbl2.appendChild(range);
+          lbl2.appendChild(valSpan);
+        } else {
+          var numInput = document.createElement("input");
+          numInput.type = "number";
+          numInput.step = isFloat ? "0.01" : "1";
+          numInput.value = String(currentValues[dp.id] || 0);
+          numInput.addEventListener("input", function() { currentValues[dp.id] = isFloat ? parseFloat(numInput.value) : parseInt(numInput.value); send(); });
+          lbl2.appendChild(numInput);
+        }
+        div.appendChild(lbl2);
+      }
+      dataControls.appendChild(div);
+    });
+  }
+
+  function rebuildSettingInputs() {
+    clearChildren(settingControls);
+    if (!config || !config.themeSettings) return;
+    config.themeSettings.forEach(function(s) {
+      var div = document.createElement("div");
+      div.className = "group";
+      var lbl = document.createElement("label");
+      if (s.type === "toggle") {
+        var chk = document.createElement("input");
+        chk.type = "checkbox";
+        chk.checked = currentSettings[s.id] === "true";
+        chk.addEventListener("change", function() { currentSettings[s.id] = chk.checked ? "true" : "false"; send(); });
+        lbl.appendChild(chk);
+        lbl.appendChild(document.createTextNode(" " + (s.label || s.id)));
+      } else if (s.type === "select" && s.options) {
+        lbl.textContent = (s.label || s.id) + " ";
+        var sel = document.createElement("select");
+        s.options.forEach(function(opt) {
+          var o = document.createElement("option");
+          o.value = opt.value || opt;
+          o.textContent = opt.label || opt.value || opt;
+          sel.appendChild(o);
+        });
+        sel.value = currentSettings[s.id] || "";
+        sel.addEventListener("change", function() { currentSettings[s.id] = sel.value; send(); });
+        lbl.appendChild(sel);
+      } else {
+        lbl.textContent = (s.label || s.id) + " ";
+        var input = document.createElement("input");
+        input.type = s.type === "color" ? "color" : "text";
+        input.value = currentSettings[s.id] || "";
+        input.addEventListener("input", function() { currentSettings[s.id] = input.value; send(); });
+        lbl.appendChild(input);
+      }
+      div.appendChild(lbl);
+      settingControls.appendChild(div);
+    });
+  }
+
+  function send() {
+    var payload = {
+      isConnected: connToggle.checked,
+      values: Object.assign({}, currentValues),
+      raw: {},
+      settings: Object.assign({}, currentSettings),
+      system: {
+        battery: { level: parseInt(batterySlider.value), isCharging: false },
+        thermal: { cpuTemp: 40, isThrottling: false },
+        display: { width: 1080, height: 2400, orientation: 0, isDualScreen: false, secondaryWidth: 0, secondaryHeight: 0 },
+        safeArea: { top: 0, bottom: 0, left: 0, right: 0 },
+      },
+      confidence: confidenceSelect.value || null,
+      gameHash: null,
+    };
+    try {
+      frame.contentWindow.postMessage({ type: "emulink:playground", payload: payload }, "*");
+    } catch(e) {}
+  }
+
+  connToggle.addEventListener("change", send);
+  batterySlider.addEventListener("input", function() { batteryVal.textContent = batterySlider.value; send(); });
+  confidenceSelect.addEventListener("change", send);
+})();
+</script>
+</body>
+</html>

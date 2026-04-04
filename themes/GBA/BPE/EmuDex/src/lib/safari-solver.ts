@@ -1,5 +1,5 @@
 import type { SafariRecommendation, PokeblockReaction } from "./types.js";
-import { NATURES } from "./data.js";
+import { NATURES } from "@emulink/sdk/parsers/pokemon-gen3";
 
 /**
  * Safari Zone catch probability (Safari Ball, full HP, no status).

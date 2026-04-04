@@ -7,7 +7,7 @@
 	import StatusBadge from "./StatusBadge.svelte";
 	import { getSpeciesNameByNatDex, getAbilityName, getItemName } from "../rom-tables.js";
 	import { MOVE_DATA } from "../moves.js";
-	import { NATURE_STAT_NAMES } from "../data.js";
+	import { NATURE_STAT_NAMES } from "@emulink/sdk/parsers/pokemon-gen3";
 	import { TYPE_NAMES } from "../type-chart.js";
 	import iconsUrl from "../../assets/icons.webp";
 	import itemsUrl from "../../assets/items.webp";

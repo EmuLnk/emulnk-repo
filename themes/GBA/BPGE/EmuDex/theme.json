@@ -17,6 +17,13 @@
       "reason": "Pokemon sprites, item icons, encounter data, map names, and SFX definitions"
     }
   ],
+  "uses": [
+    "party", "battle", "main", "ptrs",
+    "save1_region", "save2_lo", "save2_hi",
+    "safari", "safari_battle",
+    "rom_species_names", "rom_natdex_table", "rom_move_names",
+    "rom_ability_names", "rom_species_info", "rom_items"
+  ],
   "hideOverlay": false,
   "tags": ["stats", "battle", "party", "types", "moves", "combat"],
   "settings": [

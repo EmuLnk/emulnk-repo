@@ -1,0 +1,22 @@
+[
+  {
+    "label": "Connected",
+    "isConnected": true,
+    "values": {
+      "player_stats_block": "",
+      "relics_spells_inv": "",
+      "player_pos": "",
+      "room_id": 0,
+      "entity_stage_data": "",
+      "tilemap_room_pos": "",
+      "stage_id": 0
+    },
+    "settings": {}
+  },
+  {
+    "label": "Disconnected",
+    "isConnected": false,
+    "values": {},
+    "settings": {}
+  }
+]

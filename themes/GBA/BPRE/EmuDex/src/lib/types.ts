@@ -1,43 +1,12 @@
-export interface Nature {
-  name: string;
-  /** Boosted stat index (0=Atk,1=Def,2=Spd,3=SpA,4=SpD). -1 = neutral */
-  p: number;
-  /** Nerfed stat index. -1 = neutral */
-  m: number;
-}
-
-export interface StatBlock {
-  hp: number;
-  atk: number;
-  def: number;
-  spd: number;
-  spatk: number;
-  spdef: number;
-}
-
-export interface HiddenPower {
-  type: string;
-  power: number;
-}
-
-export interface DecryptedData {
-  speciesId: number;
-  heldItem: number;
-  experience: number;
-  friendship: number;
-  moves: number[];
-  pp: number[];
-  evs: StatBlock;
-  ivs: StatBlock;
-  isEgg: boolean;
-  abilityNum: number;
-}
+import type { Nature, StatBlock, HiddenPower, DecryptedData } from "@emulink/sdk/parsers/pokemon-gen3";
+export type { Nature, StatBlock, HiddenPower, DecryptedData };
 
 export interface Pokemon {
   pv: number;
   otid: number;
   speciesName: string;
   speciesId: number;
+  internalSpeciesId: number;
   level: number;
   hp: number;
   maxhp: number;
@@ -61,6 +30,7 @@ export interface Pokemon {
 
 export interface BattleMon {
   species: number;
+  internalSpeciesId: number;
   speciesName: string;
   atk: number;
   def: number;
@@ -189,31 +159,18 @@ export interface BPREValues {
   save2_hi_block?: string;
   species_names_rom_0?: string;
   species_names_rom_1?: string;
-  species_names_rom_2?: string;
-  species_names_rom_3?: string;
-  species_names_rom_4?: string;
   natdex_table_rom?: string;
   move_names_rom_0?: string;
   move_names_rom_1?: string;
-  move_names_rom_2?: string;
-  move_names_rom_3?: string;
-  move_names_rom_4?: string;
   ability_names_rom?: string;
   species_info_rom_0?: string;
   species_info_rom_1?: string;
   species_info_rom_2?: string;
-  species_info_rom_3?: string;
-  species_info_rom_4?: string;
-  species_info_rom_5?: string;
   items_rom_0?: string;
   items_rom_1?: string;
   items_rom_2?: string;
   items_rom_3?: string;
   items_rom_4?: string;
-  items_rom_5?: string;
-  items_rom_6?: string;
-  items_rom_7?: string;
-  items_rom_8?: string;
   [key: string]: unknown;
 }
 

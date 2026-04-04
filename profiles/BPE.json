@@ -12,66 +12,106 @@
       "reason": "Memory addresses, offsets, and struct layouts used for game data decoding"
     }
   ],
+  "transforms": [
+    {
+      "id": "rom_tables",
+      "inputs": [
+        "species_names_rom_0", "species_names_rom_1",
+        "natdex_table_rom",
+        "move_names_rom_0", "move_names_rom_1",
+        "ability_names_rom",
+        "species_info_rom_0", "species_info_rom_1", "species_info_rom_2",
+        "items_rom_0", "items_rom_1", "items_rom_2", "items_rom_3", "items_rom_4",
+        "evo_rom_0", "evo_rom_1", "evo_rom_2", "evo_rom_3", "evo_rom_4"
+      ]
+    },
+    { "id": "party", "inputs": ["party_data", "party_count"], "after": ["rom_tables"] },
+    {
+      "id": "battle",
+      "inputs": ["battle_mons", "battle_flags", "in_battle", "battle_outcome", "battlers_count", "battle_weather", "side_status_player", "side_status_enemy", "side_timers_player", "side_timers_enemy"],
+      "after": ["rom_tables"]
+    }
+  ],
   "bundles": {
     "party": {
-      "base": "0x020244E9"
+      "base": "0x020244E9",
+      "pollRate": "low"
     },
     "battle": {
-      "base": "0x02022FEC"
+      "base": "0x02022FEC",
+      "pollRate": "medium"
     },
     "main": {
-      "base": "0x030026F9"
+      "base": "0x030026F9",
+      "pollRate": "medium"
     },
     "ptrs": {
-      "base": "0x03005D8C"
+      "base": "0x03005D8C",
+      "pollRate": "low"
     },
     "save1_region": {
-      "base": "0x02025A00"
+      "base": "0x02025A00",
+      "pollRate": "low"
     },
     "save2_lo": {
-      "base": "0x02024A54"
+      "base": "0x02024A54",
+      "pollRate": "low"
     },
     "save2_hi": {
-      "base": "0x02025954"
+      "base": "0x02025954",
+      "pollRate": "low"
     },
     "rom_species_names": {
-      "base": "0x083185C8"
+      "base": "0x083185C8",
+      "pollRate": "low"
     },
     "rom_natdex_table": {
-      "base": "0x0831DC80"
+      "base": "0x0831DC80",
+      "pollRate": "low"
     },
     "rom_move_names": {
-      "base": "0x0831977C"
+      "base": "0x0831977C",
+      "pollRate": "low"
     },
     "rom_ability_names": {
-      "base": "0x0831B6DB"
+      "base": "0x0831B6DB",
+      "pollRate": "low"
     },
     "rom_species_info": {
-      "base": "0x083203CC"
+      "base": "0x083203CC",
+      "pollRate": "low"
     },
     "rom_items": {
-      "base": "0x085839A0"
+      "base": "0x085839A0",
+      "pollRate": "low"
     },
     "save1_feebas": {
-      "base": "0x02028800"
+      "base": "0x02028800",
+      "pollRate": "low"
     },
     "player_pos": {
-      "base": "0x02037350"
+      "base": "0x02037350",
+      "pollRate": "high"
     },
     "player_avatar": {
-      "base": "0x02037590"
+      "base": "0x02037590",
+      "pollRate": "high"
     },
     "rom_evolutions": {
-      "base": "0x0832531C"
+      "base": "0x0832531C",
+      "pollRate": "low"
     },
     "save1_hi": {
-      "base": "0x02026200"
+      "base": "0x02026200",
+      "pollRate": "low"
     },
     "safari": {
-      "base": "0x0203A04C"
+      "base": "0x0203A04C",
+      "pollRate": "medium"
     },
     "safari_battle": {
-      "pointer": "0x0202449C"
+      "pointer": "0x0202449C",
+      "pollRate": "medium"
     }
   },
   "dataPoints": [
@@ -221,43 +261,19 @@
     },
     {
       "id": "species_names_rom_0",
-      "description": "ROM species name table segment 0 (902 B)",
+      "description": "ROM species name table chunk 0 (372 entries, 11 B each)",
       "type": "bytes",
-      "size": 902,
+      "size": 4092,
       "bundle": "rom_species_names",
       "offset": "0x0"
     },
     {
       "id": "species_names_rom_1",
-      "description": "ROM species name table segment 1 (902 B)",
+      "description": "ROM species name table chunk 1 (39 entries, 11 B each, final)",
       "type": "bytes",
-      "size": 902,
+      "size": 429,
       "bundle": "rom_species_names",
-      "offset": "0x386"
-    },
-    {
-      "id": "species_names_rom_2",
-      "description": "ROM species name table segment 2 (902 B)",
-      "type": "bytes",
-      "size": 902,
-      "bundle": "rom_species_names",
-      "offset": "0x70C"
-    },
-    {
-      "id": "species_names_rom_3",
-      "description": "ROM species name table segment 3 (902 B)",
-      "type": "bytes",
-      "size": 902,
-      "bundle": "rom_species_names",
-      "offset": "0xA92"
-    },
-    {
-      "id": "species_names_rom_4",
-      "description": "ROM species name table segment 4 (913 B, final chunk)",
-      "type": "bytes",
-      "size": 913,
-      "bundle": "rom_species_names",
-      "offset": "0xE18"
+      "offset": "0x0FFC"
     },
     {
       "id": "natdex_table_rom",
@@ -269,43 +285,19 @@
     },
     {
       "id": "move_names_rom_0",
-      "description": "ROM move name table segment 0 (923 B)",
+      "description": "ROM move name table chunk 0 (315 entries, 13 B each)",
       "type": "bytes",
-      "size": 923,
+      "size": 4095,
       "bundle": "rom_move_names",
       "offset": "0x0"
     },
     {
       "id": "move_names_rom_1",
-      "description": "ROM move name table segment 1 (923 B)",
+      "description": "ROM move name table chunk 1 (40 entries, 13 B each, final)",
       "type": "bytes",
-      "size": 923,
+      "size": 520,
       "bundle": "rom_move_names",
-      "offset": "0x39B"
-    },
-    {
-      "id": "move_names_rom_2",
-      "description": "ROM move name table segment 2 (923 B)",
-      "type": "bytes",
-      "size": 923,
-      "bundle": "rom_move_names",
-      "offset": "0x736"
-    },
-    {
-      "id": "move_names_rom_3",
-      "description": "ROM move name table segment 3 (923 B)",
-      "type": "bytes",
-      "size": 923,
-      "bundle": "rom_move_names",
-      "offset": "0xAD1"
-    },
-    {
-      "id": "move_names_rom_4",
-      "description": "ROM move name table segment 4 (923 B, final chunk)",
-      "type": "bytes",
-      "size": 923,
-      "bundle": "rom_move_names",
-      "offset": "0xE6C"
+      "offset": "0x0FFF"
     },
     {
       "id": "ability_names_rom",
@@ -317,123 +309,67 @@
     },
     {
       "id": "species_info_rom_0",
-      "description": "ROM base stats table segment 0 (1932 B)",
+      "description": "ROM base stats table chunk 0 (146 entries, 28 B each)",
       "type": "bytes",
-      "size": 1932,
+      "size": 4088,
       "bundle": "rom_species_info",
       "offset": "0x0"
     },
     {
       "id": "species_info_rom_1",
-      "description": "ROM base stats table segment 1 (1932 B)",
+      "description": "ROM base stats table chunk 1 (146 entries, 28 B each)",
       "type": "bytes",
-      "size": 1932,
+      "size": 4088,
       "bundle": "rom_species_info",
-      "offset": "0x78C"
+      "offset": "0x0FF8"
     },
     {
       "id": "species_info_rom_2",
-      "description": "ROM base stats table segment 2 (1932 B)",
+      "description": "ROM base stats table chunk 2 (119 entries, 28 B each, final)",
       "type": "bytes",
-      "size": 1932,
+      "size": 3332,
       "bundle": "rom_species_info",
-      "offset": "0xF18"
-    },
-    {
-      "id": "species_info_rom_3",
-      "description": "ROM base stats table segment 3 (1932 B)",
-      "type": "bytes",
-      "size": 1932,
-      "bundle": "rom_species_info",
-      "offset": "0x16A4"
-    },
-    {
-      "id": "species_info_rom_4",
-      "description": "ROM base stats table segment 4 (1932 B)",
-      "type": "bytes",
-      "size": 1932,
-      "bundle": "rom_species_info",
-      "offset": "0x1E30"
-    },
-    {
-      "id": "species_info_rom_5",
-      "description": "ROM base stats table segment 5 (1848 B, final chunk)",
-      "type": "bytes",
-      "size": 1848,
-      "bundle": "rom_species_info",
-      "offset": "0x25BC"
+      "offset": "0x1FF0"
     },
     {
       "id": "items_rom_0",
-      "description": "ROM item data table segment 0 (1980 B)",
+      "description": "ROM item data table chunk 0 (93 entries, 44 B each)",
       "type": "bytes",
-      "size": 1980,
+      "size": 4092,
       "bundle": "rom_items",
       "offset": "0x0"
     },
     {
       "id": "items_rom_1",
-      "description": "ROM item data table segment 1 (1980 B)",
+      "description": "ROM item data table chunk 1 (93 entries, 44 B each)",
       "type": "bytes",
-      "size": 1980,
+      "size": 4092,
       "bundle": "rom_items",
-      "offset": "0x7BC"
+      "offset": "0x0FFC"
     },
     {
       "id": "items_rom_2",
-      "description": "ROM item data table segment 2 (1980 B)",
+      "description": "ROM item data table chunk 2 (93 entries, 44 B each)",
       "type": "bytes",
-      "size": 1980,
+      "size": 4092,
       "bundle": "rom_items",
-      "offset": "0xF78"
+      "offset": "0x1FF8"
     },
     {
       "id": "items_rom_3",
-      "description": "ROM item data table segment 3 (1980 B)",
+      "description": "ROM item data table chunk 3 (93 entries, 44 B each)",
       "type": "bytes",
-      "size": 1980,
+      "size": 4092,
       "bundle": "rom_items",
-      "offset": "0x1734"
+      "offset": "0x2FF4"
     },
     {
       "id": "items_rom_4",
-      "description": "ROM item data table segment 4 (1980 B)",
+      "description": "ROM item data table chunk 4 (3 entries, 44 B each, final)",
       "type": "bytes",
-      "size": 1980,
+      "size": 132,
       "bundle": "rom_items",
-      "offset": "0x1EF0"
-    },
-    {
-      "id": "items_rom_5",
-      "description": "ROM item data table segment 5 (1980 B)",
-      "type": "bytes",
-      "size": 1980,
-      "bundle": "rom_items",
-      "offset": "0x26AC"
-    },
-    {
-      "id": "items_rom_6",
-      "description": "ROM item data table segment 6 (1980 B)",
-      "type": "bytes",
-      "size": 1980,
-      "bundle": "rom_items",
-      "offset": "0x2E68"
-    },
-    {
-      "id": "items_rom_7",
-      "description": "ROM item data table segment 7 (1980 B)",
-      "type": "bytes",
-      "size": 1980,
-      "bundle": "rom_items",
-      "offset": "0x3624"
-    },
-    {
-      "id": "items_rom_8",
-      "description": "ROM item data table segment 8 (660 B, final chunk)",
-      "type": "bytes",
-      "size": 660,
-      "bundle": "rom_items",
-      "offset": "0x3DE0"
+      "offset": "0x3FF0"
     },
     {
       "id": "feebas_block",
@@ -459,15 +395,46 @@
       "bundle": "player_avatar",
       "offset": "0x5"
     },
-    { "id": "evo_rom_0", "type": "bytes", "size": 2040, "bundle": "rom_evolutions", "offset": "0x0" },
-    { "id": "evo_rom_1", "type": "bytes", "size": 2040, "bundle": "rom_evolutions", "offset": "0x7F8" },
-    { "id": "evo_rom_2", "type": "bytes", "size": 2040, "bundle": "rom_evolutions", "offset": "0xFF0" },
-    { "id": "evo_rom_3", "type": "bytes", "size": 2040, "bundle": "rom_evolutions", "offset": "0x17E8" },
-    { "id": "evo_rom_4", "type": "bytes", "size": 2040, "bundle": "rom_evolutions", "offset": "0x1FE0" },
-    { "id": "evo_rom_5", "type": "bytes", "size": 2040, "bundle": "rom_evolutions", "offset": "0x27D8" },
-    { "id": "evo_rom_6", "type": "bytes", "size": 2040, "bundle": "rom_evolutions", "offset": "0x2FD0" },
-    { "id": "evo_rom_7", "type": "bytes", "size": 2040, "bundle": "rom_evolutions", "offset": "0x37C8" },
-    { "id": "evo_rom_8", "type": "bytes", "size": 120, "bundle": "rom_evolutions", "offset": "0x3FC0" },
+    {
+      "id": "evo_rom_0",
+      "description": "ROM evolution table chunk 0 (102 species, 5 evos × 8 B each)",
+      "type": "bytes",
+      "size": 4080,
+      "bundle": "rom_evolutions",
+      "offset": "0x0"
+    },
+    {
+      "id": "evo_rom_1",
+      "description": "ROM evolution table chunk 1 (102 species, 5 evos × 8 B each)",
+      "type": "bytes",
+      "size": 4080,
+      "bundle": "rom_evolutions",
+      "offset": "0x0FF0"
+    },
+    {
+      "id": "evo_rom_2",
+      "description": "ROM evolution table chunk 2 (102 species, 5 evos × 8 B each)",
+      "type": "bytes",
+      "size": 4080,
+      "bundle": "rom_evolutions",
+      "offset": "0x1FE0"
+    },
+    {
+      "id": "evo_rom_3",
+      "description": "ROM evolution table chunk 3 (102 species, 5 evos × 8 B each)",
+      "type": "bytes",
+      "size": 4080,
+      "bundle": "rom_evolutions",
+      "offset": "0x2FD0"
+    },
+    {
+      "id": "evo_rom_4",
+      "description": "ROM evolution table chunk 4 (3 species, 5 evos × 8 B each, final)",
+      "type": "bytes",
+      "size": 120,
+      "bundle": "rom_evolutions",
+      "offset": "0x3FC0"
+    },
     { "id": "safari_balls", "description": "Remaining Safari Balls (0-30)", "type": "u8", "size": 1, "bundle": "safari", "offset": "0x0" },
     { "id": "safari_steps", "description": "Steps remaining in Safari Zone (0-500)", "type": "u16_le", "size": 2, "bundle": "safari", "offset": "0x2" },
     { "id": "safari_battle_state", "description": "Safari battle state (goNearCounter, pkblThrowCounter, escapeFactor, catchFactor)", "type": "bytes", "size": 4, "bundle": "safari_battle", "offset": "0x79" }

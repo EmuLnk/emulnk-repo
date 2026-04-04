@@ -16,6 +16,7 @@
   "dataPoints": [
     {
       "id": "player_battle_mon",
+      "description": "Active player Pokemon battle stats struct (48 bytes)",
       "type": "bytes",
       "size": 48,
       "bundle": "battle_data",
@@ -23,6 +24,7 @@
     },
     {
       "id": "enemy_battle_mon",
+      "description": "Active enemy Pokemon battle stats struct (48 bytes)",
       "type": "bytes",
       "size": 48,
       "bundle": "battle_data",
@@ -30,6 +32,7 @@
     },
     {
       "id": "battle_active",
+      "description": "Whether a battle is currently in progress",
       "type": "u16_le",
       "size": 2,
       "bundle": "battle_state",

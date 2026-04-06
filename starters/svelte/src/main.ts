@@ -1,5 +1,5 @@
 // Develop without hardware: pnpm dev --theme <name> --mock
-import { registerTheme, onConnect, onDisconnect } from "@emulink/sdk";
+import { registerTheme, onConnect, onDisconnect } from "@emulnk/sdk";
 import { mount } from "svelte";
 import App from "./App.svelte";
 import "./style.scss";

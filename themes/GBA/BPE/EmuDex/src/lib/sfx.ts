@@ -1,4 +1,4 @@
-import { playSound, vibrate } from "@emulink/sdk";
+import { playSound, vibrate } from "@emulnk/sdk";
 
 const SOUNDS = {
 	tab:       "sfx/tab.ogg",
@@ -23,7 +23,7 @@ export function play(id: SoundId) {
 	const now = Date.now();
 	if (now - lastPlayTime < 200) return;
 	lastPlayTime = now;
-	playSound(SOUNDS[id]); // emulink-allow: playSound
+	playSound(SOUNDS[id]); // emulnk-allow: playSound
 }
 
 let lastVib = 0;

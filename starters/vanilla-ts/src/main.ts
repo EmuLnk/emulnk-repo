@@ -1,5 +1,5 @@
 // Develop without hardware: pnpm dev --theme <name> --mock
-import { registerTheme, onDataChange, onConnect, onDisconnect, bool } from "@emulink/sdk";
+import { registerTheme, onDataChange, onConnect, onDisconnect, bool } from "@emulnk/sdk";
 
 interface GameData {
   party_count: number;

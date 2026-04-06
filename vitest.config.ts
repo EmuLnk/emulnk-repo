@@ -7,6 +7,6 @@ export default defineConfig({
     include: ["sdk/**/*.test.ts"],
   },
   resolve: {
-    alias: { "@emulink/sdk": path.resolve(import.meta.dirname, "sdk") },
+    alias: { "@emulnk/sdk": path.resolve(import.meta.dirname, "sdk") },
   },
 });

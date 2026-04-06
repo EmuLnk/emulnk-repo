@@ -13,7 +13,7 @@ import type { TransformDefinition } from "./transforms/types.js";
  *
  * @example
  * ```ts
- * import { registerTheme } from "@emulink/sdk";
+ * import { registerTheme } from "@emulnk/sdk";
  *
  * registerTheme({
  *   onUpdate(payload) {

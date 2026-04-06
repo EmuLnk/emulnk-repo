@@ -1,6 +1,6 @@
 import type { Pokemon, BPEValues } from "./types.js";
 import { decryptPokemon, calcNature, calcHiddenPower, decodeNickname } from "./crypto.js";
-import { decodeBase64ToDataView } from "@emulink/sdk";
+import { decodeBase64ToDataView } from "@emulnk/sdk";
 import { toNationalDex, getSpeciesAbilityId } from "./rom-tables.js";
 
 export function parseSlot(dv: DataView, off: number): Pokemon | null {

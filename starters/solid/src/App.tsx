@@ -1,5 +1,5 @@
 import { createSignal, Show } from "solid-js";
-import { bool } from "@emulink/sdk";
+import { bool } from "@emulnk/sdk";
 
 interface GameData {
   party_count: number;

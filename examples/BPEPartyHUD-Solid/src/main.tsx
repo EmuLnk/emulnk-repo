@@ -1,6 +1,6 @@
 import { render } from "solid-js/web";
 import { createSignal } from "solid-js";
-import { registerTheme } from "@emulink/sdk";
+import { registerTheme } from "@emulnk/sdk";
 import type { BPEValues, Pokemon, BPESettings } from "./types.js";
 import { processParty } from "./parser.js";
 import App from "./App.js";

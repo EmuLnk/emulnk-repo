@@ -1,4 +1,4 @@
-import type { Nature, StatBlock, HiddenPower, DecryptedData } from "@emulink/sdk/parsers/pokemon-gen3";
+import type { Nature, StatBlock, HiddenPower, DecryptedData } from "@emulnk/sdk/parsers/pokemon-gen3";
 export type { Nature, StatBlock, HiddenPower, DecryptedData };
 
 export interface Pokemon {

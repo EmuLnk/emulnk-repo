@@ -1,6 +1,6 @@
 // Develop without hardware: pnpm dev --theme <name> --mock
 import { render } from "solid-js/web";
-import { registerTheme, onConnect, onDisconnect } from "@emulink/sdk";
+import { registerTheme, onConnect, onDisconnect } from "@emulnk/sdk";
 import App, { setIsConnected, setValues, setSettings, setBatteryLevel, setConfidence } from "./App";
 import "./style.scss";
 

@@ -2,8 +2,8 @@
   import { appState } from "../state.svelte";
   import { EQUIP_ITEMS } from "../data/items";
   import { RECIPES, findRecipe, type AlchemyRecipe } from "../data/alchemy-recipes";
-  import { write } from "@emulink/sdk"; // emulink-allow: write
-  import { save } from "@emulink/sdk"; // emulink-allow: save
+  import { write } from "@emulnk/sdk"; // emulnk-allow: write
+  import { save } from "@emulnk/sdk"; // emulnk-allow: save
   import { onAlchemyCraft } from "../sfx";
   import { CATEGORY_ICONS, BOOK_ICON } from "../data/icons";
   import alchemyCircleSvg from "../../../assets/alchemy-circle.svg";
@@ -89,18 +89,18 @@
 
     // Write to game memory
     if (r.input1 === r.input2) {
-      write(`0x${(INV_BASE + r.input1).toString(16)}`, 1, qty1 - 2); // emulink-allow: write
+      write(`0x${(INV_BASE + r.input1).toString(16)}`, 1, qty1 - 2); // emulnk-allow: write
     } else {
-      write(`0x${(INV_BASE + r.input1).toString(16)}`, 1, qty1 - 1); // emulink-allow: write
-      write(`0x${(INV_BASE + r.input2).toString(16)}`, 1, appState.inventoryHand[r.input2] - 1); // emulink-allow: write
+      write(`0x${(INV_BASE + r.input1).toString(16)}`, 1, qty1 - 1); // emulnk-allow: write
+      write(`0x${(INV_BASE + r.input2).toString(16)}`, 1, appState.inventoryHand[r.input2] - 1); // emulnk-allow: write
     }
     const resultQty = appState.inventoryHand[r.output];
-    write(`0x${(INV_BASE + r.output).toString(16)}`, 1, resultQty + 1); // emulink-allow: write
+    write(`0x${(INV_BASE + r.output).toString(16)}`, 1, resultQty + 1); // emulnk-allow: write
 
     // Track discovery
     if (!discoveredRecipes.includes(r.id)) {
       localDiscoveries = [...localDiscoveries, r.id];
-      save("grimoire-recipes", JSON.stringify([...discoveredRecipes, r.id])); // emulink-allow: save
+      save("grimoire-recipes", JSON.stringify([...discoveredRecipes, r.id])); // emulnk-allow: save
     }
 
     // Animation + SFX

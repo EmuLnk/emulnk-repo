@@ -7,9 +7,9 @@
 	import BattleMoveRow from "./BattleMoveRow.svelte";
 	import { getSpeciesName } from "../rom-tables.js";
 	import { getWeaknesses } from "../type-chart.js";
-	import { calcNature } from "@emulink/sdk/parsers/pokemon-gen3";
+	import { calcNature } from "@emulnk/sdk/parsers/pokemon-gen3";
 	import { getAbilityName, getItemName } from "../rom-tables.js";
-	import { NATURE_STAT_NAMES } from "@emulink/sdk/parsers/pokemon-gen3";
+	import { NATURE_STAT_NAMES } from "@emulnk/sdk/parsers/pokemon-gen3";
 	import iconsUrl from "../../assets/icons.webp";
 	import itemsUrl from "../../assets/items.webp";
 	import { slide } from "svelte/transition";

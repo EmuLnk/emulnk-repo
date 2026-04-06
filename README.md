@@ -25,7 +25,7 @@ icons/                                     # Console icons (WebP, named {console
 themes/{console}/{profileId}/{themeId}/    # Theme, overlay, and bundle folders
 examples/                                  # Example themes showing each supported framework
 starters/                                  # Scaffolding templates for pnpm new
-sdk/                                       # @emulink/sdk - typed theme utilities
+sdk/                                       # @emulnk/sdk - typed theme utilities
 scripts/                                   # Build, dev, validate, and packaging tools
 ```
 

@@ -104,7 +104,7 @@ async function buildTheme(theme: ThemeInfo): Promise<boolean> {
       },
     },
     resolve: {
-      alias: { "@emulink/sdk": path.join(ROOT, "sdk") },
+      alias: { "@emulnk/sdk": path.join(ROOT, "sdk") },
     },
     logLevel: "warn",
   };
@@ -842,7 +842,7 @@ if (themeFilter) {
     base: "./",
     plugins: vitePlugins,
     resolve: {
-      alias: { "@emulink/sdk": path.join(ROOT, "sdk") },
+      alias: { "@emulnk/sdk": path.join(ROOT, "sdk") },
     },
     server: {
       port: PORT,

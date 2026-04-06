@@ -3,7 +3,7 @@
   import { FAMILIARS } from "../data/familiars";
   import { EQUIP_ITEMS } from "../data/items";
   import { ALL_FOOD_IDS, calculateFeedExp, isPreferredFood } from "../data/familiar-prefs";
-  import { write } from "@emulink/sdk"; // emulink-allow: write
+  import { write } from "@emulnk/sdk"; // emulnk-allow: write
   import { onFamiliarChirp, onFamiliarFeed } from "../sfx";
   import FamiliarSprite from "./FamiliarSprite.svelte";
 
@@ -83,11 +83,11 @@
     const expGain = calculateFeedExp(familiarKey, itemId);
 
     // Decrement inventory
-    write(`0x${(INV_BASE + itemId).toString(16)}`, 1, qty - 1); // emulink-allow: write
+    write(`0x${(INV_BASE + itemId).toString(16)}`, 1, qty - 1); // emulnk-allow: write
 
     // Add EXP
     const currentExp = appState.familiars[familiarKey as keyof typeof appState.familiars].exp;
-    write(familiarDef.expAddr, 4, currentExp + expGain); // emulink-allow: write
+    write(familiarDef.expAddr, 4, currentExp + expGain); // emulnk-allow: write
 
     // Close feed list so sprite + eat animation is visible
     showFeedList = false;

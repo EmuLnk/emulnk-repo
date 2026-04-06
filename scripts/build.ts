@@ -107,7 +107,7 @@ for (const marker of markers) {
     },
     resolve: {
       alias: {
-        "@emulink/sdk": path.join(ROOT, "sdk"),
+        "@emulnk/sdk": path.join(ROOT, "sdk"),
       },
     },
     logLevel: "warn",

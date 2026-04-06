@@ -1,5 +1,5 @@
 import type { BattleMon, BattleState, FieldState, SideState, StatBlock, BPEValues, WeatherType } from "./types.js";
-import { decodeBase64ToDataView } from "@emulink/sdk";
+import { decodeBase64ToDataView } from "@emulnk/sdk";
 import { getSpeciesName, toNationalDex } from "./rom-tables.js";
 import { NATURES } from "./data.js";
 

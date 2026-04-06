@@ -1,4 +1,4 @@
-import { playSound, vibrate } from "@emulink/sdk"; // emulink-allow: playSound
+import { playSound, vibrate } from "@emulnk/sdk"; // emulnk-allow: playSound
 
 let sfxEnabled = true;
 let hapticEnabled = true;
@@ -18,7 +18,7 @@ function play(file: string): void {
   const now = Date.now();
   if (now - lastPlayTime < 200) return;
   lastPlayTime = now;
-  playSound(file); // emulink-allow: playSound
+  playSound(file); // emulnk-allow: playSound
 }
 
 function vib(ms: number): void {

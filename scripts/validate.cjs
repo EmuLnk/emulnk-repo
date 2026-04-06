@@ -91,7 +91,7 @@ const FRAMEWORK_EXCEPTIONS = [
   /\bfrom\s+["']@preact\/signals-core["']/,
 ];
 
-const ESCAPE_HATCH = /\/\/\s*emulink-allow:/;
+const ESCAPE_HATCH = /\/\/\s*emulnk-allow:/;
 
 function collectFiles(dir, extensions) {
   const results = [];

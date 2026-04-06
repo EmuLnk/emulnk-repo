@@ -1,4 +1,4 @@
-import { registerTheme, decodeBase64 } from "@emulink/sdk";
+import { registerTheme, decodeBase64 } from "@emulnk/sdk";
 import { mount } from "svelte";
 import App from "./App.svelte";
 import "./style.scss";
@@ -8,8 +8,8 @@ import { MAP_NAMES } from "./lib/map-names.js";
 import { loadNuzlockeData, processNuzlockeFrame, snapshotOwnedDex } from "./lib/nuzlocke.svelte.js";
 import { setRomTables } from "./lib/rom-tables.js";
 import { analyzePokeblocksForNature } from "./lib/safari-solver.js";
-import { romTablesTransform, partyTransform, battleTransform } from "@emulink/sdk/transforms/gen3";
-import type { Gen3RomTables, Gen3Pokemon, Gen3BattleState } from "@emulink/sdk/transforms/gen3";
+import { romTablesTransform, partyTransform, battleTransform } from "@emulnk/sdk/transforms/gen3";
+import type { Gen3RomTables, Gen3Pokemon, Gen3BattleState } from "@emulnk/sdk/transforms/gen3";
 
 let prevBattleActiveForNuz = false;
 

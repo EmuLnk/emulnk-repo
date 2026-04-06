@@ -1,4 +1,4 @@
-import { registerTheme } from "@emulink/sdk";
+import { registerTheme } from "@emulnk/sdk";
 import type { BPEValues, BPESettings, Pokemon } from "./types.js";
 import { processParty } from "./parser.js";
 import { renderDetail, renderPartyBar } from "./renderer.js";

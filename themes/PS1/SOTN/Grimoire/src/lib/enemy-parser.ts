@@ -1,4 +1,4 @@
-import { decodeBase64ToDataView } from "@emulink/sdk";
+import { decodeBase64ToDataView } from "@emulnk/sdk";
 import { appState } from "./state.svelte";
 import { ENEMY_DEFS } from "./data/enemies";
 import {

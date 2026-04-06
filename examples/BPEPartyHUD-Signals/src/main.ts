@@ -1,5 +1,5 @@
-import { signal, effect } from "@preact/signals-core"; // emulink-allow: signals-only, no VDOM
-import { registerTheme } from "@emulink/sdk";
+import { signal, effect } from "@preact/signals-core"; // emulnk-allow: signals-only, no VDOM
+import { registerTheme } from "@emulnk/sdk";
 import type { BPEValues, Pokemon, BPESettings } from "./types.js";
 import { processParty } from "./parser.js";
 import { renderDetail, renderPartyBar } from "./renderer.js";

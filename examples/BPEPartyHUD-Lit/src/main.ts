@@ -1,4 +1,4 @@
-import { registerTheme } from "@emulink/sdk";
+import { registerTheme } from "@emulnk/sdk";
 import type { BPEValues } from "./types.js";
 import { processParty } from "./parser.js";
 import type { PartyHud } from "./party-hud.js";

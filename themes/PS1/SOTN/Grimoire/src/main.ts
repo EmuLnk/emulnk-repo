@@ -1,5 +1,5 @@
 import { mount } from "svelte";
-import { registerTheme } from "@emulink/sdk";
+import { registerTheme } from "@emulnk/sdk";
 import type { SotnValues } from "./lib/types";
 import { appState } from "./lib/state.svelte";
 import { parseStatsBlock, parseRelicsInv, parsePosition, parseTilemap } from "./lib/parser";

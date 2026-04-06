@@ -1,7 +1,7 @@
 // Develop without hardware: pnpm dev --theme <name> --mock
 import { LitElement, html, css } from "lit";
 import { customElement, property } from "lit/decorators.js";
-import { registerTheme, bool, onConnect, onDisconnect } from "@emulink/sdk";
+import { registerTheme, bool, onConnect, onDisconnect } from "@emulnk/sdk";
 import "./style.scss";
 
 interface GameData {

@@ -207,12 +207,12 @@ function saveVisited() {
     try {
         var arr = [];
         visited.forEach(function(info, key) { arr.push([key, info.area, info.room]); });
-        localStorage.setItem('metroid_visited', JSON.stringify(arr)); // emulink-allow: legacy automap persistence, predates storage policy
+        localStorage.setItem('metroid_visited', JSON.stringify(arr)); // emulnk-allow: legacy automap persistence, predates storage policy
     } catch (e) { /* quota or private mode - silently fail */ }
 }
 function loadVisited() {
     try {
-        var raw = localStorage.getItem('metroid_visited'); // emulink-allow: legacy automap persistence, predates storage policy
+        var raw = localStorage.getItem('metroid_visited'); // emulnk-allow: legacy automap persistence, predates storage policy
         if (raw) {
             JSON.parse(raw).forEach(function(entry) {
                 if (entry.length === 3) {

@@ -1,4 +1,4 @@
-import { save } from "@emulink/sdk"; // emulink-allow: save
+import { save } from "@emulnk/sdk"; // emulnk-allow: save
 import { appState } from "./state.svelte";
 
 const MAP_SAVE_KEY = "grimoire-map-data";
@@ -51,16 +51,16 @@ function debounceSaveMap(): void {
   const now = Date.now();
   if (now - lastSaveTime < SAVE_DEBOUNCE) return;
   lastSaveTime = now;
-  save(MAP_SAVE_KEY, JSON.stringify([...appState.visitedRooms])); // emulink-allow: save
+  save(MAP_SAVE_KEY, JSON.stringify([...appState.visitedRooms])); // emulnk-allow: save
 }
 
 /** Save annotations (called from MapView when user adds a note) */
 export function saveAnnotations(): void {
-  save(ANNOTATIONS_SAVE_KEY, JSON.stringify(appState.annotations)); // emulink-allow: save
+  save(ANNOTATIONS_SAVE_KEY, JSON.stringify(appState.annotations)); // emulnk-allow: save
 }
 
 /** Reset all map data. Clears visited rooms and persists empty. */
 export function resetMapData(): void {
   appState.visitedRooms.clear();
-  save(MAP_SAVE_KEY, "[]"); // emulink-allow: save
+  save(MAP_SAVE_KEY, "[]"); // emulnk-allow: save
 }

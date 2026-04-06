@@ -1,4 +1,4 @@
-import { save } from "@emulink/sdk";
+import { save } from "@emulnk/sdk";
 import type { Pokemon, BattleState } from "./types.js";
 import type { NuzlockeData } from "./nuzlocke-types.js";
 import { createEmptyNuzlockeData } from "./nuzlocke-types.js";

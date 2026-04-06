@@ -15,8 +15,8 @@
     "jsxImportSource": "solid-js",
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "paths": {
-      "@emulink/sdk": ["./sdk/index.ts"],
-      "@emulink/sdk/*": ["./sdk/*"]
+      "@emulnk/sdk": ["./sdk/index.ts"],
+      "@emulnk/sdk/*": ["./sdk/*"]
     },
     "types": ["vite/client"]
   },

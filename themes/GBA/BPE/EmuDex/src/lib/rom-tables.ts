@@ -1,6 +1,6 @@
-import type { Gen3RomTables, Evolution } from "@emulink/sdk/transforms/gen3";
-import { NUM_SPECIES } from "@emulink/sdk/transforms/gen3";
-import { toNationalDex as toNationalDexHardcoded } from "@emulink/sdk/parsers/pokemon-gen3";
+import type { Gen3RomTables, Evolution } from "@emulnk/sdk/transforms/gen3";
+import { NUM_SPECIES } from "@emulnk/sdk/transforms/gen3";
+import { toNationalDex as toNationalDexHardcoded } from "@emulnk/sdk/parsers/pokemon-gen3";
 import { SPECIES } from "./species.js";
 import { getItemName as getItemNameFallback } from "./items.js";
 

@@ -20,7 +20,7 @@ describe("registerTheme", () => {
     expect((received as any).values.hp).toBe(100);
   });
 
-  it("silently ignores malformed base64", () => {
+  it("logs error and does not throw on malformed base64", () => {
     let called = false;
     registerTheme({ onUpdate: () => { called = true; } });
     expect(() => (globalThis as any).updateData("!!!not-base64!!!")).not.toThrow();

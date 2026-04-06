@@ -55,5 +55,5 @@ export const ITEMS: Record<number, string> = {
 };
 
 export function getItemName(id: number): string {
-  return ITEMS[id] || `Item #${id}`;
+  return ITEMS[id] ?? `Item #${id}`;
 }

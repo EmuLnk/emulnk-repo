@@ -42,7 +42,8 @@ registerTheme<BPEValues>({
 
       if (!isConnected) return;
 
-      setRomTables(values.rom_tables as Gen3RomTables | undefined);
+      const romTables = values.rom_tables as Gen3RomTables | undefined;
+      if (romTables != null) setRomTables(romTables);
 
       // Party from transform (with anti-flicker: keep previous if count drops to 0)
       const transformParty = values.party as (Gen3Pokemon | null)[] | undefined;
@@ -78,7 +79,7 @@ registerTheme<BPEValues>({
           };
         }
 
-        // Parse Poké Balls bag pocket (13 slots × 4 bytes at SaveBlock1+0x0430)
+        // Parse Poke Balls bag pocket (16 slots x 4 bytes at SaveBlock1+0x0650)
         const ballsStart = off + BAG_POKEBALLS_OFFSET;
         const ballsEnd = ballsStart + BAG_POKEBALLS_COUNT * 4;
         if (ballsEnd <= block.length) {

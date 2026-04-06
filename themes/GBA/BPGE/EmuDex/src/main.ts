@@ -41,7 +41,8 @@ registerTheme<BPREValues>({
 
       if (!isConnected) return;
 
-      setRomTables(values.rom_tables as Gen3RomTables | undefined);
+      const romTables = values.rom_tables as Gen3RomTables | undefined;
+      if (romTables != null) setRomTables(romTables);
 
       // Party from transform (with anti-flicker: keep previous if count drops to 0)
       const transformParty = values.party as (Gen3Pokemon | null)[] | undefined;

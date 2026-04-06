@@ -2,11 +2,13 @@ import type { Gen3RomTables, Evolution } from "@emulink/sdk/transforms/gen3";
 import { NUM_SPECIES } from "@emulink/sdk/transforms/gen3";
 import { toNationalDex as toNationalDexHardcoded } from "@emulink/sdk/parsers/pokemon-gen3";
 import { SPECIES } from "./species.js";
+import { getItemName as getItemNameFallback } from "./items.js";
 
 let tables: Gen3RomTables | undefined;
 let natDexReverse: Record<number, number> = {};
 
 export function setRomTables(t: Gen3RomTables | undefined): void {
+  if (tables === t) return;
   tables = t;
   natDexReverse = {};
   if (t?.natDexTable) {
@@ -91,5 +93,5 @@ export function getEvolutions(internalId: number): Evolution[] {
 
 export function getItemName(itemId: number): string {
   if (itemId === 0) return "None";
-  return tables?.itemNames?.[itemId] ?? "???";
+  return tables?.itemNames?.[itemId] ?? getItemNameFallback(itemId);
 }

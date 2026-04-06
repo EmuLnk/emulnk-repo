@@ -35,15 +35,18 @@ export function registerTheme<T extends Record<string, unknown> = Record<string,
   }
 
   (window as any).updateData = (base64Data: string, _isInitial?: boolean) => {
+    let json: EmuLnkPayload<T>;
     try {
-      let json: EmuLnkPayload<T> = JSON.parse(atob(base64Data));
+      json = JSON.parse(atob(base64Data));
       json = _runTransforms(json);
-      callbacks.onUpdate(json);
-      _dispatchChanges(json);
-      _dispatchLifecycle(json);
-    } catch {
-      // Malformed payload - silently ignore to avoid crashing the overlay.
+    } catch (err) {
+      // Swallow decode/transform errors to prevent WebView bridge death on OEM devices.
+      console.error("[EmuLnk] updateData decode error:", err);
+      return;
     }
+    callbacks.onUpdate(json);
+    _dispatchChanges(json);
+    _dispatchLifecycle(json);
   };
 
   if (callbacks.onGameClosed) {

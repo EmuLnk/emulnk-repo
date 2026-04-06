@@ -98,19 +98,25 @@ const EVO_METHOD_NAMES: Record<number, string> = {
   11: 'Level', 12: 'Level', 13: 'Level', 14: 'Level', 15: 'Beauty',
 };
 
-export function formatEvolution(evo: Evolution): string {
+export function formatEvoMethod(evo: Evolution): string {
   const method = EVO_METHOD_NAMES[evo.method] ?? `Method ${evo.method}`;
-  const target = getSpeciesName(evo.targetSpecies);
   if (evo.method === 4 || (evo.method >= 8 && evo.method <= 14)) {
-    return `${target} (${method} ${evo.param})`;
+    return `${method} ${evo.param}`;
   }
-  if (evo.method === 7 || evo.method === 6) {
-    return `${target} (${method} ${getItemName(evo.param)})`;
+  if (evo.method === 6) {
+    return `${method} ${getItemName(evo.param)}`;
+  }
+  if (evo.method === 7) {
+    return getItemName(evo.param);
   }
   if (evo.method === 15) {
-    return `${target} (Beauty ${evo.param}+)`;
+    return `Beauty ${evo.param}+`;
   }
-  return `${target} (${method})`;
+  return method;
+}
+
+export function evoUsesItem(evo: Evolution): boolean {
+  return evo.method === 6 || evo.method === 7;
 }
 
 export function getItemName(itemId: number): string {

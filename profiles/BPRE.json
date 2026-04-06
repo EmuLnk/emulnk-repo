@@ -21,7 +21,8 @@
         "move_names_rom_0", "move_names_rom_1",
         "ability_names_rom",
         "species_info_rom_0", "species_info_rom_1", "species_info_rom_2",
-        "items_rom_0", "items_rom_1", "items_rom_2", "items_rom_3", "items_rom_4"
+        "items_rom_0", "items_rom_1", "items_rom_2", "items_rom_3", "items_rom_4",
+        "evo_rom_0", "evo_rom_1", "evo_rom_2", "evo_rom_3", "evo_rom_4"
       ]
     },
     { "id": "party", "inputs": ["party_data", "party_count"], "after": ["rom_tables"] },
@@ -90,6 +91,10 @@
     },
     "rom_items": {
       "base": "0x083DB028",
+      "pollRate": "low"
+    },
+    "rom_evolutions": {
+      "base": "0x08259754",
       "pollRate": "low"
     }
   },
@@ -365,6 +370,46 @@
       "size": 132,
       "bundle": "rom_items",
       "offset": "0x3FF0"
+    },
+    {
+      "id": "evo_rom_0",
+      "description": "ROM evolution table chunk 0 (102 species, 5 evos × 8 B each)",
+      "type": "bytes",
+      "size": 4080,
+      "bundle": "rom_evolutions",
+      "offset": "0x0"
+    },
+    {
+      "id": "evo_rom_1",
+      "description": "ROM evolution table chunk 1 (102 species, 5 evos × 8 B each)",
+      "type": "bytes",
+      "size": 4080,
+      "bundle": "rom_evolutions",
+      "offset": "0x0FF0"
+    },
+    {
+      "id": "evo_rom_2",
+      "description": "ROM evolution table chunk 2 (102 species, 5 evos × 8 B each)",
+      "type": "bytes",
+      "size": 4080,
+      "bundle": "rom_evolutions",
+      "offset": "0x1FE0"
+    },
+    {
+      "id": "evo_rom_3",
+      "description": "ROM evolution table chunk 3 (102 species, 5 evos × 8 B each)",
+      "type": "bytes",
+      "size": 4080,
+      "bundle": "rom_evolutions",
+      "offset": "0x2FD0"
+    },
+    {
+      "id": "evo_rom_4",
+      "description": "ROM evolution table chunk 4 (3 species, 5 evos × 8 B each, final)",
+      "type": "bytes",
+      "size": 120,
+      "bundle": "rom_evolutions",
+      "offset": "0x3FC0"
     }
   ]
 }

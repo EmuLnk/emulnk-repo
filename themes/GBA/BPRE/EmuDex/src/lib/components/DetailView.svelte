@@ -5,7 +5,7 @@
 	import StatBar from "./StatBar.svelte";
 	import MoveSlot from "./MoveSlot.svelte";
 	import StatusBadge from "./StatusBadge.svelte";
-	import { getSpeciesNameByNatDex, getAbilityName, getItemName } from "../rom-tables.js";
+	import { getSpeciesNameByNatDex, getAbilityName, getItemName, getEvolutions, formatEvoMethod, evoUsesItem, toNationalDex, getSpeciesName } from "../rom-tables.js";
 	import { MOVE_DATA } from "../moves.js";
 	import { NATURE_STAT_NAMES } from "@emulnk/sdk/parsers/pokemon-gen3";
 	import { TYPE_NAMES } from "../type-chart.js";
@@ -161,6 +161,43 @@
 						style:background-position="{itemIconCol * -24}px {itemIconRow * -24}px"
 					></div>
 					<span class="item-text">{getItemName(pokemon.heldItem)}</span>
+				</div>
+			</section>
+		{/if}
+
+		{#if getEvolutions(pokemon.internalSpeciesId).length > 0}
+			<section class="section">
+				<h3 class="section-header">EVOLUTION</h3>
+				<div class="evo-list">
+					{#each getEvolutions(pokemon.internalSpeciesId) as evo}
+						{@const targetNatDex = toNationalDex(evo.targetSpecies)}
+						{@const evoIconCol = (targetNatDex - 1) % 20}
+						{@const evoIconRow = Math.floor((targetNatDex - 1) / 20)}
+						<div class="evo-row">
+							{#if targetNatDex > 0}
+								<div
+									class="evo-sprite"
+									style:background-image="url({iconsUrl})"
+									style:background-size="480px 480px"
+									style:background-position="calc({evoIconCol} * -24px) calc({evoIconRow} * -24px)"
+								></div>
+							{/if}
+							<span class="evo-name">{getSpeciesName(evo.targetSpecies)}</span>
+							<span class="evo-detail">
+								{#if evoUsesItem(evo)}
+									{@const evoItemCol = (evo.param - 1) % 20}
+									{@const evoItemRow = Math.floor((evo.param - 1) / 20)}
+									<div
+										class="evo-item-sprite"
+										style:background-image="url({itemsUrl})"
+										style:background-size="320px auto"
+										style:background-position="{evoItemCol * -16}px {evoItemRow * -16}px"
+									></div>
+								{/if}
+								{formatEvoMethod(evo)}
+							</span>
+						</div>
+					{/each}
 				</div>
 			</section>
 		{/if}
@@ -356,6 +393,48 @@
 	}
 
 	.heart-icon {
+		flex-shrink: 0;
+	}
+
+	.evo-list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 4px;
+	}
+
+	.evo-row {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		background: var(--surface-alt);
+		border-radius: 4px;
+		padding: 2px 8px 2px 2px;
+	}
+
+	.evo-sprite {
+		width: 24px;
+		height: 24px;
+		image-rendering: pixelated;
+		flex-shrink: 0;
+	}
+
+	.evo-name {
+		font-size: 11px;
+		color: var(--text);
+	}
+
+	.evo-detail {
+		font-size: 10px;
+		color: var(--text-muted);
+		display: flex;
+		align-items: center;
+		gap: 2px;
+	}
+
+	.evo-item-sprite {
+		width: 16px;
+		height: 16px;
+		image-rendering: pixelated;
 		flex-shrink: 0;
 	}
 

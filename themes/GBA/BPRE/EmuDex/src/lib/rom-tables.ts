@@ -91,6 +91,34 @@ export function getEvolutions(internalId: number): Evolution[] {
   return tables?.evolutions?.[internalId] ?? [];
 }
 
+const EVO_METHOD_NAMES: Record<number, string> = {
+  1: 'Friendship', 2: 'Friendship (Day)', 3: 'Friendship (Night)',
+  4: 'Level', 5: 'Trade', 6: 'Trade +', 7: 'Item',
+  8: 'Lv (Atk>Def)', 9: 'Lv (Atk=Def)', 10: 'Lv (Atk<Def)',
+  11: 'Level', 12: 'Level', 13: 'Level', 14: 'Level', 15: 'Beauty',
+};
+
+export function formatEvoMethod(evo: Evolution): string {
+  const method = EVO_METHOD_NAMES[evo.method] ?? `Method ${evo.method}`;
+  if (evo.method === 4 || (evo.method >= 8 && evo.method <= 14)) {
+    return `${method} ${evo.param}`;
+  }
+  if (evo.method === 6) {
+    return `${method} ${getItemName(evo.param)}`;
+  }
+  if (evo.method === 7) {
+    return getItemName(evo.param);
+  }
+  if (evo.method === 15) {
+    return `Beauty ${evo.param}+`;
+  }
+  return method;
+}
+
+export function evoUsesItem(evo: Evolution): boolean {
+  return evo.method === 6 || evo.method === 7;
+}
+
 export function getItemName(itemId: number): string {
   if (itemId === 0) return "None";
   return tables?.itemNames?.[itemId] ?? getItemNameFallback(itemId);

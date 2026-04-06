@@ -6,7 +6,7 @@
   "meta": {
     "name": "EmuDex",
     "author": "EmuLnk Team",
-    "version": "1.2.0",
+    "version": "1.4.0",
     "description": "Kanto Pokedex companion with party stats, battle damage calculator, catch rate analysis, and Nuzlocke tracker.",
     "minAppVersion": 1
   },
@@ -22,7 +22,7 @@
     "save1_region", "save2_lo", "save2_hi",
     "safari", "safari_battle",
     "rom_species_names", "rom_natdex_table", "rom_move_names",
-    "rom_ability_names", "rom_species_info", "rom_items"
+    "rom_ability_names", "rom_species_info", "rom_items", "rom_evolutions"
   ],
   "hideOverlay": false,
   "tags": ["stats", "battle", "party", "types", "moves", "combat"],

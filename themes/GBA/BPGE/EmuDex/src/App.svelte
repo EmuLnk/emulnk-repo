@@ -15,6 +15,10 @@
 	let debugOpen = $state(false);
 	let viewMode = $state<'party' | 'battle' | 'safari' | 'catching' | 'map' | 'nuz'>('party');
 
+	// --- Default tab setting ---
+	const DEFAULT_TAB_MAP: Record<string, 'party' | 'map'> = { "Party": "party", "DEX": "map" };
+	let defaultTab = $derived<'party' | 'map'>(DEFAULT_TAB_MAP[appState.settings["default-tab"]] ?? 'party');
+
 	// --- SFX settings ---
 	let sfxEnabled = $derived(appState.settings["sfx-enabled"] !== "false");
 	let hapticEnabled = $derived(appState.settings["haptic-enabled"] !== "false");
@@ -58,7 +62,7 @@
 		} else if (!active && battleWipeShown) {
 			battleWipeShown = false;
 			if (viewMode === 'battle') {
-				wipeTarget = 'party';
+				wipeTarget = defaultTab;
 				wipeState = 'closing';
 				onBattleEnd();
 			} else if (viewMode === 'catching') {
@@ -104,10 +108,10 @@
 	// --- Guard: clean up invalid tabs ---
 	$effect(() => {
 		if (viewMode === 'nuz' && !nuzlockeEnabled) {
-			viewMode = 'party';
+			viewMode = defaultTab;
 		}
 		if (viewMode === 'safari' && !safariInZone) {
-			viewMode = 'party';
+			viewMode = defaultTab;
 		}
 	});
 

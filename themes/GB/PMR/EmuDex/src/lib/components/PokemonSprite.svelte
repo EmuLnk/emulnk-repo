@@ -1,19 +1,18 @@
 <script lang="ts">
-  import { pokemonSpritePath } from "../format.js";
+  import {
+    POKEMON_SPRITE_ATLAS_HEIGHT,
+    POKEMON_SPRITE_ATLAS_WIDTH,
+    pokemonSpriteFrame,
+    pokemonSpritePath,
+  } from "../format.js";
 
   export let speciesName = "";
   export let label = speciesName;
   export let animate = false;
   export let statusLabel = "OK";
 
-  let failed = false;
-  let lastSrc: string | null = null;
-
   $: src = pokemonSpritePath(speciesName);
-  $: if (src !== lastSrc) {
-    failed = false;
-    lastSrc = src;
-  }
+  $: frame = pokemonSpriteFrame(speciesName);
 </script>
 
 <div
@@ -25,8 +24,23 @@
   class:status-freeze={statusLabel === "FRZ"}
   class:status-burn={statusLabel === "BRN"}
 >
-  {#if src && !failed}
-    <img src={src} alt={label} on:error={() => (failed = true)} />
+  {#if src && frame}
+    <svg
+      class="sprite-atlas"
+      aria-label={label}
+      role="img"
+      width={frame.w}
+      height={frame.h}
+      viewBox={`0 0 ${frame.w} ${frame.h}`}
+    >
+      <image
+        href={src}
+        x={-frame.x}
+        y={-frame.y}
+        width={POKEMON_SPRITE_ATLAS_WIDTH}
+        height={POKEMON_SPRITE_ATLAS_HEIGHT}
+      />
+    </svg>
   {:else}
     <div class="sprite-missing" aria-label={label}>?</div>
   {/if}

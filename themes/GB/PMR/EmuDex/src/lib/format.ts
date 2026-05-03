@@ -1,5 +1,15 @@
 import { typeEffectiveness } from "@emulnk/sdk/parsers/pokemon-gen1";
 import type { Gen1MoveSlot, Gen1Pokemon } from "@emulnk/sdk/transforms/gen1";
+import {
+  FRONT_SPRITE_ATLAS_HEIGHT,
+  FRONT_SPRITE_ATLAS_PATH,
+  FRONT_SPRITE_ATLAS_WIDTH,
+  FRONT_SPRITE_FRAMES,
+  type FrontSpriteFrame,
+} from "./front-atlas.generated.js";
+
+export const POKEMON_SPRITE_ATLAS_WIDTH = FRONT_SPRITE_ATLAS_WIDTH;
+export const POKEMON_SPRITE_ATLAS_HEIGHT = FRONT_SPRITE_ATLAS_HEIGHT;
 
 const SPRITE_OVERRIDES: Record<string, string> = {
   "NIDORAN♂": "nidoranm",
@@ -128,7 +138,12 @@ export function spriteBase(speciesName: string): string | null {
 export function pokemonSpritePath(speciesName: string | undefined): string | null {
   const base = speciesName ? spriteBase(speciesName) : null;
   if (!base) return null;
-  return `pokemon/front/${base}.png`;
+  return FRONT_SPRITE_FRAMES[base] ? FRONT_SPRITE_ATLAS_PATH : null;
+}
+
+export function pokemonSpriteFrame(speciesName: string | undefined): FrontSpriteFrame | null {
+  const base = speciesName ? spriteBase(speciesName) : null;
+  return base ? FRONT_SPRITE_FRAMES[base] ?? null : null;
 }
 
 function gen1MovePriority(moveId: number): number {

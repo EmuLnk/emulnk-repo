@@ -388,7 +388,8 @@ b {
   min-height: 84px;
 }
 
-.party-detail-sprite .pokemon-sprite img {
+.party-detail-sprite .pokemon-sprite img,
+.party-detail-sprite .pokemon-sprite .sprite-atlas {
   max-width: 84px;
   max-height: 84px;
 }
@@ -654,7 +655,8 @@ b {
   min-height: 76px;
 }
 
-.party-slot .pokemon-sprite img {
+.party-slot .pokemon-sprite img,
+.party-slot .pokemon-sprite .sprite-atlas {
   max-width: 76px;
   max-height: 76px;
 }
@@ -680,14 +682,20 @@ b {
   place-items: center;
 }
 
-.pokemon-sprite img {
+.pokemon-sprite img,
+.pokemon-sprite .sprite-atlas {
   display: block;
   max-width: 112px;
   max-height: 112px;
   image-rendering: pixelated;
 }
 
-.pokemon-sprite.back img {
+.pokemon-sprite .sprite-atlas {
+  overflow: hidden;
+}
+
+.pokemon-sprite.back img,
+.pokemon-sprite.back .sprite-atlas {
   max-width: 104px;
   max-height: 104px;
 }
@@ -704,6 +712,7 @@ b {
 }
 
 .pokemon-sprite.animated img,
+.pokemon-sprite.animated .sprite-atlas,
 .pokemon-sprite.animated .sprite-missing {
   animation: sprite-idle 1600ms steps(2, end) infinite;
   transform-origin: 50% 100%;
@@ -711,26 +720,31 @@ b {
 }
 
 .pokemon-sprite.animated.status-poison img,
+.pokemon-sprite.animated.status-poison .sprite-atlas,
 .pokemon-sprite.animated.status-poison .sprite-missing {
   animation: sprite-poison 1400ms steps(2, end) infinite;
 }
 
 .pokemon-sprite.animated.status-paralysis img,
+.pokemon-sprite.animated.status-paralysis .sprite-atlas,
 .pokemon-sprite.animated.status-paralysis .sprite-missing {
   animation: sprite-paralysis 900ms steps(2, end) infinite;
 }
 
 .pokemon-sprite.animated.status-sleep img,
+.pokemon-sprite.animated.status-sleep .sprite-atlas,
 .pokemon-sprite.animated.status-sleep .sprite-missing {
   animation: sprite-sleep 1800ms steps(3, end) infinite;
 }
 
 .pokemon-sprite.animated.status-freeze img,
+.pokemon-sprite.animated.status-freeze .sprite-atlas,
 .pokemon-sprite.animated.status-freeze .sprite-missing {
   animation: sprite-freeze 1800ms steps(2, end) infinite;
 }
 
 .pokemon-sprite.animated.status-burn img,
+.pokemon-sprite.animated.status-burn .sprite-atlas,
 .pokemon-sprite.animated.status-burn .sprite-missing {
   animation: sprite-burn 760ms steps(2, end) infinite;
 }
@@ -1324,8 +1338,10 @@ b {
 }
 
 .safari-rare-card.unseen .pokemon-sprite img,
+.safari-rare-card.unseen .pokemon-sprite .sprite-atlas,
 .safari-rare-card.unseen .sprite-missing,
 .safari-spot-card.unseen .pokemon-sprite img,
+.safari-spot-card.unseen .pokemon-sprite .sprite-atlas,
 .safari-spot-card.unseen .sprite-missing {
   filter: brightness(0);
   opacity: 0.22;
@@ -1337,7 +1353,9 @@ b {
 }
 
 .safari-rare-card .pokemon-sprite img,
-.safari-spot-card .pokemon-sprite img {
+.safari-rare-card .pokemon-sprite .sprite-atlas,
+.safari-spot-card .pokemon-sprite img,
+.safari-spot-card .pokemon-sprite .sprite-atlas {
   max-width: 34px;
   max-height: 34px;
 }
@@ -2001,16 +2019,19 @@ b {
   min-height: 42px;
 }
 
-.area-card-sprite .pokemon-sprite img {
+.area-card-sprite .pokemon-sprite img,
+.area-card-sprite .pokemon-sprite .sprite-atlas {
   max-width: 42px;
   max-height: 42px;
 }
 
-.area-pokemon-card.seen .area-card-sprite img {
+.area-pokemon-card.seen .area-card-sprite img,
+.area-pokemon-card.seen .area-card-sprite .sprite-atlas {
   opacity: 0.62;
 }
 
 .area-pokemon-card.unseen .area-card-sprite img,
+.area-pokemon-card.unseen .area-card-sprite .sprite-atlas,
 .area-pokemon-card.unseen .sprite-missing {
   filter: brightness(0);
   opacity: 0.2;
@@ -2103,7 +2124,8 @@ b {
   min-height: 46px;
 }
 
-.species-area-sprite .pokemon-sprite img {
+.species-area-sprite .pokemon-sprite img,
+.species-area-sprite .pokemon-sprite .sprite-atlas {
   max-width: 46px;
   max-height: 46px;
 }
@@ -2236,6 +2258,7 @@ b {
 }
 
 .nuzlocke-target-card.unseen .nuzlocke-target-sprite img,
+.nuzlocke-target-card.unseen .nuzlocke-target-sprite .sprite-atlas,
 .nuzlocke-target-card.unseen .sprite-missing {
   filter: brightness(0);
   opacity: 0.22;
@@ -2246,7 +2269,8 @@ b {
   min-height: 46px;
 }
 
-.nuzlocke-target-sprite .pokemon-sprite img {
+.nuzlocke-target-sprite .pokemon-sprite img,
+.nuzlocke-target-sprite .pokemon-sprite .sprite-atlas {
   max-width: 46px;
   max-height: 46px;
 }
@@ -2468,7 +2492,8 @@ b {
     min-height: 68px;
   }
 
-  .party-detail-sprite .pokemon-sprite img {
+  .party-detail-sprite .pokemon-sprite img,
+  .party-detail-sprite .pokemon-sprite .sprite-atlas {
     max-width: 68px;
     max-height: 68px;
   }
@@ -2490,7 +2515,8 @@ b {
     min-height: 62px;
   }
 
-  .party-slot .pokemon-sprite img {
+  .party-slot .pokemon-sprite img,
+  .party-slot .pokemon-sprite .sprite-atlas {
     max-width: 62px;
     max-height: 62px;
   }
@@ -2551,7 +2577,8 @@ b {
     min-height: 48px;
   }
 
-  .party-detail-sprite .pokemon-sprite img {
+  .party-detail-sprite .pokemon-sprite img,
+  .party-detail-sprite .pokemon-sprite .sprite-atlas {
     max-width: 48px;
     max-height: 48px;
   }
@@ -2601,7 +2628,8 @@ b {
     min-height: 42px;
   }
 
-  .party-slot .pokemon-sprite img {
+  .party-slot .pokemon-sprite img,
+  .party-slot .pokemon-sprite .sprite-atlas {
     max-width: 42px;
     max-height: 42px;
   }
@@ -2672,7 +2700,8 @@ b {
     min-height: 44px;
   }
 
-  .party-detail-sprite .pokemon-sprite img {
+  .party-detail-sprite .pokemon-sprite img,
+  .party-detail-sprite .pokemon-sprite .sprite-atlas {
     max-width: 44px;
     max-height: 44px;
   }
@@ -2699,7 +2728,8 @@ b {
     min-height: 48px;
   }
 
-  .party-slot .pokemon-sprite img {
+  .party-slot .pokemon-sprite img,
+  .party-slot .pokemon-sprite .sprite-atlas {
     max-width: 48px;
     max-height: 48px;
   }
@@ -2785,7 +2815,8 @@ b {
   min-height: 48px;
 }
 
-.battle-side-sprite .pokemon-sprite img {
+.battle-side-sprite .pokemon-sprite img,
+.battle-side-sprite .pokemon-sprite .sprite-atlas {
   max-width: 50px;
   max-height: 50px;
 }
@@ -3289,7 +3320,8 @@ b {
     min-height: 40px;
   }
 
-  .battle-side-sprite .pokemon-sprite img {
+  .battle-side-sprite .pokemon-sprite img,
+  .battle-side-sprite .pokemon-sprite .sprite-atlas {
     max-width: 42px;
     max-height: 42px;
   }
@@ -3334,7 +3366,8 @@ b {
     min-height: 36px;
   }
 
-  .battle-side-sprite .pokemon-sprite img {
+  .battle-side-sprite .pokemon-sprite img,
+  .battle-side-sprite .pokemon-sprite .sprite-atlas {
     max-width: 38px;
     max-height: 38px;
   }
@@ -3364,26 +3397,37 @@ b {
   }
 
   .pokemon-sprite.animated img,
+  .pokemon-sprite.animated .sprite-atlas,
   .pokemon-sprite.animated .sprite-missing,
   .pokemon-sprite.animated.status-poison img,
+  .pokemon-sprite.animated.status-poison .sprite-atlas,
   .pokemon-sprite.animated.status-poison .sprite-missing,
   .pokemon-sprite.animated.status-paralysis img,
+  .pokemon-sprite.animated.status-paralysis .sprite-atlas,
   .pokemon-sprite.animated.status-paralysis .sprite-missing,
   .pokemon-sprite.animated.status-sleep img,
+  .pokemon-sprite.animated.status-sleep .sprite-atlas,
   .pokemon-sprite.animated.status-sleep .sprite-missing,
   .pokemon-sprite.animated.status-freeze img,
+  .pokemon-sprite.animated.status-freeze .sprite-atlas,
   .pokemon-sprite.animated.status-freeze .sprite-missing,
   .pokemon-sprite.animated.status-burn img,
+  .pokemon-sprite.animated.status-burn .sprite-atlas,
   .pokemon-sprite.animated.status-burn .sprite-missing,
   .pokemon-sprite.status-poison img,
+  .pokemon-sprite.status-poison .sprite-atlas,
   .pokemon-sprite.status-poison .sprite-missing,
   .pokemon-sprite.status-paralysis img,
+  .pokemon-sprite.status-paralysis .sprite-atlas,
   .pokemon-sprite.status-paralysis .sprite-missing,
   .pokemon-sprite.status-sleep img,
+  .pokemon-sprite.status-sleep .sprite-atlas,
   .pokemon-sprite.status-sleep .sprite-missing,
   .pokemon-sprite.status-freeze img,
+  .pokemon-sprite.status-freeze .sprite-atlas,
   .pokemon-sprite.status-freeze .sprite-missing,
   .pokemon-sprite.status-burn img,
+  .pokemon-sprite.status-burn .sprite-atlas,
   .pokemon-sprite.status-burn .sprite-missing {
     animation: none;
     filter: none;

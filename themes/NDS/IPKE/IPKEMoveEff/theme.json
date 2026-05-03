@@ -12,6 +12,7 @@
     "minAppVersion": 1
   },
   "hideOverlay": false,
+  "mock": { "path": "mock/scenarios.json" },
   "widgets": [
     {
       "id": "move-eff",

@@ -1,0 +1,19 @@
+{
+  "previewScenario": "fire-flying-battle",
+  "scenarios": [
+    {
+      "id": "fire-flying-battle",
+      "label": "Fire/Flying Battle",
+      "payload": {
+        "isConnected": true,
+        "values": {
+          "battle_active": 10241,
+          "player_battle_mon": "BwAAAAAAAAAAAAAANwBUAEcAWQAAAAAAAAAAAAAAAAAAAAAACws=",
+          "enemy_battle_mon": "BgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACgI="
+        },
+        "raw": {},
+        "settings": {}
+      }
+    }
+  ]
+}

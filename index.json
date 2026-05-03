@@ -18,6 +18,56 @@
       ]
     },
     {
+      "profileId": "PMB",
+      "name": "Pokemon Blue",
+      "console": "GB",
+      "themes": [
+        {
+          "id": "EmuDex",
+          "name": "EmuDex",
+          "author": "EmuLnk Team",
+          "version": "1.0.0",
+          "type": "theme",
+          "tags": [
+            "stats",
+            "battle",
+            "party",
+            "types",
+            "moves",
+            "combat",
+            "tracker"
+          ],
+          "description": "Gen 1 Pokedex companion for Pokemon Blue with a six-slot party roster, battle state, catch odds, Safari tools and version-aware area data.",
+          "minAppVersion": 1
+        }
+      ]
+    },
+    {
+      "profileId": "PMR",
+      "name": "Pokemon Red",
+      "console": "GB",
+      "themes": [
+        {
+          "id": "EmuDex",
+          "name": "EmuDex",
+          "author": "EmuLnk Team",
+          "version": "1.0.0",
+          "type": "theme",
+          "tags": [
+            "stats",
+            "battle",
+            "party",
+            "types",
+            "moves",
+            "combat",
+            "tracker"
+          ],
+          "description": "Gen 1 Pokedex companion with a six-slot party roster, battle state, catch odds, Safari tools and Nuzlocke tracking.",
+          "minAppVersion": 1
+        }
+      ]
+    },
+    {
       "profileId": "BPE",
       "name": "Pokemon Emerald",
       "console": "GBA",
@@ -26,7 +76,7 @@
           "id": "EmuDex",
           "name": "EmuDex",
           "author": "EmuLnk Team",
-          "version": "1.0.0",
+          "version": "1.4.0",
           "type": "theme",
           "tags": [
             "stats",
@@ -51,7 +101,7 @@
           "id": "EmuDex",
           "name": "EmuDex",
           "author": "EmuLnk Team",
-          "version": "1.3.0",
+          "version": "1.4.0",
           "type": "theme",
           "tags": [
             "stats",
@@ -76,7 +126,7 @@
           "id": "EmuDex",
           "name": "EmuDex",
           "author": "EmuLnk Team",
-          "version": "1.3.0",
+          "version": "1.4.0",
           "type": "theme",
           "tags": [
             "stats",

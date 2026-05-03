@@ -4,6 +4,7 @@ import type { TransformDefinition, TransformContext, TransformResult } from "./t
 let _transforms: TransformDefinition[] = [];
 let _prevInputs: Map<string, Record<string, unknown>> = new Map();
 let _prevOutputs: Map<string, TransformResult> = new Map();
+let _prevValues: Record<string, unknown> = {};
 
 function _topoSort(defs: TransformDefinition[]): TransformDefinition[] {
   const idToIdx = new Map<string, number>(defs.map((d, i) => [d.id, i]));
@@ -52,6 +53,7 @@ export function _registerTransforms(defs: TransformDefinition[]): void {
   _transforms = _topoSort(defs);
   _prevInputs = new Map();
   _prevOutputs = new Map();
+  _prevValues = {};
 }
 
 export function _runTransforms<T extends Record<string, unknown>>(
@@ -59,7 +61,15 @@ export function _runTransforms<T extends Record<string, unknown>>(
 ): EmuLnkPayload<T> {
   if (_transforms.length === 0) return payload;
 
-  const working: Record<string, unknown> = { ...payload.values };
+  if (!payload.isConnected) {
+    _prevInputs = new Map();
+    _prevOutputs = new Map();
+    _prevValues = {};
+  }
+
+  const working: Record<string, unknown> = payload.isConnected
+    ? { ..._prevValues, ...payload.values }
+    : { ...payload.values };
 
   for (const def of _transforms) {
     const prevSnapshot = _prevInputs.get(def.id);
@@ -93,12 +103,27 @@ export function _runTransforms<T extends Record<string, unknown>>(
       console.error(`[EmuLnk] Transform "${def.id}" threw an error:`, err);
     }
 
+    const previousOutput = _prevOutputs.get(def.id);
     if (result !== null) {
+      if (previousOutput !== undefined) {
+        for (const key of Object.keys(previousOutput)) {
+          if (!(key in result)) delete working[key];
+        }
+      }
       _prevOutputs.set(def.id, result);
       Object.assign(working, result);
     } else {
+      if (previousOutput !== undefined) {
+        for (const key of Object.keys(previousOutput)) {
+          delete working[key];
+        }
+      }
       _prevOutputs.delete(def.id);
     }
+  }
+
+  if (payload.isConnected) {
+    _prevValues = { ...working };
   }
 
   return { ...payload, values: working as T };
@@ -108,4 +133,5 @@ export function _resetTransforms(): void {
   _transforms = [];
   _prevInputs = new Map();
   _prevOutputs = new Map();
+  _prevValues = {};
 }

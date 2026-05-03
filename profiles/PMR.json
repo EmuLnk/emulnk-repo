@@ -1,0 +1,460 @@
+{
+  "id": "PMR",
+  "name": "Pokemon Red",
+  "platform": "GB",
+  "gameIds": [
+    "POKEMON RED"
+  ],
+  "credits": [
+    {
+      "name": "pret/pokered",
+      "url": "https://github.com/pret/pokered",
+      "reason": "WRAM labels, struct layouts, battle constants, catch formula and Gen 1 data references"
+    }
+  ],
+  "transforms": [
+    {
+      "id": "party",
+      "inputs": ["party_data", "party_count", "party_nicknames"]
+    },
+    {
+      "id": "battle",
+      "inputs": [
+        "player_mon_number",
+        "battle_result",
+        "enemy_species_hint",
+        "mon_header_species",
+        "mon_header_types",
+        "enemy_mon_head",
+        "enemy_mon_tail",
+        "enemy_actual_catch_rate",
+        "player_battle_mon",
+        "cur_enemy_level",
+        "in_battle",
+        "battle_type",
+        "player_stat_mods",
+        "player_battle_status",
+        "enemy_battle_status",
+        "enemy_stat_mods",
+        "player_num_attacks_left",
+        "player_confused_counter",
+        "player_toxic_counter",
+        "player_disabled_move",
+        "enemy_num_attacks_left",
+        "enemy_confused_counter",
+        "enemy_toxic_counter",
+        "enemy_disabled_move",
+        "player_substitute_hp",
+        "enemy_substitute_hp",
+        "player_selected_move",
+        "enemy_selected_move",
+        "player_used_move",
+        "enemy_used_move"
+      ]
+    },
+    {
+      "id": "bag",
+      "inputs": ["bag_items"]
+    },
+    {
+      "id": "progress",
+      "inputs": ["pokedex_owned", "pokedex_seen", "badges", "current_map"]
+    },
+    {
+      "id": "safari",
+      "inputs": ["safari_escape_factor", "safari_bait_factor", "safari_steps", "safari_balls"]
+    }
+  ],
+  "bundles": {
+    "party": {
+      "base": "0xD163",
+      "pollRate": "low"
+    },
+    "battle_core": {
+      "base": "0xCF0B",
+      "pollRate": "medium"
+    },
+    "battle_mods": {
+      "base": "0xCD1A",
+      "pollRate": "medium"
+    },
+    "battle_state": {
+      "base": "0xD000",
+      "pollRate": "medium"
+    },
+    "battle_player": {
+      "base": "0xCC2F",
+      "pollRate": "medium"
+    },
+    "battle_misc": {
+      "base": "0xCCD7",
+      "pollRate": "medium"
+    },
+    "progress": {
+      "base": "0xD2F7",
+      "pollRate": "low"
+    },
+    "bag_inventory": {
+      "base": "0xD31D",
+      "pollRate": "medium"
+    },
+    "safari_battle": {
+      "base": "0xCCE8",
+      "pollRate": "medium"
+    },
+    "safari_steps": {
+      "base": "0xD70D",
+      "pollRate": "low"
+    },
+    "safari_balls": {
+      "base": "0xDA47",
+      "pollRate": "medium"
+    }
+  },
+  "dataPoints": [
+    {
+      "id": "party_count",
+      "description": "Number of Pokemon in the player's party (0-6)",
+      "type": "u8",
+      "size": 1,
+      "bundle": "party",
+      "offset": "0x0"
+    },
+    {
+      "id": "party_species",
+      "description": "Party species ids plus terminator (7 bytes)",
+      "type": "bytes",
+      "size": 7,
+      "bundle": "party",
+      "offset": "0x1"
+    },
+    {
+      "id": "party_data",
+      "description": "Full party Pokemon data, 6 slots x 44 bytes",
+      "type": "bytes",
+      "size": 264,
+      "bundle": "party",
+      "offset": "0x8"
+    },
+    {
+      "id": "party_nicknames",
+      "description": "Nicknames for all 6 party Pokemon (66 bytes)",
+      "type": "bytes",
+      "size": 66,
+      "bundle": "party",
+      "offset": "0x152"
+    },
+    {
+      "id": "player_mon_number",
+      "description": "Index of the active player's party Pokemon during battle",
+      "type": "u8",
+      "size": 1,
+      "bundle": "battle_player",
+      "offset": "0x0"
+    },
+    {
+      "id": "battle_result",
+      "description": "Current battle result flag; 0 while the battle is unresolved",
+      "type": "u8",
+      "size": 1,
+      "bundle": "battle_core",
+      "offset": "0x0"
+    },
+    {
+      "id": "enemy_species_hint",
+      "description": "Backup active enemy species id (wEnemyMonSpecies2), set before the full enemy battle struct is stable",
+      "type": "u8",
+      "size": 1,
+      "bundle": "battle_core",
+      "offset": "0xCD"
+    },
+    {
+      "id": "mon_header_species",
+      "description": "Loaded Pokemon header species id, used to complete fallback enemy identity when it matches wEnemyMonSpecies2",
+      "type": "u8",
+      "size": 1,
+      "bundle": "battle_state",
+      "offset": "0xB8"
+    },
+    {
+      "id": "mon_header_types",
+      "description": "Loaded Pokemon header type1, type2, and catch rate bytes",
+      "type": "bytes",
+      "size": 3,
+      "bundle": "battle_state",
+      "offset": "0xBE"
+    },
+    {
+      "id": "enemy_mon_head",
+      "description": "Active enemy Pokemon in-battle struct from CFE5-CFFF; split before the D000 WRAM boundary",
+      "type": "bytes",
+      "size": 27,
+      "bundle": "battle_core",
+      "offset": "0xDA"
+    },
+    {
+      "id": "enemy_mon_tail",
+      "description": "Final two PP bytes of the active enemy Pokemon in-battle struct at D000-D001",
+      "type": "bytes",
+      "size": 2,
+      "bundle": "battle_state",
+      "offset": "0x0"
+    },
+    {
+      "id": "enemy_actual_catch_rate",
+      "description": "Current enemy catch rate after Safari bait/rock modifiers",
+      "type": "u8",
+      "size": 1,
+      "bundle": "battle_state",
+      "offset": "0x7"
+    },
+    {
+      "id": "player_battle_mon",
+      "description": "Active player Pokemon in-battle struct (29 bytes)",
+      "type": "bytes",
+      "size": 29,
+      "bundle": "battle_state",
+      "offset": "0x14"
+    },
+    {
+      "id": "cur_enemy_level",
+      "description": "Current enemy level used while the enemy battle struct is being initialized",
+      "type": "u8",
+      "size": 1,
+      "bundle": "battle_state",
+      "offset": "0x127"
+    },
+    {
+      "id": "in_battle",
+      "description": "Battle mode flag: 0 none, 1 wild, 2 trainer, 255 blackout",
+      "type": "u8",
+      "size": 1,
+      "bundle": "battle_state",
+      "offset": "0x57"
+    },
+    {
+      "id": "battle_type",
+      "description": "Special battle type: 0 normal, 1 old man, 2 Safari",
+      "type": "u8",
+      "size": 1,
+      "bundle": "battle_state",
+      "offset": "0x5A"
+    },
+    {
+      "id": "player_battle_status",
+      "description": "Player volatile battle status bytes",
+      "type": "bytes",
+      "size": 3,
+      "bundle": "battle_state",
+      "offset": "0x62"
+    },
+    {
+      "id": "enemy_battle_status",
+      "description": "Enemy volatile battle status bytes",
+      "type": "bytes",
+      "size": 3,
+      "bundle": "battle_state",
+      "offset": "0x67"
+    },
+    {
+      "id": "player_stat_mods",
+      "description": "Player stat stages: Attack, Defense, Speed, Special, Accuracy, Evasion",
+      "type": "bytes",
+      "size": 6,
+      "bundle": "battle_mods",
+      "offset": "0x0"
+    },
+    {
+      "id": "enemy_stat_mods",
+      "description": "Enemy stat stages: Attack, Defense, Speed, Special, Accuracy, Evasion",
+      "type": "bytes",
+      "size": 6,
+      "bundle": "battle_mods",
+      "offset": "0x14"
+    },
+    {
+      "id": "player_num_attacks_left",
+      "description": "Remaining player hits during multi-hit or Bide-style sequences",
+      "type": "u8",
+      "size": 1,
+      "bundle": "battle_state",
+      "offset": "0x6A"
+    },
+    {
+      "id": "player_confused_counter",
+      "description": "Player confusion turns remaining",
+      "type": "u8",
+      "size": 1,
+      "bundle": "battle_state",
+      "offset": "0x6B"
+    },
+    {
+      "id": "player_toxic_counter",
+      "description": "Player Toxic counter",
+      "type": "u8",
+      "size": 1,
+      "bundle": "battle_state",
+      "offset": "0x6C"
+    },
+    {
+      "id": "player_disabled_move",
+      "description": "Player disabled move slot in high nibble and turns in low nibble",
+      "type": "u8",
+      "size": 1,
+      "bundle": "battle_state",
+      "offset": "0x6D"
+    },
+    {
+      "id": "enemy_num_attacks_left",
+      "description": "Remaining enemy hits during multi-hit or Bide-style sequences",
+      "type": "u8",
+      "size": 1,
+      "bundle": "battle_state",
+      "offset": "0x6F"
+    },
+    {
+      "id": "enemy_confused_counter",
+      "description": "Enemy confusion turns remaining",
+      "type": "u8",
+      "size": 1,
+      "bundle": "battle_state",
+      "offset": "0x70"
+    },
+    {
+      "id": "enemy_toxic_counter",
+      "description": "Enemy Toxic counter",
+      "type": "u8",
+      "size": 1,
+      "bundle": "battle_state",
+      "offset": "0x71"
+    },
+    {
+      "id": "enemy_disabled_move",
+      "description": "Enemy disabled move slot in high nibble and turns in low nibble",
+      "type": "u8",
+      "size": 1,
+      "bundle": "battle_state",
+      "offset": "0x72"
+    },
+    {
+      "id": "player_substitute_hp",
+      "description": "Player Substitute HP",
+      "type": "u8",
+      "size": 1,
+      "bundle": "battle_misc",
+      "offset": "0x0"
+    },
+    {
+      "id": "enemy_substitute_hp",
+      "description": "Enemy Substitute HP",
+      "type": "u8",
+      "size": 1,
+      "bundle": "battle_misc",
+      "offset": "0x1"
+    },
+    {
+      "id": "player_selected_move",
+      "description": "Player selected move id for the current turn",
+      "type": "u8",
+      "size": 1,
+      "bundle": "battle_misc",
+      "offset": "0x5"
+    },
+    {
+      "id": "enemy_selected_move",
+      "description": "Enemy selected move id for the current turn",
+      "type": "u8",
+      "size": 1,
+      "bundle": "battle_misc",
+      "offset": "0x6"
+    },
+    {
+      "id": "player_used_move",
+      "description": "Last player move id used by battle logic",
+      "type": "u8",
+      "size": 1,
+      "bundle": "battle_misc",
+      "offset": "0x1A"
+    },
+    {
+      "id": "enemy_used_move",
+      "description": "Last enemy move id used by battle logic",
+      "type": "u8",
+      "size": 1,
+      "bundle": "battle_misc",
+      "offset": "0x1B"
+    },
+    {
+      "id": "pokedex_owned",
+      "description": "Owned Pokedex flags for the original 151 species",
+      "type": "bytes",
+      "size": 19,
+      "bundle": "progress",
+      "offset": "0x0"
+    },
+    {
+      "id": "pokedex_seen",
+      "description": "Seen Pokedex flags for the original 151 species",
+      "type": "bytes",
+      "size": 19,
+      "bundle": "progress",
+      "offset": "0x13"
+    },
+    {
+      "id": "badges",
+      "description": "Kanto badge flags",
+      "type": "u8",
+      "size": 1,
+      "bundle": "progress",
+      "offset": "0x5F"
+    },
+    {
+      "id": "current_map",
+      "description": "Current map id",
+      "type": "u8",
+      "size": 1,
+      "bundle": "progress",
+      "offset": "0x67"
+    },
+    {
+      "id": "bag_items",
+      "description": "Player bag item count, up to 20 item/quantity pairs, and terminator",
+      "type": "bytes",
+      "size": 42,
+      "bundle": "bag_inventory",
+      "offset": "0x0"
+    },
+    {
+      "id": "safari_escape_factor",
+      "description": "Safari Zone escape factor",
+      "type": "u8",
+      "size": 1,
+      "bundle": "safari_battle",
+      "offset": "0x0"
+    },
+    {
+      "id": "safari_bait_factor",
+      "description": "Safari Zone bait factor",
+      "type": "u8",
+      "size": 1,
+      "bundle": "safari_battle",
+      "offset": "0x1"
+    },
+    {
+      "id": "safari_steps",
+      "description": "Remaining Safari Zone steps",
+      "type": "u16_be",
+      "size": 2,
+      "bundle": "safari_steps",
+      "offset": "0x0"
+    },
+    {
+      "id": "safari_balls",
+      "description": "Remaining Safari Balls",
+      "type": "u8",
+      "size": 1,
+      "bundle": "safari_balls",
+      "offset": "0x0"
+    }
+  ]
+}

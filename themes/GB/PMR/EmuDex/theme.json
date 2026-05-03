@@ -1,0 +1,55 @@
+{
+  "id": "EmuDex",
+  "type": "theme",
+  "targetProfileId": "PMR",
+  "targetConsole": "GB",
+  "meta": {
+    "name": "EmuDex",
+    "author": "EmuLnk Team",
+    "version": "1.0.0",
+    "description": "Gen 1 Pokedex companion with a six-slot party roster, battle state, catch odds, Safari tools and Nuzlocke tracking.",
+    "minAppVersion": 1
+  },
+  "credits": [
+    {
+      "name": "pret/pokered",
+      "url": "https://github.com/pret/pokered",
+      "reason": "WRAM labels, struct layouts, battle constants, catch formula, map names, Gen 1 data references, Pokemon sprites and SFX references"
+    }
+  ],
+  "uses": [
+    "party",
+    "battle_core",
+    "battle_mods",
+    "battle_state",
+    "battle_player",
+    "battle_misc",
+    "progress",
+    "bag_inventory",
+    "safari_battle",
+    "safari_steps",
+    "safari_balls"
+  ],
+  "hideOverlay": false,
+  "tags": ["stats", "battle", "party", "types", "moves", "combat", "tracker"],
+  "settings": [
+    { "id": "default-tab", "label": "Default Tab", "type": "select", "options": ["Party", "Dex"], "default": "Party" },
+    { "id": "sprite-animations", "label": "Sprite Animations", "type": "toggle", "default": "true", "category": "Display" },
+    { "id": "dex-show-all", "label": "Show All Areas", "type": "toggle", "default": "false", "category": "Dex" },
+    { "id": "party-show-dvs", "label": "Show DVs", "type": "toggle", "default": "true", "category": "Party" },
+    { "id": "party-show-stat-exp", "label": "Show Stat Exp", "type": "toggle", "default": "true", "category": "Party" },
+    { "id": "party-show-evolution", "label": "Show Evolution", "type": "toggle", "default": "true", "category": "Party" },
+    { "id": "battle-show-damage", "label": "Damage", "type": "toggle", "default": "true", "category": "Battle" },
+    { "id": "battle-show-accuracy", "label": "Hit Chance", "type": "toggle", "default": "true", "category": "Battle" },
+    { "id": "battle-show-eff-label", "label": "Effect Labels", "type": "toggle", "default": "true", "category": "Battle" },
+    { "id": "battle-show-field", "label": "Field States", "type": "toggle", "default": "true", "category": "Battle" },
+    { "id": "battle-show-turn-order", "label": "First Tag", "type": "toggle", "default": "true", "category": "Battle" },
+    { "id": "battle-show-enemy-moves", "label": "Enemy Moves", "type": "toggle", "default": "true", "category": "Battle" },
+    { "id": "battle-show-catch-rate", "label": "Catch Odds", "type": "toggle", "default": "true", "category": "Battle" },
+    { "id": "battle-show-weaknesses", "label": "Weakness Summary", "type": "toggle", "default": "false", "category": "Battle" },
+    { "id": "nuzlocke-mode", "label": "Nuzlocke Mode", "type": "toggle", "default": "false", "category": "Nuzlocke" },
+    { "id": "nuzlocke-data", "type": "string", "default": "", "hidden": true, "category": "Nuzlocke" },
+    { "id": "sfx-enabled", "label": "Sound Effects", "type": "toggle", "default": "true" },
+    { "id": "haptic-enabled", "label": "Haptic Feedback", "type": "toggle", "default": "true" }
+  ]
+}

@@ -18,6 +18,8 @@ const PORT = portIdx !== -1 ? parseInt(process.argv[portIdx + 1], 10) || DEFAULT
 const mockMode = process.argv.includes("--mock");
 const debugMode = process.argv.includes("--debug");
 const playgroundMode = process.argv.includes("--playground");
+const desktopPortIdx = process.argv.indexOf("--desktop-port");
+const desktopPort = desktopPortIdx !== -1 ? parseInt(process.argv[desktopPortIdx + 1], 10) : undefined;
 
 // ===== Theme discovery (themes/ only, matches package.ts) =====
 
@@ -811,6 +813,24 @@ if (themeFilter) {
 }`,
         injectTo: "body",
       });
+
+      if (desktopPort) {
+        tags.push({
+          tag: "script",
+          attrs: {type: "module"},
+          children: `
+const ws = new WebSocket('ws://localhost:${desktopPort}/payload');
+
+ws.onopen = () => console.log('WebSocket connected');
+ws.onmessage = (e) => {
+const data = (e.data);
+window.updateData(data);
+}
+ws.onclose = () => console.log('WebSocket disconnected');
+`,
+          injectTo: "body",
+        });
+      }
       if (mockScenarios && !playgroundMode) {
         tags.push({ tag: "script", children: buildMockScript(mockScenarios), injectTo: "body" });
       }
